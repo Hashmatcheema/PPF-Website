@@ -37,8 +37,6 @@ out/
 .env.*
 !.env.example
 
-<<<<<<< HEAD
-=======
 # Vercel (local link / project settings)
 .vercel
 
@@ -54,6 +52,4 @@ Thumbs.db
 ehthumbs.db
 Desktop.ini
 
->>>>>>> modifics
 # Reference clone — not part of shipped app
-talhacode/
