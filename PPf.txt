@@ -1,0 +1,96 @@
+Software Requirements Specification For
+Pak-Palestine Forum (PPF) Website (Phase-1)
+Version 1.0
+Prepared by: Dev Team
+Date: 08/02/26
+1. Introduction
+1.1 Purpose
+This Software Requirements Specification (SRS) document defines the functional and non-functional requirements for the Pak-Palestine Forum (PPF) public website. The purpose of this document is to clearly describe the scope, features, and constraints of Phase-1 of the website to guide designers, developers, testers, and stakeholders during development and delivery.
+1.2 Document Conventions
+The keywords “shall”, “must”, and “will” indicate mandatory requirements.
+Requirements are uniquely identified using IDs such as REQ-HP-01.
+English is used as the primary language of this document.
+1.3 Intended Audience and Reading Suggestions
+This document is intended for project stakeholders, UI/UX designers, frontend and backend developers, QA engineers, SEO teams, and content managers. Readers should begin with Sections 1 and 2 for context and proceed to Section 4 for detailed functional requirements.
+1.4 Product Scope
+The PPF website is a responsive landing website aimed at presenting the mission, vision, and impact of the Pak-Palestine Forum. The website shall educate visitors about PPF’s objectives, showcase its geographical presence, encourage engagement through volunteering and donations, support bilingual content in English and Urdu. Phase-1 focuses only on the homepage, with future expansion planned.
+1.5 References
+The document is based on the IEEE Software Requirements Specification Template, client requirement elicitation notes, and the Global Sumud Flotilla website for FAQ inspiration.
+2. Overall Description
+2.1 Product Perspective
+The PPF website is a new standalone web application accessible through modern browsers. It does not replace any existing system and will serve as the primary digital presence of Pak-Palestine Forum.
+2.2 Product Functions
+At a high level, the website shall display a multi-section landing page, present organizational vision and impact, provide FAQs, show geographic presence via a static map image, enable volunteering and contacting options, support English and Urdu languages, and highlight call-to-action features.
+2.3 User Classes and Characteristics
+•	General Visitors shall use the website to seek information about PPF.
+•	Volunteers shall use the website to join PPF initiatives. 
+•	Media and Organizations shall use the website to verify PPF’s authenticity.
+2.4 Operating Environment
+The system shall operate on modern web browsers including Chrome, Firefox, Safari, and Edge. The website shall be accessible on desktop, tablet, and mobile devices. The final hosting platform is currently TBD.
+REQ-DOM-01: The official domain for the website shall be pakpalforum.com.
+REQ-DOM-02: The official contact email for communication shall be pakpalforum@gmail.com.
+
+2.5 Design and Implementation Constraints
+The website shall support English and Urdu languages, remain responsive across devices, and align with humanitarian branding standards.
+2.7 Assumptions and Dependencies
+All required content including text, images, and team details shall be provided by the content manager.
+REQ-BRAND-01: The branding colors shall be confirmed by the client before UI implementation.
+REQ-BRAND-02: The logo design shall be provided by the client.
+REQ-BRAND-03: The font family shall be confirmed by the client.
+REQ-BRAND-04: The locations of PPF shall be provided by the client.
+3. External Interface Requirements
+3.1 User Interfaces
+The system shall provide a clean and modern landing page layout with clear navigation between sections. The homepage shall prominently display “Join Us” and “Contact Us” call-to-action buttons.
+Something which has well defined json or something with which the client can changes these with changing the code. With any feasible way it can be done easily. As per the needs of the time. It should be dynamic too. So if the text changes it is displayed perfectly. 
+join us and call the action buttons ... while changing the 'call to action' should be editable via an restful API (no need of interface)
+we need Join us and some pop that are catchy. With join us we can take the person to the google form. 
+REQ-UI-01: The system shall provide a language change feature through clickable text for switching between English and Urdu.
+REQ-UI-02: The language change feature shall remain visible across the homepage.
+
+3.2 Hardware Interfaces
+No hardware interfaces are required.
+3.3 Communications Interfaces
+REQ-COM-01: The system shall use HTTPS for secure communication.
+REQ-COM-02: The system shall ensure secure form submission handling.
+
+4. System Features
+4.1 Homepage & Landing Sections
+REQ-HP-01: The system shall display a Hero Section containing images and introductory content about Pak-Palestine Forum.
+REQ-HP-02: The system shall include a Vision and Objectives section describing PPF’s mission.
+REQ-HP-03: The system shall provide an FAQ section inspired by the Global Sumud Flotilla website addressing common questions.
+REQ-HP-04: The system shall display an Our Impact section highlighting PPF’s activities and achievements.
+REQ-HP-05: The system shall include a Map section showing PPF’s geographical presence.
+REQ-HP-06: The system shall provide a Contact Us section allowing users to volunteer  (join us) or access contact details.
+REQ-HP-07: The system shall display team and impactful profiles including names, roles, and images.
+________________________________________
+4.2 Multilingual Support
+REQ-ML-01: The system shall support both English and Urdu languages.
+REQ-ML-02: Users shall be able to switch languages at any time.
+
+4.3 Call-to-Action Features
+REQ-CTA-01: The system shall visually highlight Join Us, Contact US CTAs throughout the homepage.
+
+5. Other Nonfunctional Requirements
+REQ-PERF-01: Pages shall load within 3 seconds on standard internet connections.
+REQ-SEC-01: The system shall enforce HTTPS communication.
+REQ-SEC-02: The system shall securely handle user data.
+REQ-QUAL-01: The system shall provide simple and intuitive navigation.
+REQ-QUAL-02: The system shall ensure accessibility through mobile-friendly design.
+REQ-QUAL-03: The system shall maintain high availability and modular maintainability.
+
+The system shall follow SEO friendly architecture, and SEO best practices, SEO best practices, including Google Search Essentials, Technical SEO & On-Page SEO Best Practices
+
+5.5 Business Rules
+REQ-BR-01: Only developers shall be able to update website content as there is no admin side.
+
+6. Other Requirements
+The system shall support future scalability for additional pages and campaigns. The system shall comply with standards.
+
+
+Appendix A: Glossary
+TBD: To be determined
+PPF: Pak-Palestine Forum
+CTA: Call to Action
+SEO: Search Engine Optimization
+
+

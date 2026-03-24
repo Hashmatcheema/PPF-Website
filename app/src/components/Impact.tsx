@@ -1,0 +1,65 @@
+import { images } from "@/data/images"
+import type { Locale } from "@/data/content"
+import { content } from "@/data/content"
+
+export function Impact({ lang }: { lang: Locale }) {
+  const t = content[lang].impact
+  return (
+    <section id="impact" className="relative overflow-hidden py-24 md:py-32">
+      <div className="absolute inset-0 z-0">
+        <img
+          src={images.humanitarian}
+          alt=""
+          className="h-full w-full object-cover"
+        />
+        <div className="absolute inset-0 bg-black/75 backdrop-blur-[2px]"></div>
+      </div>
+
+      <div className="wrap relative z-10">
+        <div className="mb-5 flex items-center justify-center gap-3">
+          <div className="h-px w-8 bg-[var(--color-accent)]" />
+          <p className="font-display text-xs font-semibold uppercase tracking-[0.25em] text-[var(--color-accent)]">
+            Impact
+          </p>
+          <div className="h-px w-8 bg-[var(--color-accent)]" />
+        </div>
+        <h2 className="font-display mt-4 text-center text-3xl font-semibold text-white md:text-4xl">
+          {t.title}
+        </h2>
+        <p className="mx-auto mt-3 max-w-xl text-center text-white/80">{t.intro}</p>
+        <div className="mt-16 grid grid-cols-3 gap-8 border-y border-white/20 py-12 md:gap-16">
+          {t.stats.map((stat, i) => (
+            <div key={i} className="text-center">
+              <span className="font-display text-4xl font-bold text-[var(--color-accent)] md:text-5xl">
+                {stat.value}
+              </span>
+              <p className="mt-2 text-xs font-medium uppercase tracking-wider text-white/70">
+                {stat.label}
+              </p>
+            </div>
+          ))}
+        </div>
+        {"achievements" in t && Array.isArray(t.achievements) && t.achievements.length > 0 && (
+          <div className="mt-14 grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {t.achievements.map((item, i) => (
+              <div
+                key={i}
+                className="group flex gap-4 rounded-xl border border-white/10 bg-white/[0.06] p-5 backdrop-blur-sm transition hover:border-white/20 hover:bg-white/[0.08]"
+              >
+                <span
+                  className="font-display flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[var(--color-accent)]/20 text-sm font-bold text-[var(--color-accent)]"
+                  aria-hidden
+                >
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <p className="text-sm leading-relaxed text-white/90">
+                  {item}
+                </p>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  )
+}

@@ -1,0 +1,12 @@
+{
+  "joinUrl": "",
+  "joinLabel": { "en": "Join Us", "ur": "شامل ہوں" },
+  "contactLabel": { "en": "Contact Us", "ur": "رابطہ کریں" },
+  "heroCtaHeading": { "en": "Stand in Solidarity.", "ur": "یکجہتی میں کھڑے ہوں۔" },
+  "heroCtaSubtext": {
+    "en": "Add your voice. Join thousands making a difference.",
+    "ur": "اپنی آواز شامل کریں۔ ہزاروں کے ساتھ فرق بنائیں۔"
+  },
+  "volunteerLabel": { "en": "Volunteer", "ur": "رضاکار" },
+  "donateLabel": { "en": "Donate", "ur": "عطیہ" }
+}
