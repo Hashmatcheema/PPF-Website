@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Menu, X } from "lucide-react"
 import type { Locale } from "@/data/content"
 import { content } from "@/data/content"
@@ -24,6 +24,18 @@ export function Header({
   const [scrolled, setScrolled] = useState(false)
   const [visible, setVisible] = useState(true)
   const [activeId, setActiveId] = useState("hero")
+
+  const isClickScrolling = useRef(false)
+  const clickTimeout = useRef<NodeJS.Timeout | null>(null)
+
+  const handleNavClick = (id: string) => {
+    setActiveId(id)
+    isClickScrolling.current = true
+    if (clickTimeout.current) clearTimeout(clickTimeout.current)
+    clickTimeout.current = setTimeout(() => {
+      isClickScrolling.current = false
+    }, 1000)
+  }
 
   useEffect(() => {
     let timeoutId: ReturnType<typeof setTimeout>
@@ -54,6 +66,7 @@ export function Header({
 
     const observer = new IntersectionObserver(
       (entries) => {
+        if (isClickScrolling.current) return
         for (const entry of entries) {
           if (entry.isIntersecting) {
             setActiveId(entry.target.id)
@@ -105,6 +118,7 @@ export function Header({
               <a
                 key={id}
                 href={`#${id}`}
+                onClick={() => handleNavClick(id)}
                 className={`text-sm transition ${isActive
                   ? "text-[var(--color-accent)] font-bold relative after:absolute after:bottom-[-4px] after:left-0 after:right-0 after:h-[2px] after:bg-[var(--color-accent)]"
                   : solid
@@ -162,7 +176,10 @@ export function Header({
                   <a
                     key={id}
                     href={`#${id}`}
-                    onClick={() => setOpen(false)}
+                    onClick={() => {
+                      setOpen(false)
+                      handleNavClick(id)
+                    }}
                     className={`rounded-md px-3 py-2.5 text-sm transition ${isActive
                       ? "font-bold text-[var(--color-accent)] bg-[var(--color-surface)]"
                       : "font-medium text-[var(--color-text)] hover:bg-[var(--color-surface)]"
