@@ -5,8 +5,6 @@ import { defineConfig } from "vite"
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-<<<<<<< HEAD
-=======
   server: {
     proxy: {
       "/api": {
@@ -15,7 +13,6 @@ export default defineConfig({
       },
     },
   },
->>>>>>> modifics
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

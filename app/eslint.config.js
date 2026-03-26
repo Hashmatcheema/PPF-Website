@@ -8,8 +8,6 @@ import { defineConfig, globalIgnores } from 'eslint/config'
 export default defineConfig([
   globalIgnores(['dist']),
   {
-<<<<<<< HEAD
-=======
     files: ['api/**/*.ts'],
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     languageOptions: {
@@ -18,7 +16,6 @@ export default defineConfig([
     },
   },
   {
->>>>>>> modifics
     files: ['**/*.{ts,tsx}'],
     extends: [
       js.configs.recommended,

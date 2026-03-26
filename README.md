@@ -1,8 +1,9 @@
 # Pak-Palestine Forum Website
 
-A modern React web application built with Vite, Tailwind CSS v4, TypeScript, and shadcn/ui.
+React app and Vercel serverless API live in **`app/`** (Vite, Tailwind v4, TypeScript).  
+Public site plus **`/admin/login`** → **`/admin`** for CTA editing (cookie auth, `app/api/*` + Upstash on Vercel).
 
-## Quick Start
+## Quick start
 
 ```shell
 cd app
@@ -10,31 +11,20 @@ npm install
 npm run dev
 ```
 
-Open **http://localhost:5173** to view the application locally.
+Open **http://localhost:5173**.  
+For a local API (CTAs, contact, admin), use **`vercel dev`** from **`app/`** with Upstash env in `.env.local`, or point the Vite proxy at that process (`VITE_DEV_API_PROXY`).
 
-## Building for Production
+## Production build
 
 ```shell
 cd app
 npm run build
 ```
 
-## Vercel Deployment
+## Vercel
 
-For seamless automated deployment on Vercel:
-1. Open your **Vercel Project Dashboard**.
-2. Go to **Settings** -> **General**.
-3. Set the **Root Directory** to `app` and click **Save**.
-<<<<<<< HEAD
-4. Future pushes to GitHub will now automatically build and deploy properly!
-=======
-4. In **Settings → Environment Variables**, add:
-   - `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` (Upstash Redis REST, e.g. from the Vercel Upstash integration)
-   - `JWT_SECRET` — long random string for admin session cookies
-   - `ADMIN_USERNAME` / `ADMIN_PASSWORD` — site owner login (server-side only)
-   - Optional: `ALLOWED_ORIGINS` — comma-separated origins for cross-origin dev (e.g. `http://localhost:5173`). Same-host browser requests work without this.
-5. Leave `VITE_CTAS_API_URL` unset in production so the site uses same-origin `/api/*`.
-6. Future pushes will build the static app and deploy **API routes** under `app/api/` automatically.
+1. **Settings → General:** set **Root Directory** to **`app`**.
+2. **Settings → Environment Variables:** `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`, `JWT_SECRET`, `ADMIN_USERNAME`, `ADMIN_PASSWORD` (optional: `ALLOWED_ORIGINS` for cross-origin dev).
+3. Leave **`VITE_CTAS_API_URL`** empty in production so the browser calls same-origin **`/api/*`**.
 
-**Local full stack:** from `app/`, run `vercel dev` (needs Upstash env in `.env.local`), or use `npm run dev` with the Express server and `VITE_CTAS_API_URL=http://localhost:3001`. For Vite-only dev with proxied API, set `VITE_DEV_API_PROXY` to match your `vercel dev` URL.
->>>>>>> modifics
+See **[`app/.env.example`](app/.env.example)** for frontend env hints.

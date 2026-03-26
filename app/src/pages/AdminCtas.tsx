@@ -2,12 +2,7 @@ import { useState, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { useCtasConfig } from "@/contexts/CtasContext"
 import { ADMIN_AUTH_KEY } from "./AdminLogin"
-<<<<<<< HEAD
-
-const API_URL = import.meta.env.VITE_CTAS_API_URL ?? ""
-=======
 import { apiUrl, DISABLE_REMOTE_API } from "@/lib/apiUrl"
->>>>>>> modifics
 import type { CtasConfig, LocaleLabel } from "@/data/ctasSchema"
 
 function LocaleFields({
@@ -67,19 +62,6 @@ export function AdminCtas() {
   const { ctas, saveCtas } = useCtasConfig()
 
   const handleLogout = async () => {
-<<<<<<< HEAD
-    if (API_URL) {
-      try {
-        await fetch(API_URL.replace(/\/$/, "") + "/api/admin/logout", {
-          method: "POST",
-          credentials: "include",
-        })
-      } catch {}
-    } else {
-      try {
-        sessionStorage.removeItem(ADMIN_AUTH_KEY)
-      } catch {}
-=======
     if (!DISABLE_REMOTE_API) {
       try {
         await fetch(apiUrl("/api/admin/logout"), {
@@ -95,7 +77,6 @@ export function AdminCtas() {
       } catch {
         /* storage unavailable */
       }
->>>>>>> modifics
     }
     navigate("/admin/login", { replace: true })
   }

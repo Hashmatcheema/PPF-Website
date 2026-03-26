@@ -1,12 +1,7 @@
 import { useState, useEffect, useCallback } from "react"
 import { defaultCtas, parseCtas, type CtasConfig } from "@/data/ctasSchema"
-<<<<<<< HEAD
-
-const API_URL = import.meta.env.VITE_CTAS_API_URL ?? ""
-=======
 import { apiUrl, DISABLE_REMOTE_API } from "@/lib/apiUrl"
 
->>>>>>> modifics
 const STORAGE_KEY = "ppf-ctas"
 
 function loadFromStorage(): CtasConfig | null {
@@ -26,19 +21,6 @@ export function useCtas(): {
   saveCtas: (config: CtasConfig) => Promise<{ ok: boolean; error?: string }>
 } {
   const [ctas, setCtas] = useState<CtasConfig>(() => {
-<<<<<<< HEAD
-    if (API_URL) return defaultCtas
-    return loadFromStorage() ?? defaultCtas
-  })
-  const [loading, setLoading] = useState(!!API_URL)
-
-  useEffect(() => {
-    if (!API_URL) {
-      setLoading(false)
-      return
-    }
-    const url = API_URL.replace(/\/$/, "") + "/api/ctas"
-=======
     if (!DISABLE_REMOTE_API) return defaultCtas
     return loadFromStorage() ?? defaultCtas
   })
@@ -47,7 +29,6 @@ export function useCtas(): {
   useEffect(() => {
     if (DISABLE_REMOTE_API) return
     const url = apiUrl("/api/ctas")
->>>>>>> modifics
     fetch(url, { method: "GET", credentials: "include" })
       .then((res) => (res.ok ? res.json() : Promise.reject(new Error("Failed to fetch"))))
       .then((data) => {
@@ -63,13 +44,8 @@ export function useCtas(): {
 
   const saveCtas = useCallback(
     async (config: CtasConfig): Promise<{ ok: boolean; error?: string }> => {
-<<<<<<< HEAD
-      if (API_URL) {
-        const url = API_URL.replace(/\/$/, "") + "/api/ctas"
-=======
       if (!DISABLE_REMOTE_API) {
         const url = apiUrl("/api/ctas")
->>>>>>> modifics
         try {
           const res = await fetch(url, {
             method: "PUT",
@@ -78,10 +54,6 @@ export function useCtas(): {
             credentials: "include",
           })
           if (!res.ok) {
-<<<<<<< HEAD
-            const err = await res.text()
-            return { ok: false, error: err || "Failed to save" }
-=======
             const text = await res.text()
             try {
               const j = JSON.parse(text) as { error?: string }
@@ -89,7 +61,6 @@ export function useCtas(): {
             } catch {
               return { ok: false, error: text || "Failed to save" }
             }
->>>>>>> modifics
           }
           const data = (await res.json()) as unknown
           const parsed = parseCtas(data)

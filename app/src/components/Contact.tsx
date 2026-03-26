@@ -1,12 +1,7 @@
 import { useState } from "react"
 import type { Locale } from "@/data/content"
 import { content } from "@/data/content"
-<<<<<<< HEAD
-
-const API_BASE = import.meta.env.VITE_CTAS_API_URL ?? ""
-=======
 import { apiUrl, DISABLE_REMOTE_API } from "@/lib/apiUrl"
->>>>>>> modifics
 
 export function Contact({ lang }: { lang: Locale }) {
   const t = content[lang].contact
@@ -24,22 +19,14 @@ export function Contact({ lang }: { lang: Locale }) {
       setError(lang === "ur" ? "نامناسب جمع کرنے کی کوشش۔" : "Invalid submission.")
       return
     }
-<<<<<<< HEAD
-    if (!API_BASE) {
-=======
     if (DISABLE_REMOTE_API) {
->>>>>>> modifics
       setSent(true)
       setTimeout(() => setSent(false), 2000)
       return
     }
     setSubmitting(true)
     try {
-<<<<<<< HEAD
-      const res = await fetch(`${API_BASE.replace(/\/$/, "")}/api/contact`, {
-=======
       const res = await fetch(apiUrl("/api/contact"), {
->>>>>>> modifics
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

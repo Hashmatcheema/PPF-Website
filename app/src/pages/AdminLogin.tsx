@@ -1,14 +1,8 @@
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
-<<<<<<< HEAD
-
-const ADMIN_AUTH_KEY = "ppf-admin-auth"
-const API_URL = import.meta.env.VITE_CTAS_API_URL ?? ""
-=======
 import { apiUrl, DISABLE_REMOTE_API } from "@/lib/apiUrl"
 
 const ADMIN_AUTH_KEY = "ppf-admin-auth"
->>>>>>> modifics
 
 function checkCredentialsClient(username: string, password: string): boolean {
   const envUser = import.meta.env.VITE_ADMIN_USERNAME ?? ""
@@ -32,13 +26,8 @@ export function AdminLogin() {
       return
     }
     setLoading(true)
-<<<<<<< HEAD
-    if (API_URL) {
-      const url = API_URL.replace(/\/$/, "") + "/api/admin/login"
-=======
     if (!DISABLE_REMOTE_API) {
       const url = apiUrl("/api/admin/login")
->>>>>>> modifics
       try {
         const res = await fetch(url, {
           method: "POST",
@@ -64,13 +53,9 @@ export function AdminLogin() {
     if (ok) {
       try {
         sessionStorage.setItem(ADMIN_AUTH_KEY, "1")
-<<<<<<< HEAD
-      } catch {}
-=======
       } catch {
         /* storage unavailable */
       }
->>>>>>> modifics
       navigate("/admin", { replace: true })
     } else {
       setError("Invalid username or password.")

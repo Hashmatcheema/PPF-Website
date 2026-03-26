@@ -7,17 +7,6 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-<<<<<<< HEAD
-node_modules
-dist
-dist-ssr
-*.local
-
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-=======
 # Dependencies & build
 node_modules/
 dist/
@@ -42,16 +31,12 @@ out/
 .vscode/*
 !.vscode/extensions.json
 .idea/
->>>>>>> modifics
 .DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
-<<<<<<< HEAD
-=======
 
 # OS
 Thumbs.db
->>>>>>> modifics

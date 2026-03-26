@@ -1,26 +1,14 @@
-# Pak-Palestine Forum Website
+# Pak-Palestine Forum (Vite app)
 
-A modern React web application built with Vite, Tailwind CSS v4, TypeScript, and shadcn/ui.
-
-## Quick Start
+## Commands
 
 ```shell
 npm install
-npm run dev
-```
-
-Open **http://localhost:5173** to view the application locally.
-
-## Building for Production
-
-```shell
+npm run dev      # http://localhost:5173
 npm run build
+npm run preview
 ```
 
-## Vercel Deployment
+## Deploy
 
-For seamless automated deployment on Vercel:
-1. Open your **Vercel Project Dashboard**.
-2. Go to **Settings** -> **General**.
-3. Set the **Root Directory** to `app` and click **Save**.
-4. Future pushes to GitHub will now automatically build and deploy properly!
+In Vercel, set the project **Root Directory** to this folder (`app`). Production uses **`/api/*`** serverless routes in `api/` plus Upstash — see the [repo README](../README.md).
