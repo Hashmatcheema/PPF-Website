@@ -1,5 +1,5 @@
 import { Ratelimit } from "@upstash/ratelimit"
-import { getRedis } from "./redis"
+import { getRedis } from "./redis.js"
 
 let loginRl: Ratelimit | null = null
 let ctasRl: Ratelimit | null = null

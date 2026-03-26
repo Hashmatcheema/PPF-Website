@@ -1,8 +1,8 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node"
-import { forbidWithoutCors, getClientIp, handleCorsPreflight } from "./lib/http"
-import { getRedis, CONTACT_LIST_KEY } from "./lib/redis"
-import { ratelimitContact } from "./lib/ratelimit"
-import { getJsonBody } from "./lib/body"
+import { forbidWithoutCors, getClientIp, handleCorsPreflight } from "./lib/http.js"
+import { getRedis, CONTACT_LIST_KEY } from "./lib/redis.js"
+import { ratelimitContact } from "./lib/ratelimit.js"
+import { getJsonBody } from "./lib/body.js"
 
 const MAX_LIST = 500
 

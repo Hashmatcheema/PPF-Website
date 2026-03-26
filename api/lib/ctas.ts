@@ -1,4 +1,4 @@
-import { getRedis, CTAS_KEY } from "./redis"
+import { getRedis, CTAS_KEY } from "./redis.js"
 
 export type LocaleLabel = { en: string; ur: string }
 

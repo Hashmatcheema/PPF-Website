@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node"
-import { forbidWithoutCors, handleCorsPreflight } from "../lib/http"
-import { clearAuthCookie } from "../lib/auth"
+import { forbidWithoutCors, handleCorsPreflight } from "../lib/http.js"
+import { clearAuthCookie } from "../lib/auth.js"
 
 export default async function handler(
   req: VercelRequest,

@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node"
-import { parseAllowedOrigins, setCorsHeaders } from "./cors"
+import { parseAllowedOrigins, setCorsHeaders } from "./cors.js"
 
 export function getClientIp(req: VercelRequest): string {
   const xf = req.headers["x-forwarded-for"]
