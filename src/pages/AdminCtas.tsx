@@ -133,9 +133,12 @@ export function AdminCtas() {
       <main className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
         <form onSubmit={handleSubmit} className="space-y-8">
           <div>
-            <label className="mb-2 block text-sm font-medium text-[var(--color-text-muted)]">
+            <label className="mb-1 block text-sm font-medium text-[var(--color-text)]">
               Join URL
             </label>
+            <p className="mb-2 text-xs text-[var(--color-text-muted)]">
+              This is the web link where users will be redirected when they click the "Join Us" buttons across the website (for example, a WhatsApp Group, Telegram, or Google Form link).
+            </p>
             <input
               type="url"
               value={form.joinUrl}
@@ -149,31 +152,6 @@ export function AdminCtas() {
             label="Join label"
             value={form.joinLabel}
             onChange={(joinLabel) => setForm((f) => ({ ...f, joinLabel }))}
-          />
-          <LocaleFields
-            label="Contact label"
-            value={form.contactLabel}
-            onChange={(contactLabel) => setForm((f) => ({ ...f, contactLabel }))}
-          />
-          <LocaleFields
-            label="Hero CTA heading"
-            value={form.heroCtaHeading}
-            onChange={(heroCtaHeading) => setForm((f) => ({ ...f, heroCtaHeading }))}
-          />
-          <LocaleFields
-            label="Hero CTA subtext"
-            value={form.heroCtaSubtext}
-            onChange={(heroCtaSubtext) => setForm((f) => ({ ...f, heroCtaSubtext }))}
-          />
-          <LocaleFields
-            label="Volunteer label"
-            value={form.volunteerLabel}
-            onChange={(volunteerLabel) => setForm((f) => ({ ...f, volunteerLabel }))}
-          />
-          <LocaleFields
-            label="Donate label"
-            value={form.donateLabel}
-            onChange={(donateLabel) => setForm((f) => ({ ...f, donateLabel }))}
           />
 
           {message && (
