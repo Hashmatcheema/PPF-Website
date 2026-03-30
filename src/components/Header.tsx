@@ -26,7 +26,7 @@ export function Header({
   const [activeId, setActiveId] = useState("hero")
 
   const isClickScrolling = useRef(false)
-  const clickTimeout = useRef<NodeJS.Timeout | null>(null)
+  const clickTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const handleNavClick = (id: string) => {
     setActiveId(id)
