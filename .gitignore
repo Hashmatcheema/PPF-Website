@@ -40,3 +40,6 @@ out/
 
 # OS
 Thumbs.db
+
+# Local reference clone (not part of this repo)
+talhacode/
