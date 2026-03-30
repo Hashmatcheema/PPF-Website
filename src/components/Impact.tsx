@@ -1,17 +1,29 @@
 import { images } from "@/data/images"
 import type { Locale } from "@/data/content"
 import { content } from "@/data/content"
+import { AnimatedStatValue } from "@/components/AnimatedStatValue"
+
+function impactImageSources(jpgPath: string) {
+  const webp = jpgPath.replace(/\.(jpe?g|png)$/i, ".webp")
+  return { jpg: jpgPath, webp }
+}
 
 export function Impact({ lang }: { lang: Locale }) {
   const t = content[lang].impact
+  const bg = impactImageSources(images.humanitarian)
   return (
     <section id="impact" className="relative overflow-hidden py-24 md:py-32">
       <div className="absolute inset-0 z-0">
-        <img
-          src={images.humanitarian}
-          alt=""
-          className="h-full w-full object-cover"
-        />
+        <picture>
+          <source type="image/webp" srcSet={bg.webp} />
+          <img
+            src={bg.jpg}
+            alt=""
+            className="h-full w-full object-cover"
+            loading="lazy"
+            decoding="async"
+          />
+        </picture>
         <div className="absolute inset-0 bg-black/75 backdrop-blur-[2px]"></div>
       </div>
 
@@ -27,12 +39,13 @@ export function Impact({ lang }: { lang: Locale }) {
           {t.title}
         </h2>
         <p className="mx-auto mt-3 max-w-xl text-center text-white/80">{t.intro}</p>
-        <div className="mt-16 grid grid-cols-3 gap-8 border-y border-white/20 py-12 md:gap-16">
+        <div className="mt-16 flex flex-col gap-6 border-y border-white/20 py-8 sm:gap-8 md:flex-row md:items-start md:justify-between md:gap-12 md:py-12 lg:gap-16">
           {t.stats.map((stat, i) => (
-            <div key={i} className="text-center">
-              <span className="font-display text-4xl font-bold text-[var(--color-accent)] md:text-5xl">
-                {stat.value}
-              </span>
+            <div key={i} className="text-left md:flex-1 md:text-center">
+              <AnimatedStatValue
+                value={stat.value}
+                className="font-display text-4xl font-bold text-[var(--color-accent)] md:text-5xl"
+              />
               <p className="mt-2 text-xs font-medium uppercase tracking-wider text-white/70">
                 {stat.label}
               </p>

@@ -52,7 +52,7 @@ function MainSite() {
   }, [lang])
 
   return (
-    <div className="min-h-screen bg-[var(--color-bg)]">
+    <div className="ppf-marketing min-h-screen bg-[var(--color-bg)]">
       <Header lang={lang} setLang={setLang} />
       <main>
         <Hero lang={lang} />

@@ -94,8 +94,17 @@ export const content = {
         { name: "Armaghan Mahmood", role: "Lahore Lead — Financial Professional who's got a thing for history and geopolitics. Equally passionate about numbers and narratives.", imageKey: "team5" as const },
         { name: "Saad Humayun", role: "Karachi Lead — Forging strength beyond the gym. Fitness trainer, youth mentor, and activist inspiring discipline, leadership, and awareness for global justice.", imageKey: "team6" as const },
         { name: "Ibrahim Bajwa", role: "Faisalabad Lead — Building intelligent systems but invested more in driving awareness and activism.", imageKey: "team7" as const },
-        { name: "Adv. Jawad Bhutta", role: "Multan Lead", imageKey: "team8" as const, imagePosition: "top" as const },
-        { name: "Huzaifa Iqbal", role: "Sargodha Lead", imageKey: "team9" as const },
+        {
+          name: "Adv. Jawad Bhutta",
+          role: "Multan Lead — An all-round fighter for justice — here at home or wherever it calls. Spends his free time devouring books of history.",
+          imageKey: "team8" as const,
+          imagePosition: "top" as const,
+        },
+        {
+          name: "Huzaifa Iqbal",
+          role: "Sargodha Lead — Part activist, part coalition-builder. Often found connecting campuses, communities, and causes into one movement.",
+          imageKey: "team9" as const,
+        },
       ],
     },
     contact: {
@@ -244,8 +253,17 @@ export const content = {
         { name: "Armaghan Mahmood", role: "Lahore Lead — Financial Professional, passionate about history and geopolitics.", imageKey: "team5" as const },
         { name: "Saad Humayun", role: "Karachi Lead — Fitness trainer, youth mentor, and activist for global justice.", imageKey: "team6" as const },
         { name: "Ibrahim Bajwa", role: "Faisalabad Lead — Building intelligent systems, invested in awareness and activism.", imageKey: "team7" as const },
-        { name: "Adv. Jawad Bhutta", role: "Multan Lead", imageKey: "team8" as const, imagePosition: "top" as const },
-        { name: "Huzaifa Iqbal", role: "Sargodha Lead", imageKey: "team9" as const },
+        {
+          name: "Adv. Jawad Bhutta",
+          role: "ملتان لیڈ — انصاف کے لیے ہمہ جہت مجاہد—گھر پر یا جہاں بھی ضرورت ہو۔ فارغ وقت میں تاریخ کی کتب پڑھنے کے شوقین۔",
+          imageKey: "team8" as const,
+          imagePosition: "top" as const,
+        },
+        {
+          name: "Huzaifa Iqbal",
+          role: "سرگودھا لیڈ — ایکٹوسٹ بھی، اتحاد ساز بھی—اکثر کیمپس، کمیونٹیز اور مقاصد کو ایک تحریک میں جوڑتے نظر آتے ہیں۔",
+          imageKey: "team9" as const,
+        },
       ],
     },
     contact: {

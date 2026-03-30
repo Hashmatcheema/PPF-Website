@@ -3,13 +3,25 @@ import { Menu, X } from "lucide-react"
 import type { Locale } from "@/data/content"
 import { content } from "@/data/content"
 import { SocialIcons } from "@/components/SocialIcons"
+import {
+  PPF_NAV_SCROLL_END,
+  PPF_NAV_SCROLL_START,
+  type PpfNavScrollDetail,
+} from "@/lib/ppfNavScroll"
 
+/** Matches `scroll-margin-top` on sections (~5.5rem) so content clears fixed header */
+const NAV_SCROLL_OFFSET_PX = 88
+
+/** How long to ignore scroll-spy after a nav click while smooth scroll runs (ms) */
+const OBSERVER_SUPPRESS_MS = 2000
+
+/** Order matches main scroll: Hero → FAQ → Mission → Impact → Locations → Join → Team */
 const links = [
-  { id: "mission", key: "mission" as const },
-  { id: "presence", key: "where" as const },
-  { id: "impact", key: "impact" as const },
-  { id: "act", key: "act" as const },
   { id: "faq", key: "faq" as const },
+  { id: "mission", key: "mission" as const },
+  { id: "impact", key: "impact" as const },
+  { id: "presence", key: "where" as const },
+  { id: "act", key: "act" as const },
   { id: "team", key: "team" as const },
 ]
 
@@ -25,16 +37,103 @@ export function Header({
   const [visible, setVisible] = useState(true)
   const [activeId, setActiveId] = useState("hero")
 
-  const isClickScrolling = useRef(false)
-  const clickTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
+  /** Ignore IntersectionObserver updates right after a nav click (avoids highlight “stepping” through sections). */
+  const suppressObserverUntil = useRef(0)
 
-  const handleNavClick = (id: string) => {
+  /** Cancel prior nav completion (rAF / timeout) when a new nav target is chosen. */
+  const navScrollRaf = useRef(0)
+  const navScrollTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const navScrollOp = useRef(0)
+
+  /**
+   * Scroll to a section in one motion: smooth for comfort, or instant if user prefers reduced motion.
+   * Observer is suppressed for OBSERVER_SUPPRESS_MS so the active link does not flicker across sections mid-scroll.
+   *
+   * Nav “end” is detected when scrollY stays near the computed target for several frames — not `scrollend`,
+   * which can fire early when crossing tall/sticky sections (e.g. presence), which broke smooth scroll-through.
+   */
+  const scrollToSection = (id: string) => {
+    const el = document.getElementById(id)
+    if (!el) return
+
+    suppressObserverUntil.current = Date.now() + OBSERVER_SUPPRESS_MS
+
+    const offsetPx = id === "hero" ? 0 : NAV_SCROLL_OFFSET_PX
+    const targetY = Math.max(0, el.getBoundingClientRect().top + window.scrollY - offsetPx)
+
+    const reduceMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+
+    cancelAnimationFrame(navScrollRaf.current)
+    navScrollRaf.current = 0
+    if (navScrollTimeout.current !== null) {
+      window.clearTimeout(navScrollTimeout.current)
+      navScrollTimeout.current = null
+    }
+    navScrollOp.current += 1
+    const op = navScrollOp.current
+
+    window.dispatchEvent(
+      new CustomEvent<PpfNavScrollDetail>(PPF_NAV_SCROLL_START, {
+        detail: { targetId: id },
+      })
+    )
+
+    window.scrollTo({
+      top: targetY,
+      left: 0,
+      behavior: reduceMotion ? "instant" : "smooth",
+    })
+
+    let ended = false
+    const endNavScroll = () => {
+      if (op !== navScrollOp.current || ended) return
+      ended = true
+      cancelAnimationFrame(navScrollRaf.current)
+      navScrollRaf.current = 0
+      if (navScrollTimeout.current !== null) {
+        window.clearTimeout(navScrollTimeout.current)
+        navScrollTimeout.current = null
+      }
+      window.dispatchEvent(
+        new CustomEvent<PpfNavScrollDetail>(PPF_NAV_SCROLL_END, {
+          detail: { targetId: id },
+        })
+      )
+    }
+
+    const NEAR_PX = 4
+    const STABLE_FRAMES = 5
+    let nearCount = 0
+
+    const tick = () => {
+      if (op !== navScrollOp.current) return
+      const y = window.scrollY
+      if (Math.abs(y - targetY) <= NEAR_PX) {
+        nearCount += 1
+        if (nearCount >= STABLE_FRAMES) {
+          endNavScroll()
+          return
+        }
+      } else {
+        nearCount = 0
+      }
+      navScrollRaf.current = requestAnimationFrame(tick)
+    }
+
+    if (reduceMotion) {
+      navScrollTimeout.current = window.setTimeout(endNavScroll, 50)
+    } else {
+      navScrollRaf.current = requestAnimationFrame(tick)
+      navScrollTimeout.current = window.setTimeout(endNavScroll, 4500)
+    }
+
+    const hash = `#${id}`
+    if (window.location.hash !== hash) {
+      window.history.replaceState(null, "", hash)
+    }
     setActiveId(id)
-    isClickScrolling.current = true
-    if (clickTimeout.current) clearTimeout(clickTimeout.current)
-    clickTimeout.current = setTimeout(() => {
-      isClickScrolling.current = false
-    }, 1000)
   }
 
   useEffect(() => {
@@ -66,12 +165,11 @@ export function Header({
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (isClickScrolling.current) return
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setActiveId(entry.target.id)
-          }
-        }
+        if (Date.now() < suppressObserverUntil.current) return
+        const visible = entries.filter((e) => e.isIntersecting && e.target.id)
+        if (!visible.length) return
+        visible.sort((a, b) => b.intersectionRatio - a.intersectionRatio)
+        setActiveId(visible[0].target.id)
       },
       { rootMargin: "-30% 0px -70% 0px" }
     )
@@ -103,6 +201,10 @@ export function Header({
           href="#hero"
           className="flex items-center gap-0"
           aria-label="Pak Palestine Forum – Home"
+          onClick={(e) => {
+            e.preventDefault()
+            scrollToSection("hero")
+          }}
         >
           <img
             src="/images/PPF-logo-icon.png"
@@ -118,7 +220,10 @@ export function Header({
               <a
                 key={id}
                 href={`#${id}`}
-                onClick={() => handleNavClick(id)}
+                onClick={(e) => {
+                  e.preventDefault()
+                  scrollToSection(id)
+                }}
                 className={`text-sm transition ${isActive
                   ? "text-[var(--color-accent)] font-bold relative after:absolute after:bottom-[-4px] after:left-0 after:right-0 after:h-[2px] after:bg-[var(--color-accent)]"
                   : solid
@@ -176,9 +281,10 @@ export function Header({
                   <a
                     key={id}
                     href={`#${id}`}
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.preventDefault()
                       setOpen(false)
-                      handleNavClick(id)
+                      requestAnimationFrame(() => scrollToSection(id))
                     }}
                     className={`rounded-md px-3 py-2.5 text-sm transition ${isActive
                       ? "font-bold text-[var(--color-accent)] bg-[var(--color-surface)]"

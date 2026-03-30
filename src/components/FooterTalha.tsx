@@ -10,7 +10,6 @@ export function FooterTalha({ lang }: { lang: Locale }) {
 
   return (
     <footer className="relative overflow-hidden border-t border-white/10 bg-[#111111]">
-      {/* Subtle radial glow */}
       <div
         className="pointer-events-none absolute inset-0"
         style={{
@@ -19,74 +18,53 @@ export function FooterTalha({ lang }: { lang: Locale }) {
         }}
       />
 
-      <div className="relative wrap py-10 lg:py-12">
-        {/* ── Top row: Logo + tagline ── */}
-        <div className="flex flex-col items-center md:flex-row md:items-center md:justify-between">
-          {/* Brand block */}
-          <div className="flex flex-col items-center gap-3 md:items-start">
-            <a href="#" className="flex items-center gap-3" aria-label="Pak-Palestine Forum">
-              <img
-                src="/images/PPF-logo.png"
-                alt="PPF"
-                width={48}
-                height={48}
-                className="rounded-lg object-contain"
-                loading="lazy"
-              />
-              <div>
-                <span className="font-display text-lg font-bold text-white">
-                  Pak-Palestine Forum
-                </span>
-                <span className="block text-xs text-white/50">{t.footer.tagline}</span>
-              </div>
-            </a>
-          </div>
-
+      <div className="relative wrap py-4 sm:py-8 md:py-10 lg:py-12 max-sm:pb-24">
+        {/* Brand — tighter on mobile */}
+        <div className="flex flex-col items-start text-left">
+          <a href="#" className="flex items-center gap-2.5 sm:gap-3" aria-label="Pak-Palestine Forum">
+            <img
+              src="/images/PPF-logo.png"
+              alt="PPF"
+              width={48}
+              height={48}
+              className="h-10 w-10 shrink-0 rounded-lg object-contain sm:h-12 sm:w-12"
+              loading="lazy"
+            />
+            <div>
+              <span className="font-display text-base font-bold text-white sm:text-lg">
+                Pak-Palestine Forum
+              </span>
+              <span className="block text-[11px] leading-tight text-white/50 sm:text-xs">
+                {t.footer.tagline}
+              </span>
+            </div>
+          </a>
         </div>
 
-        {/* ── Divider ── */}
-        <div className="my-8 h-px w-full bg-white/10" />
+        <div className="my-3 h-px w-full bg-white/10 sm:my-5 md:my-6" />
 
-        {/* ── Middle: 3-column grid ── */}
-        <div className="grid grid-cols-1 gap-10 text-center sm:grid-cols-3 sm:text-left">
-          {/* Nav links */}
-          <div>
-            <h4 className="mb-4 text-[10px] font-bold uppercase tracking-widest text-white/40">
+        {/*
+          Mobile: Navigate | Chapters side by side.
+          sm+: 3 columns with empty middle for spacing (matches header order in footer links).
+        */}
+        <div className="grid grid-cols-2 gap-x-4 gap-y-3 text-left sm:grid-cols-3 sm:gap-x-8 sm:gap-y-5">
+          <div className="col-start-1 row-start-1 min-w-0">
+            <h4 className="mb-1 text-[10px] font-bold uppercase tracking-widest text-white/40 sm:mb-2 md:mb-3">
               {lang === "en" ? "Navigate" : "نیویگیٹ"}
             </h4>
-            <ul className="space-y-2.5">
-              {[
-                { href: "#mission", label: nav.mission },
-                { href: "#presence", label: nav.where },
-                { href: "#impact", label: nav.impact },
-                { href: "#act", label: nav.act },
-              ].map((link) => (
-                <li key={link.href}>
-                  <a
-                    href={link.href}
-                    className="text-sm text-white/60 transition-colors hover:text-[var(--color-accent)]"
-                  >
-                    {link.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* More links */}
-          <div>
-            <h4 className="mb-4 text-[10px] font-bold uppercase tracking-widest text-white/40">
-              {lang === "en" ? "More" : "مزید"}
-            </h4>
-            <ul className="space-y-2.5">
+            <ul className="flex flex-col gap-1 sm:gap-1.5 md:gap-2">
               {[
                 { href: "#faq", label: nav.faq },
+                { href: "#mission", label: nav.mission },
+                { href: "#impact", label: nav.impact },
+                { href: "#presence", label: nav.where },
+                { href: "#act", label: nav.act },
                 { href: "#team", label: nav.team },
               ].map((link) => (
                 <li key={link.href}>
                   <a
                     href={link.href}
-                    className="text-sm text-white/60 transition-colors hover:text-[var(--color-accent)]"
+                    className="text-[13px] leading-snug text-white/60 transition-colors hover:text-[var(--color-accent)] sm:text-sm"
                   >
                     {link.label}
                   </a>
@@ -95,17 +73,18 @@ export function FooterTalha({ lang }: { lang: Locale }) {
             </ul>
           </div>
 
-          {/* Chapters */}
-          <div>
-            <h4 className="mb-4 text-[10px] font-bold uppercase tracking-widest text-white/40">
+          <div className="hidden sm:block sm:col-start-2 sm:row-start-1" aria-hidden />
+
+          <div className="col-start-2 row-start-1 min-w-0 sm:col-start-3">
+            <h4 className="mb-1 text-[10px] font-bold uppercase tracking-widest text-white/40 sm:mb-2 md:mb-3">
               {lang === "en" ? "Our Chapters" : "ہمارے چیپٹر"}
             </h4>
-            <ul className="space-y-2.5">
+            <ul className="grid grid-cols-1 gap-x-2 gap-y-1 sm:gap-x-4 sm:gap-y-2 max-sm:grid-cols-2">
               {chapters.map((city) => (
                 <li key={city}>
                   <a
                     href="#presence"
-                    className="text-sm text-white/60 transition-colors hover:text-[var(--color-accent)]"
+                    className="text-[13px] leading-snug text-white/60 transition-colors hover:text-[var(--color-accent)] sm:text-sm"
                   >
                     {city}
                   </a>
@@ -115,25 +94,29 @@ export function FooterTalha({ lang }: { lang: Locale }) {
           </div>
         </div>
 
-        {/* ── Divider ── */}
-        <div className="my-8 h-px w-full bg-white/10" />
+        <div className="my-3 h-px w-full bg-white/10 sm:my-5 md:my-6" />
 
-        {/* ── Bottom bar: copyright + social + legal ── */}
-        <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
-          <p className="text-xs text-white/40">
-            © {year} Pak-Palestine Forum. {lang === "en" ? "All rights reserved." : "جملہ حقوق محفوظ ہیں۔"}
-          </p>
-          <SocialIcons lang={lang} variant="footer" />
-          <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
-            <a href="#" className="text-xs text-white/40 transition-colors hover:text-white/70">
-              {lang === "en" ? "Privacy Policy" : "رازداری کی پالیسی"}
-            </a>
-            <a href="#" className="text-xs text-white/40 transition-colors hover:text-white/70">
-              {lang === "en" ? "Terms" : "شرائط"}
-            </a>
-            <a href="#" className="text-xs text-white/40 transition-colors hover:text-white/70">
-              {lang === "en" ? "Cookies" : "کوکیز"}
-            </a>
+        {/* Bottom: compact row on mobile; reserve right space for floating CTA */}
+        <div className="max-sm:pr-[7.5rem] flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-x-4 sm:gap-y-3 sm:pr-0">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+            <SocialIcons lang={lang} variant="footer" />
+          </div>
+          <div className="flex min-w-0 flex-col gap-1.5 text-left sm:items-end sm:text-right">
+            <p className="text-[11px] leading-snug text-white/40 sm:text-xs">
+              © {year} Pak-Palestine Forum.{" "}
+              {lang === "en" ? "All rights reserved." : "جملہ حقوق محفوظ ہیں۔"}
+            </p>
+            <div className="flex flex-wrap gap-x-3 gap-y-0.5">
+              <a href="#" className="text-[11px] text-white/40 transition-colors hover:text-white/70 sm:text-xs">
+                {lang === "en" ? "Privacy Policy" : "رازداری کی پالیسی"}
+              </a>
+              <a href="#" className="text-[11px] text-white/40 transition-colors hover:text-white/70 sm:text-xs">
+                {lang === "en" ? "Terms" : "شرائط"}
+              </a>
+              <a href="#" className="text-[11px] text-white/40 transition-colors hover:text-white/70 sm:text-xs">
+                {lang === "en" ? "Cookies" : "کوکیز"}
+              </a>
+            </div>
           </div>
         </div>
       </div>

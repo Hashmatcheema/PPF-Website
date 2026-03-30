@@ -18,12 +18,42 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
+}
+
+/* Fixed header offset for in-page anchors (nav + footer links) */
+section[id] {
+  scroll-margin-top: 5.5rem;
+}
+
+section#hero {
+  scroll-margin-top: 0;
+}
+
+/*
+ * Custom cursor — copied from talhacode/css/tailwind.css (pakpalforum).
+ * Red 3D inverted triangle (▽), native cursor image; hotspot at tip (14 25).
+ * Scoped to .ppf-marketing so /admin keeps default cursors.
+ */
+.ppf-marketing,
+.ppf-marketing *,
+.ppf-marketing *::before,
+.ppf-marketing *::after {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cpolygon points='15 27 3 3 27 3' fill='black' opacity='0.2'/%3E%3Cpolygon points='14 25 2 2 26 2' fill='red'/%3E%3Cpolygon points='2 2 26 2 14 11' fill='black' opacity='0.35'/%3E%3Cpolygon points='14 25 2 2 14 13' fill='white' opacity='0.1'/%3E%3Cpolygon points='14 25 26 2 14 13' fill='black' opacity='0.2'/%3E%3Cline x1='2' y1='2' x2='14' y2='25' stroke='white' stroke-width='0.7' stroke-linecap='round' opacity='0.25'/%3E%3C/svg%3E")
+      14 25,
+    auto !important;
+}
+
+.ppf-marketing input,
+.ppf-marketing textarea,
+.ppf-marketing select,
+.ppf-marketing [contenteditable="true"] {
+  cursor: text !important;
 }
 
 body {
   margin: 0;
-  font-family: "DM Sans", system-ui, sans-serif;
+  font-family: "Plus Jakarta Sans", "DM Sans", system-ui, sans-serif;
   font-weight: 500;
   font-size: 1rem;
   line-height: 1.6;
@@ -62,7 +92,8 @@ body {
 }
 
 .font-display {
-  font-family: "Syne", system-ui, sans-serif;
+  font-family: "Outfit", "Syne", system-ui, sans-serif;
+  font-feature-settings: "ss01" 1;
 }
 
 /* Logo title — matches typical logo typography (bold sans); replace with exact logo font if known */
@@ -72,12 +103,29 @@ body {
   letter-spacing: -0.02em;
 }
 
-/* Hero overlay: dark shadow in all modes to ensure text legibility */
+/* Hero overlay: gradient vignette — lighter so the photo reads; text uses .hero-text-shadow */
 .hero-overlay {
-  background: linear-gradient(to top,
-      rgba(10, 14, 12, 0.92) 0%,
-      rgba(10, 14, 12, 0.4) 50%,
-      rgba(10, 14, 12, 0.15) 100%);
+  background: linear-gradient(
+    to top,
+    rgba(5, 8, 6, 0.82) 0%,
+    rgba(5, 8, 6, 0.48) 38%,
+    rgba(5, 8, 6, 0.22) 58%,
+    rgba(5, 8, 6, 0.08) 100%
+  );
+}
+
+.hero-overlay--strong::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.14);
+  pointer-events: none;
+}
+
+.hero-text-shadow {
+  text-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.75),
+    0 6px 28px rgba(0, 0, 0, 0.45);
 }
 
 /* Card Shadows for Light and Dark Modes */

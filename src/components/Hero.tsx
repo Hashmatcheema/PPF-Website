@@ -22,31 +22,38 @@ export function Hero({ lang }: { lang: Locale }) {
   const tagline = slideCopy?.tagline ?? t.tagline
   const subtext = slideCopy?.subtext ?? t.heroSubtitle
 
+  const webpFor = (jpg: string) => jpg.replace(/\.(jpe?g|png)$/i, ".webp")
+
   return (
     <section id="hero" className="relative flex min-h-[100dvh] flex-col justify-end overflow-hidden">
       <div className="absolute inset-0">
         {slides.map((src, i) => (
-          <img
+          <picture
             key={src}
-            src={src}
-            alt=""
-            className="absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-1000 ease-in-out"
-            style={{ opacity: i === index ? 1 : 0 }}
-          />
+            className="absolute inset-0 block h-full w-full [&>img]:h-full [&>img]:w-full [&>img]:object-cover [&>img]:object-center"
+          >
+            <source type="image/webp" srcSet={webpFor(src)} />
+            <img
+              src={src}
+              alt=""
+              className="absolute inset-0 transition-opacity duration-1000 ease-in-out"
+              style={{ opacity: i === index ? 1 : 0 }}
+              loading={i === 0 ? "eager" : "lazy"}
+              fetchPriority={i === 0 ? "high" : "low"}
+              decoding="async"
+            />
+          </picture>
         ))}
-        <div
-          className="hero-overlay absolute inset-0"
-          aria-hidden
-        />
+        <div className="hero-overlay hero-overlay--strong absolute inset-0" aria-hidden />
       </div>
       <div className="hero-content wrap relative z-10 pb-[20vh] pt-32">
-        <p className="font-display text-sm font-semibold uppercase tracking-[0.35em] text-[var(--color-accent)]">
+        <p className="hero-text-shadow font-display text-sm font-semibold uppercase tracking-[0.35em] text-[var(--color-accent)]">
           {t.siteName}
         </p>
-        <h1 className="font-display mt-4 max-w-3xl text-4xl font-bold leading-[1.1] tracking-tight text-[var(--color-text)] sm:text-5xl md:text-6xl lg:text-7xl transition-opacity duration-500">
+        <h1 className="hero-text-shadow font-display mt-4 max-w-3xl text-4xl font-bold leading-[1.1] tracking-tight text-white sm:text-5xl md:text-6xl lg:text-7xl transition-opacity duration-500">
           {tagline}
         </h1>
-        <p className="mt-6 max-w-xl text-lg text-[var(--color-text-muted)] transition-opacity duration-500">
+        <p className="hero-text-shadow mt-6 max-w-xl text-lg text-white/90 transition-opacity duration-500">
           {subtext}
         </p>
       </div>

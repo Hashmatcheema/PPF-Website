@@ -1,78 +1,22 @@
 import { useRef, useEffect } from "react"
 import type { Locale } from "@/data/content"
 import { content } from "@/data/content"
+import { CityLandmarkIcon } from "@/components/CityLandmarkIcons"
+import {
+  PPF_NAV_SCROLL_END,
+  PPF_NAV_SCROLL_START,
+  type PpfNavScrollDetail,
+} from "@/lib/ppfNavScroll"
 
-/** Chapter card data: landmark + social links (from Talha). Use accent for border. */
+/** Landmarks + socials aligned with content order: Islamabad → Multan */
 const CHAPTERS_DATA = [
   { landmark: "Faisal Mosque", instagram: "https://www.instagram.com/pakpalforumisb", facebook: "https://www.facebook.com/pakpalforumisb" },
   { landmark: "Badshahi Mosque", instagram: "https://www.instagram.com/pakpalforumlhr", facebook: "https://www.facebook.com/pakpalforumlhr" },
   { landmark: "Mazar-e-Quaid", instagram: "https://www.instagram.com/pakpalforumkhi", facebook: "https://www.facebook.com/pakpalforumkhi" },
   { landmark: "Ghanta Ghar", instagram: "https://www.instagram.com/pakpalforumfsd", facebook: "https://www.facebook.com/pakpalforumfsd" },
+  { landmark: "Regional Chapter", instagram: "https://www.instagram.com/pakpalforum2", facebook: "https://www.facebook.com/share/18UtUumkQL/" },
   { landmark: "Shrine of Rukn-e-Alam", instagram: "https://www.instagram.com/pakpalforummultan", facebook: "https://www.facebook.com/pakpalforummultan" },
-  { landmark: "Chapter", instagram: "https://www.instagram.com/pakpalforum2", facebook: "https://www.facebook.com/share/18UtUumkQL/" },
 ]
-
-function CityLandmarkIcon({ index }: { index: number }) {
-  const cls = "h-14 w-14 text-[var(--color-accent)]"
-  const icons = [
-    <svg key="isb" viewBox="0 0 48 48" className={cls} fill="currentColor" aria-hidden>
-      <rect x="3" y="10" width="4" height="34" />
-      <polygon points="5,6 3,10 7,10" />
-      <rect x="41" y="10" width="4" height="34" />
-      <polygon points="43,6 41,10 45,10" />
-      <rect x="10" y="16" width="3" height="28" />
-      <polygon points="11.5,13 10,16 13,16" />
-      <rect x="35" y="16" width="3" height="28" />
-      <polygon points="36.5,13 35,16 38,16" />
-      <polygon points="24,8 11,38 37,38" />
-      <rect x="8" y="38" width="32" height="4" />
-      <rect x="5" y="42" width="38" height="4" />
-    </svg>,
-    <svg key="lhr" viewBox="0 0 48 48" className={cls} fill="currentColor" aria-hidden>
-      <rect x="1" y="10" width="5" height="36" />
-      <polygon points="3.5,6 1,10 6,10" />
-      <rect x="42" y="10" width="5" height="36" />
-      <polygon points="44.5,6 42,10 47,10" />
-      <rect x="10" y="16" width="4" height="30" />
-      <polygon points="12,13 10,16 14,16" />
-      <rect x="34" y="16" width="4" height="30" />
-      <polygon points="36,13 34,16 38,16" />
-      <path d="M17,28 Q17,14 24,14 Q31,14 31,28 Z" />
-      <rect x="14" y="26" width="20" height="4" />
-      <rect x="12" y="30" width="24" height="16" />
-      <rect x="5" y="46" width="38" height="2" />
-    </svg>,
-    <svg key="khi" viewBox="0 0 48 48" className={cls} fill="currentColor" aria-hidden>
-      <line x1="24" y1="2" x2="24" y2="8" stroke="currentColor" strokeWidth="2" />
-      <path d="M10,26 Q10,8 24,8 Q38,8 38,26 Z" />
-      <rect x="8" y="24" width="32" height="4" />
-      <rect x="7" y="28" width="34" height="16" />
-      <rect x="4" y="44" width="40" height="2" />
-    </svg>,
-    <svg key="fsd" viewBox="0 0 48 48" className={cls} fill="currentColor" aria-hidden>
-      <polygon points="24,1 22,8 26,8" />
-      <rect x="19" y="8" width="10" height="5" />
-      <rect x="21" y="13" width="6" height="6" />
-      <rect x="16" y="19" width="16" height="10" />
-      <circle cx="24" cy="24" r="4" fill="currentColor" fillOpacity="0.3" />
-      <rect x="17" y="29" width="14" height="13" />
-      <rect x="13" y="42" width="22" height="4" />
-    </svg>,
-    <svg key="mtn" viewBox="0 0 48 48" className={cls} fill="currentColor" aria-hidden>
-      <path d="M19,16 Q19,8 24,8 Q29,8 29,16 Z" />
-      <rect x="21" y="14" width="6" height="4" />
-      <polygon points="15,18 13,34 35,34 33,18" />
-      <polygon points="12,34 9,46 39,46 36,34" />
-      <rect x="7" y="46" width="34" height="2" />
-    </svg>,
-    <svg key="srg" viewBox="0 0 48 48" className={cls} fill="currentColor" aria-hidden>
-      <circle cx="24" cy="14" r="8" />
-      <path d="M10,38 Q10,24 24,24 Q38,24 38,38 Z" />
-      <rect x="0" y="38" width="48" height="8" />
-    </svg>,
-  ]
-  return icons[index] ?? icons[0]
-}
 
 /** Instagram icon — same as Talha's location section SocialIcon (platform === 'instagram') */
 function InstagramIcon({ className }: { className?: string }) {
@@ -99,9 +43,79 @@ export function LocationsTalha({ lang }: { lang: Locale }) {
   const t = content[lang].where
   const presenceSectionRef = useRef<HTMLElement>(null)
   const presenceScrollRef = useRef<HTMLDivElement>(null)
+  /** True while main nav is running a programmatic scroll (smooth/instant). */
+  const navProgrammaticScroll = useRef(false)
+  /**
+   * After landing on #presence via navbar: keep chapter strip at start until the user scrolls
+   * the page normally (wheel / keys). Does not affect vertical scroll mapping once unlocked.
+   */
+  const presenceHorizontalLockUntilUserScroll = useRef(false)
 
   useEffect(() => {
-    const handleScroll = () => {
+    let presenceUnlockTimer: ReturnType<typeof setTimeout> | null = null
+    let activeKeyHandler: ((ke: KeyboardEvent) => void) | null = null
+
+    const clearActiveKeyHandler = () => {
+      if (activeKeyHandler) {
+        window.removeEventListener("keydown", activeKeyHandler, true)
+        activeKeyHandler = null
+      }
+    }
+
+    const onNavStart = () => {
+      navProgrammaticScroll.current = true
+    }
+
+    const onNavEnd = (e: Event) => {
+      navProgrammaticScroll.current = false
+      const detail = (e as CustomEvent<PpfNavScrollDetail>).detail
+      if (detail?.targetId !== "presence" || !presenceScrollRef.current) return
+
+      if (presenceUnlockTimer !== null) {
+        window.clearTimeout(presenceUnlockTimer)
+        presenceUnlockTimer = null
+      }
+      clearActiveKeyHandler()
+
+      presenceScrollRef.current.scrollLeft = 0
+      presenceHorizontalLockUntilUserScroll.current = true
+
+      const cleanup = () => {
+        presenceHorizontalLockUntilUserScroll.current = false
+        if (presenceUnlockTimer !== null) {
+          window.clearTimeout(presenceUnlockTimer)
+          presenceUnlockTimer = null
+        }
+        clearActiveKeyHandler()
+      }
+
+      const onWheel = () => {
+        cleanup()
+      }
+
+      const onKey = (ke: KeyboardEvent) => {
+        if (
+          ke.key === " " ||
+          ke.key === "PageDown" ||
+          ke.key === "PageUp" ||
+          ke.key === "ArrowDown" ||
+          ke.key === "ArrowUp" ||
+          ke.key === "Home" ||
+          ke.key === "End"
+        ) {
+          cleanup()
+        }
+      }
+
+      activeKeyHandler = onKey
+      window.addEventListener("wheel", onWheel, { passive: true, once: true })
+      window.addEventListener("keydown", onKey, true)
+      presenceUnlockTimer = window.setTimeout(cleanup, 8000)
+    }
+
+    const handleWindowScroll = () => {
+      if (navProgrammaticScroll.current) return
+      if (presenceHorizontalLockUntilUserScroll.current) return
       if (!presenceSectionRef.current || !presenceScrollRef.current) return
       const rect = presenceSectionRef.current.getBoundingClientRect()
       const total = rect.height - window.innerHeight
@@ -110,8 +124,17 @@ export function LocationsTalha({ lang }: { lang: Locale }) {
       const el = presenceScrollRef.current
       el.scrollLeft = progress * (el.scrollWidth - el.clientWidth)
     }
-    window.addEventListener("scroll", handleScroll, { passive: true })
-    return () => window.removeEventListener("scroll", handleScroll)
+
+    window.addEventListener(PPF_NAV_SCROLL_START, onNavStart)
+    window.addEventListener(PPF_NAV_SCROLL_END, onNavEnd)
+    window.addEventListener("scroll", handleWindowScroll, { passive: true })
+    return () => {
+      window.removeEventListener(PPF_NAV_SCROLL_START, onNavStart)
+      window.removeEventListener(PPF_NAV_SCROLL_END, onNavEnd)
+      window.removeEventListener("scroll", handleWindowScroll)
+      if (presenceUnlockTimer !== null) window.clearTimeout(presenceUnlockTimer)
+      clearActiveKeyHandler()
+    }
   }, [])
 
   const chapters = t.chapters
