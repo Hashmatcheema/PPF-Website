@@ -28,11 +28,13 @@ function formatNum(n: number, decimals: number): string {
 export function AnimatedStatValue({ value, className }: { value: string; className?: string }) {
   const ref = useRef<HTMLSpanElement>(null)
   const { prefix, num, decimals, suffix, skip } = parseStatParts(value)
-  const [shown, setShown] = useState(skip ? num : 0)
+  // Avoid confusing intermediate values (e.g. "30+") for large stats during the count-up.
+  const shouldAnimate = !skip && num < 100
+  const [shown, setShown] = useState(shouldAnimate ? 0 : num)
   const started = useRef(false)
 
   useEffect(() => {
-    if (skip) return
+    if (!shouldAnimate) return
     const el = ref.current
     if (!el) return
     const obs = new IntersectionObserver(
@@ -54,12 +56,12 @@ export function AnimatedStatValue({ value, className }: { value: string; classNa
     )
     obs.observe(el)
     return () => obs.disconnect()
-  }, [num, skip])
+  }, [num, shouldAnimate])
 
-  if (skip) {
+  if (!shouldAnimate) {
     return (
       <span ref={ref} className={className}>
-        {value}
+        {skip ? value : `${prefix}${formatNum(num, decimals)}${suffix}`}
       </span>
     )
   }
