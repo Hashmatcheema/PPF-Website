@@ -51,6 +51,20 @@ export const content = {
         "Our mission is to advance the Palestinian cause - the freedom of Palestine and the liberation of Al-Aqsa - by mobilizing and empowering Pakistani society to engage in informed, principled, and sustained solidarity for Palestine.",
       objectives:
         "Pak-Palestine Forum is committed to actively supporting the Palestinian cause through peaceful yet powerful means, including activism, public awareness, boycott movements, relief efforts, and diplomatic engagement. In the long term, the platform seeks to empower Pakistani youth, women, and future generations to be aware, active, and principled in defending their values and advocating for Palestine. By connecting, supporting, and uniting pro-Palestinian voices, and engaging with notable figures across Pakistan, the Forum aims to strengthen sustained solidarity for the freedom of Palestine and the liberation of Al-Aqsa.",
+      objectivePoints: [
+        {
+          title: "Activism & awareness",
+          body: "Pak-Palestine Forum is committed to actively supporting the Palestinian cause through peaceful yet powerful means, including activism, public awareness, boycott movements, relief efforts, and diplomatic engagement.",
+        },
+        {
+          title: "Empowerment",
+          body: "In the long term, the platform seeks to empower Pakistani youth, women, and future generations to be aware, active, and principled in defending their values and advocating for Palestine.",
+        },
+        {
+          title: "Solidarity & voices",
+          body: "By connecting, supporting, and uniting pro-Palestinian voices, and engaging with notable figures across Pakistan, the Forum aims to strengthen sustained solidarity for the freedom of Palestine and the liberation of Al-Aqsa.",
+        },
+      ],
       cards: [
         { title: "Activism & Awareness", body: "Raising awareness, peaceful protests, advocacy, community engagement, and promoting initiatives such as boycotts to support the Palestinian cause." },
         { title: "Relief & Aid", body: "Channel resources and efforts toward those most in need. Delivering aid through partner organizations and supporting families in Gaza." },
@@ -294,6 +308,20 @@ export const content = {
         "ہمارا مشن فلسطینی کاز کو آگے بڑھانا ہے — فلسطین کی آزادی اور المسجد الاقصیٰ کی آزادی — باخبر، اصول پسند اور پائیدار یکجہتی کے لیے پاکستانی معاشرے کو متحرک اور بااختیار بنانا، خاص طور پر فلسطین کے لیے۔",
       objectives:
         "پاک-فلسطین فورم فلسطینی کاز کی بھرپور حمایت کے لیے پرامن مگر مؤثر ذرائع سے وابستہ ہے، جن میں فعالیت، عوامی آگاہی، بائیکاٹ کی تحریکیں، امدادی کوششیں اور سفارتی یا سیاسی رابطے شامل ہیں۔ طویل مدت میں پلیٹ فارم پاکستانی نوجوانوں، خواتین اور آنے والی نسلوں کو باخبر، فعال اور اصول پسند بنا کر اپنی اقدار کے دفاع اور فلسطین کی وکالت کے لیے تیار کرنا چاہتا ہے۔ پرو-فلسطینی آوازوں کو جوڑ کر، سپورٹ کر کے اور یکجا کر کے، اور پاکستان بھر کے نمایاں افراد سے مشغول ہو کر، فورم فلسطین کی آزادی اور المسجد الاقصیٰ کی آزادی کے لیے پائیدار یکجہتی مضبوط بنانے کا ہدف رکھتا ہے۔",
+      objectivePoints: [
+        {
+          title: "فعالیت اور آگاہی",
+          body: "پاک-فلسطین فورم فلسطینی کاز کی بھرپور حمایت کے لیے پرامن مگر مؤثر ذرائع سے وابستہ ہے، جن میں فعالیت، عوامی آگاہی، بائیکاٹ کی تحریکیں، امدادی کوششیں اور سفارتی یا سیاسی رابطے شامل ہیں۔",
+        },
+        {
+          title: "بااختیار بنانا",
+          body: "طویل مدت میں پلیٹ فارم پاکستانی نوجوانوں، خواتین اور آنے والی نسلوں کو باخبر، فعال اور اصول پسند بنا کر اپنی اقدار کے دفاع اور فلسطین کی وکالت کے لیے تیار کرنا چاہتا ہے۔",
+        },
+        {
+          title: "یکجہتی اور آوازیں",
+          body: "پرو-فلسطینی آوازوں کو جوڑ کر، سپورٹ کر کے اور یکجا کر کے، اور پاکستان بھر کے نمایاں افراد سے مشغول ہو کر، فورم فلسطین کی آزادی اور المسجد الاقصیٰ کی آزادی کے لیے پائیدار یکجہتی مضبوط بنانے کا ہدف رکھتا ہے۔",
+        },
+      ],
       cards: [
         { title: "فعالیت اور آگاہی", body: "فلسطینی مقصد کی حمایت کے لیے آگاہی، پرامن احتجاج، وکالت، کمیونٹی کی مصروفیت اور بائیکاٹ جیسے اقدامات کو فروغ دینا۔" },
         { title: "امداد", body: "وسائل اور کوششوں کو ان لوگوں کی طرف موڑنا جو سب سے زیادہ ضرورت مند ہیں۔ پارٹنر تنظیموں کے ذریعے امداد اور غزہ میں خاندانوں کی حمایت۔" },
