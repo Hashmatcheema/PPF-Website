@@ -50,7 +50,12 @@ export function Hero({ lang }: { lang: Locale }) {
         <p className="hero-text-shadow font-display text-xs font-semibold uppercase tracking-[0.25em] text-[var(--color-accent)] sm:text-sm sm:tracking-[0.35em]">
           {t.siteName}
         </p>
-        <h1 className="hero-text-shadow font-display mt-3 max-w-full text-balance break-words text-3xl font-bold leading-[1.12] tracking-tight text-white sm:mt-4 sm:max-w-3xl sm:text-5xl md:text-6xl lg:text-7xl transition-opacity duration-500">
+        {"heroSubtitle" in t && t.heroSubtitle ? (
+          <p className="hero-text-shadow mt-3 max-w-full text-pretty break-words text-base leading-relaxed text-white/90 sm:mt-4 sm:max-w-3xl sm:text-lg">
+            {t.heroSubtitle}
+          </p>
+        ) : null}
+        <h1 className="hero-text-shadow font-display mt-4 max-w-full text-balance break-words text-3xl font-bold leading-[1.12] tracking-tight text-white sm:mt-5 sm:max-w-3xl sm:text-5xl md:text-6xl lg:text-7xl transition-opacity duration-500">
           {tagline}
         </h1>
         <p className="hero-text-shadow mt-4 max-w-full text-pretty break-words text-base text-white/90 sm:mt-6 sm:max-w-xl sm:text-lg transition-opacity duration-500">
