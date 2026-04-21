@@ -35,13 +35,15 @@ export function Impact({ lang }: { lang: Locale }) {
           </p>
           <div className="h-px w-8 bg-[var(--color-accent)]" />
         </div>
-        <h2 className="font-display mt-4 text-center text-3xl font-semibold text-white md:text-4xl">
+        <h2 className="font-display mt-4 text-center text-balance break-words text-3xl font-semibold text-white md:text-4xl">
           {t.title}
         </h2>
-        <p className="mx-auto mt-3 max-w-xl text-center text-white/80">{t.intro}</p>
+        <p className="mx-auto mt-3 max-w-xl px-1 text-center text-pretty break-words text-white/80 sm:px-0">
+          {t.intro}
+        </p>
         <div className="mt-16 flex flex-col gap-6 border-y border-white/20 py-8 sm:gap-8 md:flex-row md:items-start md:justify-between md:gap-12 md:py-12 lg:gap-16">
           {t.stats.map((stat, i) => (
-            <div key={i} className="text-left md:flex-1 md:text-center">
+            <div key={i} className="min-w-0 text-left md:flex-1 md:text-center">
               <AnimatedStatValue
                 value={stat.value}
                 className="font-display text-4xl font-bold text-[var(--color-accent)] md:text-5xl"
@@ -65,7 +67,7 @@ export function Impact({ lang }: { lang: Locale }) {
                 >
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <p className="text-sm leading-relaxed text-white/90">
+                <p className="min-w-0 text-pretty break-words text-sm leading-relaxed text-white/90">
                   {item}
                 </p>
               </div>

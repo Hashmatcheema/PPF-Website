@@ -1,6 +1,7 @@
 import { useState } from "react"
 import type { Locale } from "@/data/content"
 import { content } from "@/data/content"
+import { FaqJoinHowAnswer } from "@/components/FaqJoinHowAnswer"
 
 export function FAQ({ lang }: { lang: Locale }) {
   const t = content[lang].faq
@@ -31,8 +32,12 @@ export function FAQ({ lang }: { lang: Locale }) {
                 </span>
               </button>
               {open === i && (
-                <p className="pb-5 pr-8 text-sm leading-relaxed text-[var(--color-text-muted)]">
-                  {item.a}
+                <p className="whitespace-pre-line pb-5 pr-8 text-sm leading-relaxed text-[var(--color-text-muted)]">
+                  {"rich" in item && item.rich === "joinHow" ? (
+                    <FaqJoinHowAnswer lang={lang} />
+                  ) : (
+                    "a" in item && item.a
+                  )}
                 </p>
               )}
             </div>

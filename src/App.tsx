@@ -16,8 +16,8 @@ import type { Locale } from "@/data/content"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 
 const SEO_TITLES: Record<Locale, string> = {
-  en: "Pak-Palestine Forum — A United Stand for Palestine",
-  ur: "پاک فلسطین فورم — فلسطین کے لیے متحدہ موقف",
+  en: "Pak Palestine Forum - PPF",
+  ur: "پاک فلسطین فورم - PPF",
 }
 const SEO_DESCRIPTIONS: Record<Locale, string> = {
   en: "A united platform based in Pakistan, dedicated to supporting the Palestinian cause. Answer the call to stand for Al-Aqsa and Palestine.",
@@ -52,7 +52,7 @@ function MainSite() {
   }, [lang])
 
   return (
-    <div className="ppf-marketing min-h-screen bg-[var(--color-bg)]">
+    <div className="ppf-marketing min-h-screen min-w-0 bg-[var(--color-bg)]">
       <Header lang={lang} setLang={setLang} />
       <main>
         <Hero lang={lang} />

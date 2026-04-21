@@ -1,3 +1,4 @@
+import { ChevronLeft, ChevronRight } from "lucide-react"
 import type { Locale } from "@/data/content"
 import { content } from "@/data/content"
 
@@ -41,9 +42,10 @@ function JoinRoleIcon({ index }: { index: number }) {
   return icons[index] ?? icons[0]
 }
 
-/** Join PPF section — Talha layout (badge, heading, CTA, role cards grid) with app color scheme */
+/** Join PPF — ways to take part (static list) + primary Join Us link to volunteer form */
 export function JoinPPFTalha({ lang }: { lang: Locale }) {
   const t = content[lang].join
+  const volunteerFormUrl = content[lang].contact.volunteer.formUrl
   return (
     <section id="act" aria-labelledby="join-heading" className="bg-black">
       <div className="wrap pb-10 pt-20">
@@ -56,45 +58,75 @@ export function JoinPPFTalha({ lang }: { lang: Locale }) {
         </div>
         <h2
           id="join-heading"
-          className="font-display mt-4 text-center text-3xl font-semibold text-[var(--color-text)] md:text-4xl"
+          className="font-display mt-4 text-center text-balance break-words text-3xl font-semibold text-[var(--color-text)] md:text-4xl"
         >
           {t.h2}
         </h2>
-        <p className="mx-auto mt-5 max-w-2xl text-center text-base text-[var(--color-text-muted)] sm:text-lg">
+        <p className="mx-auto mt-5 max-w-2xl px-1 text-center text-pretty break-words text-base text-[var(--color-text-muted)] sm:px-0 sm:text-lg">
           {t.p}
         </p>
       </div>
-      <div className="mx-auto max-w-5xl px-4 pb-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {t.ways.map((way, i) => (
-            <div
-              key={i}
-              className="group relative overflow-hidden rounded-xl border border-white/10 bg-white/[0.06] p-5 backdrop-blur-sm transition hover:border-white/20 hover:bg-white/[0.08]"
+      <div className="mx-auto max-w-5xl px-4 pb-12 sm:px-6 lg:px-8">
+        <div className="-mx-4 sm:mx-0">
+          <p className="mb-2 flex items-center justify-center gap-1.5 px-4 text-center text-[9px] font-medium leading-none text-[var(--color-text-muted)] sm:hidden">
+            <ChevronLeft className="size-3 shrink-0 opacity-60" strokeWidth={2} aria-hidden />
+            <span>
+              {lang === "en"
+                ? "Swipe sideways to see all ways to help"
+                : "بائیں یا دائیں سوائپ کریں — تمام طریقے دیکھیں"}
+            </span>
+            <ChevronRight className="size-3 shrink-0 opacity-60" strokeWidth={2} aria-hidden />
+          </p>
+          <div
+            role="region"
+            aria-label={lang === "en" ? "Ways to get involved, scroll horizontally" : "شامل ہونے کے طریقے، افقی سکرول"}
+            className="overflow-x-auto overflow-y-visible overscroll-x-contain px-5 pb-3 [-webkit-overflow-scrolling:touch] [scrollbar-width:thin] scroll-ps-5 scroll-pe-5 snap-x snap-mandatory scroll-smooth sm:scroll-p-0 sm:overflow-visible sm:px-0 sm:pb-0 sm:snap-none"
+          >
+            <ul
+              className="m-0 flex w-max list-none flex-nowrap gap-6 py-0.5 ps-0 pe-0 sm:grid sm:w-auto sm:grid-cols-2 sm:gap-4 sm:overflow-visible sm:py-0 lg:grid-cols-3"
+              aria-label={lang === "en" ? "Ways to get involved" : "شامل ہونے کے طریقے"}
             >
-              <span
-                className="pointer-events-none absolute right-3 top-1 select-none text-8xl font-black leading-none text-white/[0.06]"
-                aria-hidden
-              >
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <div className="pb-2">
-                <JoinRoleIcon index={i} />
-              </div>
-              <div>
-                <h3 className="text-sm font-bold leading-snug text-[var(--color-text)]">
-                  {way.title}
-                </h3>
-                <p className="mt-2 text-xs leading-relaxed text-[var(--color-text-muted)]">
-                  {way.short}
-                </p>
-              </div>
-            </div>
-          ))}
+              {t.ways.map((way, i) => (
+                <li
+                  key={i}
+                  className="relative aspect-square w-[min(10.75rem,calc(100vw-3.25rem))] shrink-0 snap-center cursor-default rounded-lg border-y border-r border-white/[0.08] border-l-4 border-l-[var(--color-accent)] bg-white/[0.03] p-3 sm:snap-normal sm:aspect-auto sm:w-auto sm:min-w-0 sm:p-4 sm:p-5"
+                >
+                  <span
+                    className="pointer-events-none absolute right-1.5 top-1.5 select-none font-display text-2xl font-bold leading-none text-white/[0.07] sm:right-3 sm:top-3 sm:text-4xl"
+                    aria-hidden
+                  >
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <div className="relative flex h-full min-h-0 flex-col items-center justify-center gap-2 px-0.5 text-center sm:h-auto sm:flex-row sm:items-start sm:justify-start sm:gap-4 sm:px-0 sm:text-left">
+                    <div className="shrink-0 scale-[0.88] sm:scale-100 sm:pt-0.5">
+                      <JoinRoleIcon index={i} />
+                    </div>
+                    <div className="min-w-0 max-w-full sm:pr-6">
+                      <h3 className="line-clamp-3 text-xs font-semibold leading-snug text-[var(--color-text)] sm:line-clamp-none sm:text-sm">
+                        {way.title}
+                      </h3>
+                      <p className="mt-1 line-clamp-3 text-[11px] leading-relaxed text-[var(--color-text-muted)] sm:mt-1.5 sm:line-clamp-none sm:text-xs">
+                        {way.short}
+                      </p>
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <div className="mt-10 flex justify-center px-1 sm:mt-12 sm:px-0">
+          <a
+            href={volunteerFormUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex h-12 w-full max-w-xs items-center justify-center rounded-md bg-[var(--color-accent)] px-6 text-sm font-semibold text-[var(--color-bg)] transition-colors hover:bg-[var(--color-accent-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)] sm:w-auto sm:max-w-none sm:min-w-[11rem] sm:px-8"
+          >
+            {t.cta}
+          </a>
         </div>
       </div>
-      <p className="px-6 pb-16 pt-8 text-center text-sm text-[var(--color-text-muted)]">
-        {t.footer}
-      </p>
     </section>
   )
 }

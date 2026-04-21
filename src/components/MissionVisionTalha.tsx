@@ -21,11 +21,11 @@ export function MissionVisionTalha({ lang }: { lang: Locale }) {
         </div>
         <h2
           id="vision-heading"
-          className="font-display mt-4 text-center text-3xl font-semibold text-[var(--color-text)] md:text-4xl"
+          className="font-display mt-4 text-center text-balance break-words text-3xl font-semibold text-[var(--color-text)] md:text-4xl"
         >
           {t.title}
         </h2>
-        <p className="mx-auto mt-6 max-w-4xl text-center text-lg leading-relaxed text-[var(--color-text-muted)]">
+        <p className="mx-auto mt-6 max-w-4xl px-1 text-center text-pretty break-words text-lg leading-relaxed text-[var(--color-text-muted)] sm:px-0">
           {t.intro}
         </p>
       </div>
@@ -37,7 +37,7 @@ export function MissionVisionTalha({ lang }: { lang: Locale }) {
             </h3>
             <ul className="mt-4 flex flex-col items-center gap-4">
               {t.cards.map((card, i) => (
-                <li key={i} className="flex max-w-xl items-start gap-3 text-left text-[var(--color-text-muted)]">
+                <li key={i} className="flex max-w-xl min-w-0 items-start gap-3 text-left text-[var(--color-text-muted)]">
                   <span
                     className="mt-1 flex-shrink-0 text-[var(--color-accent)]"
                     aria-hidden
@@ -50,7 +50,7 @@ export function MissionVisionTalha({ lang }: { lang: Locale }) {
                       />
                     </svg>
                   </span>
-                  <span>
+                  <span className="min-w-0 text-pretty break-words">
                     <strong className="text-[var(--color-text)]">{card.title}</strong>
                     {" — "}
                     {card.body}
@@ -60,8 +60,8 @@ export function MissionVisionTalha({ lang }: { lang: Locale }) {
             </ul>
             {"objectives" in t && t.objectives && (
               <div className="mt-7 text-left">
-              <p className="max-w-xl text-[var(--color-text-muted)]">{t.objectives}</p>
-            </div>
+                <p className="max-w-xl text-pretty break-words text-[var(--color-text-muted)]">{t.objectives}</p>
+              </div>
             )}
           </div>
           <div className="relative h-80 overflow-hidden rounded-xl shadow-2xl ring-1 ring-[var(--color-border)] sm:h-96 lg:min-h-[480px]">

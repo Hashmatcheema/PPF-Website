@@ -44,14 +44,11 @@ export function FooterTalha({ lang }: { lang: Locale }) {
         <div className="my-3 h-px w-full bg-white/10 sm:my-5 md:my-6" />
 
         {/*
-          Mobile: Navigate | Chapters side by side.
+          Mobile: nav links | Chapters side by side.
           sm+: 3 columns with empty middle for spacing (matches header order in footer links).
         */}
         <div className="grid grid-cols-2 gap-x-4 gap-y-3 text-left sm:grid-cols-3 sm:gap-x-8 sm:gap-y-5">
           <div className="col-start-1 row-start-1 min-w-0">
-            <h4 className="mb-1 text-[10px] font-bold uppercase tracking-widest text-white/40 sm:mb-2 md:mb-3">
-              {lang === "en" ? "Navigate" : "نیویگیٹ"}
-            </h4>
             <ul className="flex flex-col gap-1 sm:gap-1.5 md:gap-2">
               {[
                 { href: "#faq", label: nav.faq },

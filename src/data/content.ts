@@ -4,8 +4,33 @@ export const content = {
     tagline: "Stand in Solidarity.",
     heroSubtitle:
       "Pak-Palestine Forum brings together voices and actions for justice, relief, and lasting change.",
-    nav: { mission: "Mission", where: "Where We Exist", impact: "Impact", act: "Get Involved", faq: "FAQ", team: "Team", contact: "Contact" },
+    nav: {
+      mission: "Vision",
+      where: "Our Chapters",
+      impact: "Our Impact",
+      act: "Join Us",
+      faq: "FAQs",
+      team: "Team",
+      contact: "Contact",
+    },
     cta: { join: "Join Us", volunteer: "Volunteer", donate: "Donate" },
+    floatingBar: {
+      contactBtn: "Contact us",
+      eventBtn: "Pakistanis March For Gaza",
+      contactTitle: "Contact us",
+      contactHint: "Reach the Pak-Palestine Forum team.",
+      whatsappLabel: "WhatsApp",
+      emailLabel: "Email",
+      phoneDisplay: "+92 340 4555542",
+      /** E.164 without + for wa.me */
+      phoneWaDigits: "923404555542",
+      email: "pakpalforum@gmail.com",
+      eventTitle: "Pakistanis March For Gaza",
+      eventBody:
+        "Stand with Palestine in the streets. Dates, cities, and how to join will be shared on our channels — follow PPF so you do not miss the march.",
+      close: "Close",
+      dismissOverlay: "Close dialog",
+    },
     heroSlides: [
       { tagline: "A United Stand for Palestine", subtext: "Answer the call to stand for Al-Aqsa and Palestine." },
       { tagline: "Solidarity Beyond Borders", subtext: "Join a united stand from Pakistan for Palestine." },
@@ -47,8 +72,11 @@ export const content = {
     faq: {
       title: "Frequently Asked Questions",
       items: [
-        { q: "What is Pak-Palestine Forum?", a: "The Pak-Palestine Forum is a united platform based in Pakistan that works to support the Palestinian cause, particularly the liberation of Al-Aqsa and the freedom of Palestine. Our mission is to empower both the people of Pakistan and the state through awareness, engagement, and collective action. By strengthening public understanding and readiness, we aim to encourage a more active and principled role in defending our shared values, fundamental rights, and the Palestinian cause." },
-        { q: "How can I join PPF?", a: "Getting involved is easy. Sign up through our registration form for volunteering, or send donations to our provided number. Every effort counts." },
+        {
+          q: "What is Pak-Palestine Forum?",
+          a: "The Pak-Palestine Forum is a united platform based in Pakistan that works to support the Palestinian cause, particularly the liberation of Al-Aqsa and the freedom of Palestine.\n\nOur mission is to empower both the people of Pakistan and the state through awareness, engagement, and collective action. By strengthening public understanding and readiness, we aim to encourage a more active and principled role in defending our shared values, fundamental rights, and the Palestinian cause.",
+        },
+        { q: "How can I join PPF?", rich: "joinHow" as const },
         { q: "How Can I Make a Difference for Gaza as a Pakistani?", a: "Pakistanis can support Gaza in several ways: by spreading awareness on social media, participating in peaceful protests, observing and promoting boycotts of companies linked to the oppression of Palestinians, and donating to credible organizations providing relief for Gaza. Individuals can also become a voice for Palestine in their own circles and educate themselves about Palestinian history and the conflict so they can advocate more effectively." },
         { q: "What is Activism?", a: "Activism means taking action to create change. It involves using your voice and efforts to challenge injustice and hold those in power accountable in order to bring positive change in society. In the context of the Pak–Palestine Forum, activism includes raising awareness, peaceful protests, advocacy, community engagement, and promoting initiatives such as boycotts to support the Palestinian cause. At its core, activism is about standing against injustice and working collectively for a more just and ethical world." },
         { q: "Do Protests and Solidarity Efforts Help the Palestinian Cause?", a: "Protests and public solidarity raise awareness, keep the issue visible, and build public pressure on governments, institutions, and companies to take action. They also show Palestinians that they are not alone in their struggle, while helping mobilize communities to support the cause through advocacy, boycotts, and humanitarian efforts." },
@@ -57,7 +85,7 @@ export const content = {
       ],
     },
     where: {
-      title: "Where We Exist",
+      title: "PPF TEAMS ACROSS CITIES OF PAKISTAN",
       intro: "Our geographical presence and reach.",
       overlay: "Pakistan · Regional Hubs · International Partners",
       chapters: ["Islamabad", "Lahore", "Karachi", "Faisalabad", "Sargodha", "Multan"],
@@ -123,7 +151,7 @@ export const content = {
         cta: "Donate now",
         contactName: "Maria Paracha",
         contactRole: "Relief Head",
-        contactPhone: "+92 334 8850777",
+        contactPhone: "+92 340 4555542",
       },
       form: { title: "Send a message", name: "Name", email: "Email", message: "Message", send: "Send" },
       social: [
@@ -140,7 +168,6 @@ export const content = {
       h2: "Join Pak-Palestine Forum — Volunteer Opportunities",
       p: "Pak-Palestine Forum welcomes volunteers, professionals, and organizations to contribute to humanitarian and advocacy initiatives.",
       cta: "Join Us",
-      footer: "The forum emphasizes collective civic engagement and voluntary participation to create meaningful impact.",
       ways: [
         { title: "Volunteer for Campaigns", short: "On-ground activism & event coordination" },
         { title: "Support Awareness Initiatives", short: "Content creation & public outreach" },
@@ -163,8 +190,32 @@ export const content = {
     siteName: "پاک فلسطین فورم",
     tagline: "یکجہتی میں کھڑے ہوں۔",
     heroSubtitle: "پاک فلسطین فورم انصاف، امداد اور پائیدار تبدیلی کے لیے آوازیں اور اقدامات کو یکجا کرتا ہے۔",
-    nav: { mission: "مشن", where: "ہم کہاں موجود ہیں", impact: "اثر", act: "شامل ہوں", faq: "سوالات", team: "ٹیم", contact: "رابطہ" },
+    nav: {
+      mission: "ویژن",
+      where: "ہمارے چیپٹر",
+      impact: "ہمارا اثر",
+      act: "شامل ہوں",
+      faq: "سوالات",
+      team: "ٹیم",
+      contact: "رابطہ",
+    },
     cta: { join: "شامل ہوں", volunteer: "رضاکار", donate: "عطیہ" },
+    floatingBar: {
+      contactBtn: "ہم سے رابطہ",
+      eventBtn: "غزہ کے لیے پاکستانی مارچ",
+      contactTitle: "ہم سے رابطہ",
+      contactHint: "پاک فلسطین فورم کی ٹیم تک پہنچیں۔",
+      whatsappLabel: "واٹس ایپ",
+      emailLabel: "ای میل",
+      phoneDisplay: "+92 340 4555542",
+      phoneWaDigits: "923404555542",
+      email: "pakpalforum@gmail.com",
+      eventTitle: "غزہ کے لیے پاکستانی مارچ",
+      eventBody:
+        "فلسطین کے ساتھ سڑکوں پر یکجہتی۔ تاریخیں، شہروں کی تفصیل اور شرکت کا طریقہ ہمارے چینلز پر شیئر کیا جائے گا — پی پی ایف فالو کریں تاکہ مارچ کی تازہ خبریں نہ چھوٹیں۔",
+      close: "بند کریں",
+      dismissOverlay: "باکس بند کریں",
+    },
     heroSlides: [
       { tagline: "فلسطین کے لیے متحدہ موقف", subtext: "الاقصیٰ اور فلسطین کے لیے کھڑے ہونے کی دعوت کا جواب دیں۔" },
       { tagline: "سرحدوں سے پرے یکجہتی", subtext: "فلسطین کے لیے پاکستان سے متحدہ موقف میں شامل ہوں۔" },
@@ -206,8 +257,11 @@ export const content = {
     faq: {
       title: "اکثر پوچھے گئے سوالات",
       items: [
-        { q: "پاک فلسطین فورم کیا ہے؟", a: "پاک فلسطین فورم پاکستان میں قائم ایک متحد پلیٹ فارم ہے جو فلسطینی مقصد، خاص طور پر الاقصیٰ کی آزادی اور فلسطین کی آزادی کی حمایت کے لیے کام کرتا ہے۔ ہمارا مشن بیداری، مشغولیت اور اجتماعی عمل کے ذریعے پاکستان کے عوام اور ریاست دونوں کو بااختیار بنانا ہے۔" },
-        { q: "میں PPF میں کیسے شامل ہو سکتا ہوں؟", a: "شامل ہونا آسان ہے۔ رضاکاری کے لیے ہمارے رجسٹریشن فارم کے ذریعے سائن اپ کریں، یا ہمارے فراہم کردہ نمبر پر عطیہ بھیجیں۔ ہر کوشش شمار ہوتی ہے۔" },
+        {
+          q: "پاک فلسطین فورم کیا ہے؟",
+          a: "پاک فلسطین فورم پاکستان میں قائم ایک متحد پلیٹ فارم ہے جو فلسطینی مقصد، خاص طور پر الاقصیٰ کی آزادی اور فلسطین کی آزادی کی حمایت کے لیے کام کرتا ہے۔\n\nہمارا مشن بیداری، مشغولیت اور اجتماعی عمل کے ذریعے پاکستان کے عوام اور ریاست دونوں کو بااختیار بنانا ہے۔",
+        },
+        { q: "میں PPF میں کیسے شامل ہو سکتا ہوں؟", rich: "joinHow" as const },
         { q: "میں ایک پاکستانی کے طور پر غزہ کے لیے کیسے فرق بنا سکتا ہوں؟", a: "پاکستانی سوشل میڈیا پر آگاہی پھیلا کر، پرامن احتجاج میں حصہ لے کر، فلسطینیوں کے مظالم سے وابستہ کمپنیوں کے بائیکاٹ کا مشاہدہ اور پروموٹ کر کے، اور غزہ کے لیے ریلیف فراہم کرنے والی credible تنظیموں کو عطیہ دے کر غزہ کی حمایت کر سکتے ہیں۔" },
         { q: "فعالیت کیا ہے؟", a: "فعالیت کا مطلب تبدیلی لانے کے لیے عمل کرنا ہے۔ پاک فلسطین فورم کے تناظر میں، activism میں آگاہی، پرامن احتجاج، وکالت، کمیونٹی کی مصروفیت اور فلسطینی مقصد کی حمایت کے لیے بائیکاٹ جیسے اقدامات کو فروغ دینا شامل ہے۔" },
         { q: "کیا احتجاج اور یکجہتی کی کوششیں فلسطینی مقصد میں مدد کرتی ہیں؟", a: "احتجاج اور عوامی یکجہتی آگاہی بڑھاتی ہے، مسئلے کو نظر میں رکھتی ہے، اور حکومتوں، اداروں اور کمپنیوں پر عمل کرنے کے لیے عوامی دباؤ بناتی ہے۔ وہ فلسطینیوں کو یہ بھی دکھاتی ہیں کہ وہ اپنی جدوجہد میں اکیلے نہیں ہیں۔" },
@@ -216,7 +270,7 @@ export const content = {
       ],
     },
     where: {
-      title: "ہم کہاں موجود ہیں",
+      title: "پاکستان کے شہروں میں پی پی ایف کی ٹیمیں",
       intro: "ہماری جغرافیائی موجودگی اور رسائی۔",
       overlay: "پاکستان · علاقائی مراکز · بین الاقوامی شراکت دار",
       chapters: ["اسلام آباد", "لاہور", "کراچی", "فیصل آباد", "سرگودھا", "ملتان"],
@@ -282,7 +336,7 @@ export const content = {
         cta: "ابھی عطیہ کریں",
         contactName: "Maria Paracha",
         contactRole: "Relief Head",
-        contactPhone: "+92 334 8850777",
+        contactPhone: "+92 340 4555542",
       },
       form: { title: "پیغام بھیجیں", name: "نام", email: "ای میل", message: "پیغام", send: "بھیجیں" },
       social: [
@@ -299,7 +353,6 @@ export const content = {
       h2: "پاک فلسطین فورم میں شامل ہوں — رضاکارانہ مواقع",
       p: "پاک فلسطین فورم انسانی اور وکالت کی کوششوں میں حصہ ڈالنے کے لیے رضاکاروں، پیشہ ور افراد اور تنظیموں کا خیرمقدم کرتا ہے۔",
       cta: "شامل ہوں",
-      footer: "فورم اجتماعی شہری مشغولیت اور رضاکارانہ شرکت پر زور دیتا ہے تاکہ معنی خیز اثر پیدا ہو۔",
       ways: [
         { title: "مہمات کے لیے رضاکار", short: "زمینی سرگرمی اور ایونٹ کوآرڈینیشن" },
         { title: "آگاہی کی کوششوں کی حمایت", short: "مواد کی تخلیق اور عوامی رسائی" },

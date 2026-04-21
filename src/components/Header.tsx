@@ -196,7 +196,7 @@ export function Header({
       className={`fixed left-0 right-0 top-0 z-50 transition-all duration-300 ${solid ? "bg-[var(--color-bg)]/95 backdrop-blur-md border-b border-[var(--color-border)]" : "bg-black/20 backdrop-blur-md"
         } ${!visible && !open ? "-translate-y-full" : "translate-y-0"}`}
     >
-      <div className="wrap flex h-16 items-center justify-between md:h-18">
+      <div className="wrap flex h-16 min-w-0 items-center justify-between md:h-18">
         <a
           href="#hero"
           className="flex items-center gap-0"

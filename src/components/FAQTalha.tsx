@@ -1,6 +1,7 @@
 import { useState } from "react"
 import type { Locale } from "@/data/content"
 import { content } from "@/data/content"
+import { FaqJoinHowAnswer } from "@/components/FaqJoinHowAnswer"
 
 /** FAQ section — Talha layout (centered label, accordion cards) with app color scheme */
 export function FAQTalha({ lang }: { lang: Locale }) {
@@ -22,7 +23,7 @@ export function FAQTalha({ lang }: { lang: Locale }) {
         </div>
         <h2
           id="faq-heading"
-          className="font-display mt-4 text-center text-3xl font-semibold text-[var(--color-text)] md:text-4xl"
+          className="font-display mt-4 text-center text-balance break-words text-3xl font-semibold text-[var(--color-text)] md:text-4xl"
         >
           {t.title}
         </h2>
@@ -39,11 +40,11 @@ export function FAQTalha({ lang }: { lang: Locale }) {
               <button
                 type="button"
                 onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                className="flex w-full items-center justify-between px-6 py-4 text-left transition-colors hover:bg-white/[0.06]"
+                className="flex w-full min-w-0 items-center justify-between gap-3 px-4 py-3.5 text-left transition-colors hover:bg-white/[0.06] sm:px-6 sm:py-4"
                 aria-expanded={openFaq === i}
               >
-                <span className="pr-4 font-semibold text-[var(--color-text)]">
-                  {item.q}
+                <span className="min-w-0 flex-1 pr-1 font-semibold text-[var(--color-text)] sm:pr-4">
+                  <span className="text-pretty break-words">{item.q}</span>
                 </span>
                 <span
                   className={`flex-shrink-0 text-[var(--color-text)] transition-transform duration-200 ${
@@ -62,8 +63,12 @@ export function FAQTalha({ lang }: { lang: Locale }) {
                 </span>
               </button>
               {openFaq === i && (
-                <div className="px-6 pb-5 text-[var(--color-text-muted)]">
-                  {item.a}
+                <div className="border-t border-white/5 px-4 pb-4 pt-1 text-pretty break-words whitespace-pre-line text-[var(--color-text-muted)] sm:px-6 sm:pb-5 sm:pt-0">
+                  {"rich" in item && item.rich === "joinHow" ? (
+                    <FaqJoinHowAnswer lang={lang} />
+                  ) : (
+                    "a" in item && item.a
+                  )}
                 </div>
               )}
             </div>

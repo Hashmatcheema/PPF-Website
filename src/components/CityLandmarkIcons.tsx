@@ -1,12 +1,11 @@
 /**
  * City landmark SVGs — copied from Talha-1010/pakpalforum (pages/index.js CityLandmarkIcon).
- * Index 0–4: Islamabad, Lahore, Karachi, Faisalabad, Multan (Rukn-e-Alam).
- * Index 5: Sargodha (no Talha asset) — simple dome silhouette consistent with set.
+ * Index 0–3: Islamabad, Lahore, Karachi, Faisalabad (named landmarks).
+ * Index 4: Sargodha — generic dome + base (no Talha landmark asset); matches `CHAPTERS_DATA` “Regional Chapter”.
+ * Index 5: Multan — Shrine of Rukn-e-Alam.
  */
-const iconCls = "h-14 w-14 text-[var(--color-accent)]"
-
-export function CityLandmarkIcon({ index }: { index: number }) {
-  const icons = [
+function cityLandmarkSvgIcons(iconCls: string) {
+  return [
     // 0: Islamabad – Faisal Mosque
     <svg key="isb" viewBox="0 0 48 48" className={iconCls} fill="currentColor" aria-hidden>
       <rect x="3" y="10" width="4" height="34" />
@@ -53,11 +52,26 @@ export function CityLandmarkIcon({ index }: { index: number }) {
       <rect x="4" y="44" width="40" height="2" />
       <rect x="1" y="46" width="46" height="2" />
     </svg>,
-    // 3: Faisalabad – Ghanta Ghar
-    <svg key="fsd" viewBox="0 0 48 48" className={iconCls} fill="currentColor" aria-hidden>
-      <polygon points="24,1 22,8 26,8" />
-      <rect x="19" y="8" width="10" height="5" />
-      <rect x="21" y="13" width="6" height="6" />
+    // 3: Faisalabad – Ghanta Ghar (dome + finial minaret on apex ~24,3.5)
+    <svg key="fsd" viewBox="0 0 48 48" className={iconCls} fill="currentColor" overflow="visible" aria-hidden>
+      <path d="M18,13 Q18,3.5 24,3.5 Q30,3.5 30,13 Z" />
+      {/* Foot on dome — small arch */}
+      <path d="M22.2,3.5 Q24,2.35 25.8,3.5 Z" />
+      {/* Stem */}
+      <rect x="23.2" y="2.05" width="1.6" height="1.45" rx="0.2" />
+      {/* Bulb */}
+      <circle cx="24" cy="1.15" r="1.05" />
+      {/* Spike */}
+      <line
+        x1="24"
+        y1="0.12"
+        x2="24"
+        y2="-1.15"
+        stroke="currentColor"
+        strokeWidth="1.35"
+        strokeLinecap="round"
+      />
+      <rect x="16" y="13" width="16" height="6" />
       <rect x="16" y="19" width="16" height="10" />
       <circle cx="24" cy="24" r="4" fill="white" fillOpacity="0.3" />
       <rect x="17" y="29" width="14" height="13" />
@@ -82,5 +96,17 @@ export function CityLandmarkIcon({ index }: { index: number }) {
       <rect x="7" y="46" width="34" height="2" />
     </svg>,
   ]
+}
+
+export function CityLandmarkIcon({
+  index,
+  className,
+}: {
+  index: number
+  /** Defaults to h-14 w-14 + accent text color */
+  className?: string
+}) {
+  const iconCls = className ?? "h-14 w-14 text-[var(--color-accent)]"
+  const icons = cityLandmarkSvgIcons(iconCls)
   return icons[index] ?? icons[0]
 }

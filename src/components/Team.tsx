@@ -18,16 +18,16 @@ export function Team({ lang }: { lang: Locale }) {
         <h2 className="font-display mt-4 text-center text-3xl font-semibold text-[var(--color-text)] md:text-4xl">
           {t.title}
         </h2>
-        <p className="mx-auto mt-4 max-w-2xl text-center text-[var(--color-text-muted)]">
+        <p className="mx-auto mt-4 max-w-2xl px-1 text-center text-pretty break-words text-[var(--color-text-muted)] sm:px-0">
           {t.intro}
         </p>
-        <div className="mt-16 grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-3 md:gap-14 px-4 md:px-0">
+        <div className="mt-12 grid grid-cols-1 gap-10 sm:mt-16 sm:grid-cols-2 sm:gap-12 md:gap-14 lg:grid-cols-3">
           {members.map((member, i) => (
             <div
               key={i}
-              className="flex flex-col items-center text-center w-full"
+              className="flex w-full min-w-0 flex-col items-center px-1 text-center sm:px-0"
             >
-              <div className="relative h-64 w-64 md:h-72 md:w-72 overflow-hidden rounded-full border-4 border-white/10 shadow-card">
+              <div className="relative mx-auto aspect-square w-full max-w-[min(16rem,calc(100vw-2.5rem))] overflow-hidden rounded-full border-4 border-white/10 shadow-card sm:max-w-[18rem] md:aspect-auto md:h-72 md:w-72 md:max-w-none">
                 <img
                   src={images[member.imageKey]}
                   alt=""
@@ -35,10 +35,10 @@ export function Team({ lang }: { lang: Locale }) {
                   style={"imagePosition" in member && member.imagePosition === "top" ? { objectPosition: "center top" } : undefined}
                 />
               </div>
-              <h3 className="font-display mt-6 text-2xl font-bold text-[var(--color-text)]">
+              <h3 className="font-display mt-5 max-w-full text-balance break-words text-xl font-bold text-[var(--color-text)] sm:mt-6 sm:text-2xl">
                 {member.name}
               </h3>
-              <p className="mt-2 text-base text-[var(--color-text-muted)]">
+              <p className="mt-2 max-w-md text-pretty break-words text-base text-[var(--color-text-muted)]">
                 {member.role}
               </p>
             </div>
