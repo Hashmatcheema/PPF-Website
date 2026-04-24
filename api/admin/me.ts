@@ -21,5 +21,8 @@ export default async function handler(
     return
   }
 
-  res.status(200).json({ ok: true, user })
+  const marchPosterBlobUpload =
+    String(process.env.BLOB_READ_WRITE_TOKEN ?? "").trim().length > 0
+
+  res.status(200).json({ ok: true, user, marchPosterBlobUpload })
 }

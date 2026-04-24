@@ -4,7 +4,10 @@ import { forbidWithoutCors, handleCorsPreflight } from "../../server/lib/http.js
 import { requireAdminUser } from "../../server/lib/auth.js"
 import { getJsonBody } from "../../server/lib/body.js"
 
+/** With Vercel Blob token */
 const MAX_BYTES = 1.8 * 1024 * 1024
+/** Without Blob: embed as data URL in Redis — keep small for Upstash payload limits */
+const MAX_EMBED_BYTES_NO_BLOB = 420 * 1024
 
 const ALLOWED_MIME = new Set([
   "image/jpeg",
@@ -36,15 +39,6 @@ export default async function handler(
 
   if (!requireAdminUser(req)) {
     res.status(401).json({ error: "Unauthorized" })
-    return
-  }
-
-  const token = process.env.BLOB_READ_WRITE_TOKEN
-  if (!token) {
-    res.status(503).json({
-      error:
-        "Upload is not configured (missing BLOB_READ_WRITE_TOKEN). Paste an https:// image URL in the poster field, or add a Vercel Blob token for this project.",
-    })
     return
   }
 
@@ -81,7 +75,30 @@ export default async function handler(
     return
   }
 
-  if (buffer.length === 0 || buffer.length > MAX_BYTES) {
+  if (buffer.length === 0) {
+    res.status(400).json({ error: "Empty image" })
+    return
+  }
+
+  const token = String(process.env.BLOB_READ_WRITE_TOKEN ?? "").trim()
+
+  if (!token) {
+    if (buffer.length > MAX_EMBED_BYTES_NO_BLOB) {
+      res.status(413).json({
+        error: `Without BLOB_READ_WRITE_TOKEN, images must be under ${Math.floor(MAX_EMBED_BYTES_NO_BLOB / 1024)} KB. Compress the file, add a Vercel Blob token for larger uploads, or use an /images/… URL.`,
+      })
+      return
+    }
+    const dataUrl = `data:${mimeType};base64,${base64}`
+    res.status(200).json({
+      url: dataUrl,
+      embedded: true,
+      hint: "Stored as embedded data when you click Save (no Blob). Add BLOB_READ_WRITE_TOKEN for larger files.",
+    })
+    return
+  }
+
+  if (buffer.length > MAX_BYTES) {
     res.status(400).json({ error: `Image must be under ${Math.floor(MAX_BYTES / (1024 * 1024))} MB` })
     return
   }

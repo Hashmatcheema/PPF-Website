@@ -44,12 +44,9 @@ function validateMarchPoster(url: string): string | null {
   const u = url.trim()
   if (!u) return null
   if (u.startsWith("data:image/")) {
-    if (!DISABLE_REMOTE_API) {
-      return "With the live API, use an https:// image URL or upload (no data URLs in Redis)."
-    }
-    const maxEncoded = 600_000
+    const maxEncoded = DISABLE_REMOTE_API ? 600_000 : 980_000
     if (u.length > maxEncoded) {
-      return "Poster file is too large for local save; use a smaller image or an https:// URL."
+      return "Poster embedded image is too large; use a smaller file, /images/…, https://, or Vercel Blob for large uploads."
     }
     return null
   }
@@ -209,25 +206,26 @@ export function AdminCtas() {
       const data = (await res.json().catch(() => ({}))) as { url?: string; error?: string }
       if (!res.ok) {
         const apiErr = typeof data.error === "string" ? data.error : ""
-        const blobMissing =
-          apiErr.includes("BLOB") || apiErr.toLowerCase().includes("not configured")
-        setMessage({
-          type: "error",
-          text: blobMissing
-            ? `${apiErr || "Upload is not configured."} Add the image under public/images in the repo, use /images/… in Poster URL, then Save — or add BLOB_READ_WRITE_TOKEN in Vercel for drag-and-drop upload.`
-            : apiErr || "Upload failed",
-        })
+        setMessage({ type: "error", text: apiErr || "Upload failed" })
         return
       }
-      if (typeof data.url === "string" && data.url.startsWith("https://")) {
+      if (
+        typeof data.url === "string" &&
+        (data.url.startsWith("https://") || data.url.startsWith("data:image/"))
+      ) {
         const url = data.url
         const next = { ...form, marchPosterUrl: url }
         setForm(next)
         const saved = await saveCtas(next)
         if (saved.ok) {
+          const hint =
+            typeof (data as { embedded?: boolean }).embedded === "boolean" &&
+            (data as { embedded?: boolean }).embedded
+              ? " (embedded in Redis — add BLOB_READ_WRITE_TOKEN for larger files.)"
+              : ""
           setMessage({
             type: "success",
-            text: "Poster uploaded and saved. Open the march dialog on the site to confirm.",
+            text: `Poster uploaded and saved.${hint} Open the march dialog on the site to confirm.`,
           })
         } else {
           setMessage({
@@ -333,18 +331,18 @@ export function AdminCtas() {
               >
                 Vercel Blob
               </a>{" "}
-              when <code className="rounded bg-white/10 px-1 py-0.5 text-[11px]">BLOB_READ_WRITE_TOKEN</code> is set;
-              otherwise paste a same-site path like{" "}
-              <code className="rounded bg-white/10 px-1 py-0.5 text-[11px]">{DEFAULT_MARCH_POSTER_URL}</code> or an{" "}
-              <strong className="text-[var(--color-text)]">https://</strong> image URL.
+              when <code className="rounded bg-white/10 px-1 py-0.5 text-[11px]">BLOB_READ_WRITE_TOKEN</code> is set
+              (larger files). <strong className="text-[var(--color-text)]">Without Blob,</strong>{" "}
+              <strong className="text-[var(--color-text)]">Upload</strong> still works for images under ~420&nbsp;KB (stored
+              embedded in Redis after Save). Or paste{" "}
+              <code className="rounded bg-white/10 px-1 py-0.5 text-[11px]">{DEFAULT_MARCH_POSTER_URL}</code> or{" "}
+              <strong className="text-[var(--color-text)]">https://</strong> URLs.
             </p>
             <p className="mt-3 rounded-md border border-white/10 bg-white/[0.04] px-3 py-2.5 text-xs leading-relaxed text-[var(--color-text-muted)]">
-              <strong className="text-[var(--color-text)]">Upload</strong> only works if this project has{" "}
-              <code className="rounded bg-white/10 px-1 py-0.5 text-[11px]">BLOB_READ_WRITE_TOKEN</code> in Vercel
-              env. <strong className="text-[var(--color-text)]">Without Blob,</strong> add images under{" "}
-              <code className="rounded bg-white/10 px-1 py-0.5 text-[11px]">public/images/</code> in Git, deploy, then
-              set Poster URL to <code className="rounded bg-white/10 px-1 py-0.5 text-[11px]">/images/your-file.jpg</code>{" "}
-              and click <strong className="text-[var(--color-text)]">Save</strong> — no upload button needed.
+              For big posters without Blob, add files under{" "}
+              <code className="rounded bg-white/10 px-1 py-0.5 text-[11px]">public/images/</code>, deploy, set Poster URL
+              to <code className="rounded bg-white/10 px-1 py-0.5 text-[11px]">/images/your-file.jpg</code>, then{" "}
+              <strong className="text-[var(--color-text)]">Save</strong>.
             </p>
             <label className="mb-1 mt-4 block text-sm font-medium text-[var(--color-text)]">
               Poster image URL
