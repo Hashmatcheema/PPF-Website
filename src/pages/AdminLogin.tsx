@@ -72,7 +72,7 @@ export function AdminLogin() {
             PPF Admin
           </h1>
           <p className="mt-2 text-sm text-[var(--color-text-muted)]">
-            Sign in to update Join Us, march popup, and poster
+            Sign in to update Join Us and poster content
           </p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
