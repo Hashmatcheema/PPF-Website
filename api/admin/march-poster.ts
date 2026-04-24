@@ -1,8 +1,8 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node"
 import { put } from "@vercel/blob"
-import { forbidWithoutCors, handleCorsPreflight } from "../lib/http.js"
-import { requireAdminUser } from "../lib/auth.js"
-import { getJsonBody } from "../lib/body.js"
+import { forbidWithoutCors, handleCorsPreflight } from "../../server/lib/http.js"
+import { requireAdminUser } from "../../server/lib/auth.js"
+import { getJsonBody } from "../../server/lib/body.js"
 
 const MAX_BYTES = 1.8 * 1024 * 1024
 

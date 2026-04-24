@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node"
-import { forbidWithoutCors, handleCorsPreflight } from "../lib/http.js"
-import { requireAdminUser } from "../lib/auth.js"
+import { forbidWithoutCors, handleCorsPreflight } from "../../server/lib/http.js"
+import { requireAdminUser } from "../../server/lib/auth.js"
 
 export default async function handler(
   req: VercelRequest,

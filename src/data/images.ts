@@ -9,7 +9,7 @@ const HERO_PRIMARY_WEBP = "/images/354b2959-8e7f-4f19-b8d4-eee82ab400b6.webp" as
 
 /**
  * Default march modal graphic (`public/images/WhatsApp Image 2026-04-09 at 21.09.21.jpeg`).
- * Spaces encoded for stable `src` URLs. Override in Admin → CTAs; keep in sync with `api/lib/ctas.ts` defaultCtas.
+ * Spaces encoded for stable `src` URLs. Override in Admin → CTAs; keep in sync with `server/lib/ctas.ts` defaultCtas.
  */
 export const DEFAULT_MARCH_POSTER_URL =
   "/images/WhatsApp%20Image%202026-04-09%20at%2021.09.21.jpeg" as const

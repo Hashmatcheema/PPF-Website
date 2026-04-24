@@ -3,13 +3,13 @@ import {
   forbidWithoutCors,
   getClientIp,
   handleCorsPreflight,
-} from "../lib/http.js"
+} from "../../server/lib/http.js"
 import {
   adminCredentials,
   setAuthCookie,
-} from "../lib/auth.js"
-import { ratelimitLogin } from "../lib/ratelimit.js"
-import { getJsonBody } from "../lib/body.js"
+} from "../../server/lib/auth.js"
+import { ratelimitLogin } from "../../server/lib/ratelimit.js"
+import { getJsonBody } from "../../server/lib/body.js"
 
 function clean(s: unknown): string {
   return String(s ?? "").replace(/\r/g, "").trim()

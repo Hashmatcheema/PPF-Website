@@ -3,11 +3,11 @@ import {
   forbidWithoutCors,
   getClientIp,
   handleCorsPreflight,
-} from "./lib/http.js"
-import { readCtas, writeCtas, mergeCtasPatch, parseCtasBody } from "./lib/ctas.js"
-import { requireAdminUser } from "./lib/auth.js"
-import { ratelimitCtasPut } from "./lib/ratelimit.js"
-import { getJsonBody } from "./lib/body.js"
+} from "../server/lib/http.js"
+import { readCtas, writeCtas, mergeCtasPatch, parseCtasBody } from "../server/lib/ctas.js"
+import { requireAdminUser } from "../server/lib/auth.js"
+import { ratelimitCtasPut } from "../server/lib/ratelimit.js"
+import { getJsonBody } from "../server/lib/body.js"
 
 export default async function handler(
   req: VercelRequest,
