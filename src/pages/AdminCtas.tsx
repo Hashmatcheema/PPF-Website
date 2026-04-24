@@ -223,10 +223,7 @@ export function AdminCtas() {
 
     if (file.size > maxPick) {
       const cap = formatPosterSizeLimit(maxPick)
-      const hint =
-        marchPosterBlobUpload === false
-          ? " Try a smaller photo, or ask your web team to allow larger uploads."
-          : ""
+      const hint = marchPosterBlobUpload === false ? " Try a smaller photo." : ""
       setMessage({
         type: "error",
         text: `This image is too large (${formatPosterSizeLimit(file.size)}). Maximum upload size is ${cap}.${hint}`,
@@ -288,14 +285,9 @@ export function AdminCtas() {
         setForm(next)
         const saved = await saveCtas(next)
         if (saved.ok) {
-          const hint =
-            typeof (data as { embedded?: boolean }).embedded === "boolean" &&
-            (data as { embedded?: boolean }).embedded
-              ? " For bigger photos, ask your web team to allow larger uploads."
-              : ""
           setMessage({
             type: "success",
-            text: `Poster uploaded and saved.${hint} Refresh the site and open the poster popup to confirm.`,
+            text: "Poster uploaded and saved. Refresh the site and open the poster popup to confirm.",
           })
         } else {
           setMessage({
