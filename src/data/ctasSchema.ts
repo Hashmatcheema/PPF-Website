@@ -1,4 +1,8 @@
 import { DEFAULT_MARCH_POSTER_URL } from "./images"
+import {
+  MARCH_FLOATING_DEFAULT_BODY,
+  MARCH_FLOATING_DEFAULT_TITLE,
+} from "./marchFloatingDefaults"
 
 /**
  * CTA config schema — matches server API (GET/PUT /api/ctas).
@@ -14,6 +18,10 @@ export interface CtasConfig {
   heroCtaSubtext: LocaleLabel
   volunteerLabel: LocaleLabel
   donateLabel: LocaleLabel
+  /** Red march pill + modal title (en/ur); editable in Admin → CTAs */
+  marchEventTitle: LocaleLabel
+  /** March modal body copy (en/ur) */
+  marchEventBody: LocaleLabel
   /** Same-site path (/images/…), https URL (e.g. Vercel Blob), or data URL in local-only; shown in the march modal */
   marchPosterUrl: string
 }
@@ -30,6 +38,8 @@ export const defaultCtas: CtasConfig = {
   },
   volunteerLabel: { en: "Volunteer", ur: "رضاکار" },
   donateLabel: { en: "Donate", ur: "عطیہ" },
+  marchEventTitle: { ...MARCH_FLOATING_DEFAULT_TITLE },
+  marchEventBody: { ...MARCH_FLOATING_DEFAULT_BODY },
   marchPosterUrl: DEFAULT_MARCH_POSTER_URL,
 }
 
@@ -61,6 +71,13 @@ export function parseCtas(raw: unknown): CtasConfig | null {
   const resolvedPoster =
     "marchPosterUrl" in o ? marchPosterUrl : DEFAULT_MARCH_POSTER_URL
 
+  const marchEventTitle = isLocaleLabel(o.marchEventTitle)
+    ? o.marchEventTitle
+    : { ...MARCH_FLOATING_DEFAULT_TITLE }
+  const marchEventBody = isLocaleLabel(o.marchEventBody)
+    ? o.marchEventBody
+    : { ...MARCH_FLOATING_DEFAULT_BODY }
+
   return {
     joinUrl: typeof o.joinUrl === "string" ? o.joinUrl : "",
     joinLabel: o.joinLabel,
@@ -69,6 +86,8 @@ export function parseCtas(raw: unknown): CtasConfig | null {
     heroCtaSubtext: o.heroCtaSubtext,
     volunteerLabel: o.volunteerLabel,
     donateLabel: o.donateLabel,
+    marchEventTitle,
+    marchEventBody,
     marchPosterUrl: resolvedPoster,
   }
 }

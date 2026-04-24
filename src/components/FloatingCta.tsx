@@ -42,6 +42,8 @@ const eventModalContentClassName =
 export function FloatingCta({ lang }: { lang: Locale }) {
   const { ctas } = useCtasConfig()
   const t = content[lang].floatingBar
+  const marchTitle = (ctas.marchEventTitle?.[lang] ?? "").trim() || t.eventTitle
+  const marchBody = (ctas.marchEventBody?.[lang] ?? "").trim() || t.eventBody
   const marchPoster = ctas.marchPosterUrl?.trim() ?? ""
   const [contactOpen, setContactOpen] = useState(false)
   const [eventOpen, setEventOpen] = useState(false)
@@ -89,7 +91,7 @@ export function FloatingCta({ lang }: { lang: Locale }) {
               <Dialog.Content id={eventPanelId} className={eventModalContentClassName}>
                 <div className="flex items-start justify-between gap-2 border-b border-white/10 pb-3">
                   <Dialog.Title className="font-display pr-2 text-base font-semibold leading-tight text-[var(--color-text)] sm:text-lg">
-                    {t.eventTitle}
+                    {marchTitle}
                   </Dialog.Title>
                   <Dialog.Close
                     type="button"
@@ -119,7 +121,7 @@ export function FloatingCta({ lang }: { lang: Locale }) {
                         <div className="overflow-hidden rounded-[1px] bg-neutral-900 shadow-[inset_0_0_24px_rgba(0,0,0,0.35)] ring-1 ring-black/20">
                           <img
                             src={marchPoster}
-                            alt={t.eventTitle}
+                            alt={marchTitle}
                             className="mx-auto block h-auto max-h-[min(58dvh,520px)] w-auto max-w-[min(18.5rem,calc(100vw-3.5rem))] object-contain object-center sm:max-h-[min(62dvh,560px)] sm:max-w-[min(19.25rem,calc(100vw-4rem))]"
                             sizes="(max-width: 24rem) calc(100vw - 3.5rem), 19rem"
                             decoding="async"
@@ -131,7 +133,7 @@ export function FloatingCta({ lang }: { lang: Locale }) {
                   </figure>
                 ) : null}
                 <Dialog.Description className="mt-4 border-t border-white/10 pt-4 text-pretty text-sm leading-relaxed text-[var(--color-text-muted)]">
-                  {t.eventBody}
+                  {marchBody}
                 </Dialog.Description>
               </Dialog.Content>
             </Dialog.Portal>
@@ -149,7 +151,7 @@ export function FloatingCta({ lang }: { lang: Locale }) {
               >
                 <Megaphone className="h-4 w-4 shrink-0 sm:h-6 sm:w-6 md:h-7 md:w-7" strokeWidth={2.25} aria-hidden />
                 <span className="min-w-0 flex-1 text-balance text-center sm:max-w-full sm:flex-none sm:text-pretty">
-                  {t.eventBtn}
+                  {marchTitle}
                 </span>
               </button>
             </div>

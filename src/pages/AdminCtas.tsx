@@ -75,6 +75,8 @@ function validate(config: CtasConfig): string | null {
     { key: "heroCtaSubtext", v: config.heroCtaSubtext },
     { key: "volunteerLabel", v: config.volunteerLabel },
     { key: "donateLabel", v: config.donateLabel },
+    { key: "marchEventTitle", v: config.marchEventTitle },
+    { key: "marchEventBody", v: config.marchEventBody },
   ]
   for (const { key, v } of labels) {
     if (typeof v.en !== "string" || typeof v.ur !== "string") {
@@ -294,10 +296,32 @@ export function AdminCtas() {
 
           <div className="rounded-lg border border-white/10 bg-white/[0.03] p-4 sm:p-5">
             <h2 className="font-display text-base font-semibold text-[var(--color-text)]">
+              March floating bar &amp; dialog copy
+            </h2>
+            <p className="mt-2 text-xs leading-relaxed text-[var(--color-text-muted)]">
+              The red bottom-right pill label, the dialog title, and the paragraph under the poster (English and Urdu).
+              Save after editing — these are stored with your other CTAs in Redis.
+            </p>
+            <div className="mt-4 space-y-4">
+              <LocaleFields
+                label="Pill &amp; dialog title"
+                value={form.marchEventTitle}
+                onChange={(marchEventTitle) => setForm((f) => ({ ...f, marchEventTitle }))}
+              />
+              <LocaleFields
+                label="Dialog text (below poster)"
+                value={form.marchEventBody}
+                onChange={(marchEventBody) => setForm((f) => ({ ...f, marchEventBody }))}
+              />
+            </div>
+          </div>
+
+          <div className="rounded-lg border border-white/10 bg-white/[0.03] p-4 sm:p-5">
+            <h2 className="font-display text-base font-semibold text-[var(--color-text)]">
               March modal poster
             </h2>
             <p className="mt-2 text-xs leading-relaxed text-[var(--color-text-muted)]">
-              Shown inside the &quot;Pakistanis March For Gaza&quot; dialog (WebP recommended). Stored with your other
+              Image inside the march dialog (WebP recommended). Stored with your other
               CTAs in Redis (no separate database). Production uploads use{" "}
               <a
                 href="https://vercel.com/docs/vercel-blob"

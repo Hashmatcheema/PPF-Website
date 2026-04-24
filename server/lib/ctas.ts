@@ -10,7 +10,19 @@ export interface CtasConfig {
   heroCtaSubtext: LocaleLabel
   volunteerLabel: LocaleLabel
   donateLabel: LocaleLabel
+  marchEventTitle: LocaleLabel
+  marchEventBody: LocaleLabel
   marchPosterUrl: string
+}
+
+const MARCH_FLOATING_DEFAULT_TITLE: LocaleLabel = {
+  en: "Pakistanis March For Gaza",
+  ur: "غزہ کے لیے پاکستانی مارچ",
+}
+
+const MARCH_FLOATING_DEFAULT_BODY: LocaleLabel = {
+  en: "Stand with Palestine in the streets. Dates, cities, and how to join will be shared on our channels — follow PPF so you do not miss the march.",
+  ur: "فلسطین کے ساتھ سڑکوں پر یکجہتی۔ تاریخیں، شہروں کی تفصیل اور شرکت کا طریقہ ہمارے چینلز پر شیئر کیا جائے گا — پی پی ایف فالو کریں تاکہ مارچ کی تازہ خبریں نہ چھوٹیں۔",
 }
 
 export function defaultCtas(): CtasConfig {
@@ -28,6 +40,8 @@ export function defaultCtas(): CtasConfig {
     },
     volunteerLabel: { en: "Volunteer", ur: "رضاکار" },
     donateLabel: { en: "Donate", ur: "عطیہ" },
+    marchEventTitle: { ...MARCH_FLOATING_DEFAULT_TITLE },
+    marchEventBody: { ...MARCH_FLOATING_DEFAULT_BODY },
     /** Same-origin march poster JPEG; keep in sync with src/data/images.ts `DEFAULT_MARCH_POSTER_URL` */
     marchPosterUrl:
       "/images/WhatsApp%20Image%202026-04-09%20at%2021.09.21.jpeg",
@@ -61,6 +75,13 @@ export function parseCtasBody(raw: unknown): CtasConfig | null {
   const resolvedPoster =
     "marchPosterUrl" in o ? marchPosterUrl : defaultCtas().marchPosterUrl
 
+  const marchEventTitle = isLocaleLabel(o.marchEventTitle)
+    ? o.marchEventTitle
+    : { ...MARCH_FLOATING_DEFAULT_TITLE }
+  const marchEventBody = isLocaleLabel(o.marchEventBody)
+    ? o.marchEventBody
+    : { ...MARCH_FLOATING_DEFAULT_BODY }
+
   return {
     joinUrl: typeof o.joinUrl === "string" ? o.joinUrl : "",
     joinLabel: o.joinLabel,
@@ -69,6 +90,8 @@ export function parseCtasBody(raw: unknown): CtasConfig | null {
     heroCtaSubtext: o.heroCtaSubtext,
     volunteerLabel: o.volunteerLabel,
     donateLabel: o.donateLabel,
+    marchEventTitle,
+    marchEventBody,
     marchPosterUrl: resolvedPoster,
   }
 }
@@ -124,6 +147,12 @@ export async function mergeCtasPatch(body: Record<string, unknown>): Promise<Cta
   }
   if (typeof merged.marchPosterUrl !== "string") {
     merged.marchPosterUrl = current.marchPosterUrl
+  }
+  for (const key of ["marchEventTitle", "marchEventBody"] as const) {
+    const v = merged[key]
+    if (!v || typeof v !== "object" || !isLocaleLabel(v)) {
+      merged[key] = current[key]
+    }
   }
   return merged as CtasConfig
 }
