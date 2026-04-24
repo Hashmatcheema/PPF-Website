@@ -326,7 +326,10 @@ export function AdminCtas() {
             <input
               type="text"
               value={form.marchPosterUrl.startsWith("data:") ? "" : form.marchPosterUrl}
-              onChange={(e) => setForm((f) => ({ ...f, marchPosterUrl: e.target.value }))}
+              onChange={(e) => {
+                setMessage(null)
+                setForm((f) => ({ ...f, marchPosterUrl: e.target.value }))
+              }}
               placeholder={`${DEFAULT_MARCH_POSTER_URL} or https://…`}
               className="w-full rounded-md border border-white/20 bg-white/5 px-3 py-2 text-[var(--color-text)] placeholder:text-white/40 focus:border-[var(--color-accent)] focus:outline-none focus:ring-1 focus:ring-[var(--color-accent)]"
             />
@@ -349,14 +352,20 @@ export function AdminCtas() {
               </label>
               <button
                 type="button"
-                onClick={() => setForm((f) => ({ ...f, marchPosterUrl: DEFAULT_MARCH_POSTER_URL }))}
+                onClick={() => {
+                  setMessage(null)
+                  setForm((f) => ({ ...f, marchPosterUrl: DEFAULT_MARCH_POSTER_URL }))
+                }}
                 className="rounded-md border border-white/20 px-3 py-2 text-sm text-[var(--color-text)] transition hover:bg-white/5"
               >
                 Use site default poster
               </button>
               <button
                 type="button"
-                onClick={() => setForm((f) => ({ ...f, marchPosterUrl: "" }))}
+                onClick={() => {
+                  setMessage(null)
+                  setForm((f) => ({ ...f, marchPosterUrl: "" }))
+                }}
                 className="rounded-md border border-white/20 px-3 py-2 text-sm text-[var(--color-text-muted)] transition hover:bg-white/5 hover:text-[var(--color-text)]"
               >
                 Hide poster
@@ -374,15 +383,26 @@ export function AdminCtas() {
           </div>
 
           {message && (
-            <p
-              className={
-                message.type === "success"
-                  ? "text-sm text-[var(--color-accent-hover)]"
-                  : "text-sm text-red-400"
-              }
-            >
-              {message.text}
-            </p>
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+              <p
+                className={
+                  message.type === "success"
+                    ? "min-w-0 flex-1 text-sm text-[var(--color-accent-hover)]"
+                    : "min-w-0 flex-1 text-sm text-red-400"
+                }
+              >
+                {message.text}
+              </p>
+              {message.type === "error" ? (
+                <button
+                  type="button"
+                  onClick={() => setMessage(null)}
+                  className="shrink-0 self-start rounded-md border border-white/20 px-2.5 py-1 text-xs font-medium text-[var(--color-text-muted)] transition hover:bg-white/10 hover:text-[var(--color-text)]"
+                >
+                  Dismiss
+                </button>
+              ) : null}
+            </div>
           )}
 
           <div className="flex gap-3">
