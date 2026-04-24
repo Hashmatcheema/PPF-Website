@@ -51,7 +51,7 @@ function validateMarchPoster(url: string): string | null {
   if (u.startsWith("data:image/")) {
     const maxEncoded = DISABLE_REMOTE_API ? 600_000 : 980_000
     if (u.length > maxEncoded) {
-      return "Poster embedded image is too large; use a smaller file, /images/…, https://, or Vercel Blob for large uploads."
+      return "That image is too large to store this way. Use a smaller file, a site image path (/images/…), a direct https:// link, or ask your web team to enable large uploads."
     }
     return null
   }
@@ -67,7 +67,7 @@ function validateMarchPoster(url: string): string | null {
     if (u.includes("..") || u.length > 2048) return "Invalid poster path"
     return null
   }
-  return "Poster must be empty, /images/… on this site, an https:// image URL, or an uploaded image."
+  return "Use a site image path (/images/…), an https:// image link, upload a small file, or clear the field."
 }
 
 function validate(config: CtasConfig): string | null {
@@ -175,7 +175,7 @@ export function AdminCtas() {
     const result = await saveCtas(form)
     setSaving(false)
     if (result.ok) {
-      setMessage({ type: "success", text: "CTAs saved successfully." })
+      setMessage({ type: "success", text: "Saved. Changes appear on the live site after a refresh." })
     } else {
       setMessage({ type: "error", text: result.error ?? "Failed to save" })
     }
@@ -199,7 +199,7 @@ export function AdminCtas() {
       const cap = formatPosterSizeLimit(maxPick)
       const hint =
         marchPosterBlobUpload === false
-          ? " Without Vercel Blob, uploads are limited to embedded storage. Add BLOB_READ_WRITE_TOKEN for larger files, or use an /images/… or https:// URL."
+          ? " For larger files, use an /images/… or https:// link, or ask your web team to turn on cloud uploads."
           : ""
       setMessage({
         type: "error",
@@ -224,7 +224,7 @@ export function AdminCtas() {
         setForm(next)
         const saved = await saveCtas(next)
         if (saved.ok) {
-          setMessage({ type: "success", text: "Poster saved. Refresh the site to see it in the march dialog." })
+          setMessage({ type: "success", text: "Poster saved. Refresh the preview site to see it in the march popup." })
         } else {
           setMessage({
             type: "error",
@@ -265,18 +265,18 @@ export function AdminCtas() {
           const hint =
             typeof (data as { embedded?: boolean }).embedded === "boolean" &&
             (data as { embedded?: boolean }).embedded
-              ? " (embedded in Redis — add BLOB_READ_WRITE_TOKEN for larger files.)"
+              ? " (Saved inside settings — use a link for bigger images.)"
               : ""
           setMessage({
             type: "success",
-            text: `Poster uploaded and saved.${hint} Open the march dialog on the site to confirm.`,
+            text: `Poster uploaded and saved.${hint} Refresh the site and open the march popup to confirm.`,
           })
         } else {
           setMessage({
             type: "error",
             text:
               saved.error ??
-              "Upload succeeded but save failed — click Save, or configure Redis for CTAs.",
+              "Upload worked but saving failed. Click Save again, or contact support if it keeps happening.",
           })
         }
       } else {
@@ -300,7 +300,7 @@ export function AdminCtas() {
       <header className="border-b border-white/10 px-4 py-4 sm:px-6">
         <div className="mx-auto flex max-w-3xl items-center justify-between">
           <h1 className="font-display text-lg font-semibold text-[var(--color-text)]">
-            PPF Admin – CTAs
+            Site buttons &amp; march popup
           </h1>
           <div className="flex items-center gap-4">
             <button
@@ -321,35 +321,40 @@ export function AdminCtas() {
       </header>
       <main className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
         <form onSubmit={handleSubmit} className="space-y-8">
-          <div>
-            <label className="mb-1 block text-sm font-medium text-[var(--color-text)]">
-              Join URL
-            </label>
-            <p className="mb-2 text-xs text-[var(--color-text-muted)]">
-              This is the web link where users will be redirected when they click the "Join Us" buttons across the website (for example, a WhatsApp Group, Telegram, or Google Form link).
+          <div className="rounded-lg border border-white/10 bg-white/[0.03] p-4 sm:p-5">
+            <h2 className="font-display text-base font-semibold text-[var(--color-text)]">
+              Join Us (sitewide)
+            </h2>
+            <p className="mt-2 text-xs leading-relaxed text-[var(--color-text-muted)]">
+              Every <strong className="text-[var(--color-text)]">Join Us</strong> button on the public site uses this link
+              and these labels (English and Urdu).
             </p>
+            <label className="mb-1 mt-4 block text-sm font-medium text-[var(--color-text)]">
+              Where Join Us goes
+            </label>
             <input
               type="url"
               value={form.joinUrl}
               onChange={(e) => setForm((f) => ({ ...f, joinUrl: e.target.value }))}
-              placeholder="https://..."
+              placeholder="https://chat.whatsapp.com/… or form link"
               className="w-full rounded-md border border-white/20 bg-white/5 px-3 py-2 text-[var(--color-text)] placeholder:text-white/40 focus:border-[var(--color-accent)] focus:outline-none focus:ring-1 focus:ring-[var(--color-accent)]"
             />
+            <div className="mt-4">
+              <LocaleFields
+                label="Button wording"
+                value={form.joinLabel}
+                onChange={(joinLabel) => setForm((f) => ({ ...f, joinLabel }))}
+              />
+            </div>
           </div>
-
-          <LocaleFields
-            label="Join label"
-            value={form.joinLabel}
-            onChange={(joinLabel) => setForm((f) => ({ ...f, joinLabel }))}
-          />
 
           <div className="rounded-lg border border-white/10 bg-white/[0.03] p-4 sm:p-5">
             <h2 className="font-display text-base font-semibold text-[var(--color-text)]">
               March floating bar &amp; dialog copy
             </h2>
             <p className="mt-2 text-xs leading-relaxed text-[var(--color-text-muted)]">
-              The red bottom-right pill label, the dialog title, and the paragraph under the poster (English and Urdu).
-              Save after editing — these are stored with your other CTAs in Redis.
+              The red march pill, the popup title, and the text under the poster — English and Urdu. Click{" "}
+              <strong className="text-[var(--color-text)]">Save</strong> at the bottom when you are done.
             </p>
             <div className="mt-4 space-y-4">
               <LocaleFields
@@ -370,29 +375,11 @@ export function AdminCtas() {
               March modal poster
             </h2>
             <p className="mt-2 text-xs leading-relaxed text-[var(--color-text-muted)]">
-              Image inside the march dialog (WebP recommended). Same <code className="rounded bg-white/10 px-1 py-0.5 text-[11px]">/images/…</code> path is
-              browser-cached; after replacing the file in Git, redeploy so visitors get a new cache key. Stored with your
-              other CTAs in Redis (no separate database). Production uploads use{" "}
-              <a
-                href="https://vercel.com/docs/vercel-blob"
-                className="text-[var(--color-accent)] underline-offset-2 hover:underline"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Vercel Blob
-              </a>{" "}
-              when <code className="rounded bg-white/10 px-1 py-0.5 text-[11px]">BLOB_READ_WRITE_TOKEN</code> is set
-              (larger files). <strong className="text-[var(--color-text)]">Without Blob,</strong>{" "}
-              <strong className="text-[var(--color-text)]">Upload</strong> still works for images up to{" "}
-              {formatPosterSizeLimit(MARCH_POSTER_MAX_EMBED_BYTES)} (stored embedded in Redis after Save). Or paste{" "}
-              <code className="rounded bg-white/10 px-1 py-0.5 text-[11px]">{DEFAULT_MARCH_POSTER_URL}</code> or{" "}
-              <strong className="text-[var(--color-text)]">https://</strong> URLs.
-            </p>
-            <p className="mt-3 rounded-md border border-white/10 bg-white/[0.04] px-3 py-2.5 text-xs leading-relaxed text-[var(--color-text-muted)]">
-              For big posters without Blob, add files under{" "}
-              <code className="rounded bg-white/10 px-1 py-0.5 text-[11px]">public/images/</code>, deploy, set Poster URL
-              to <code className="rounded bg-white/10 px-1 py-0.5 text-[11px]">/images/your-file.jpg</code>, then{" "}
-              <strong className="text-[var(--color-text)]">Save</strong>.
+              Picture shown in the march popup. Paste a link to an image on this site (starts with{" "}
+              <code className="rounded bg-white/10 px-1 py-0.5 text-[11px]">/images/</code>) or any{" "}
+              <strong className="text-[var(--color-text)]">https://</strong> image address. You can also use{" "}
+              <strong className="text-[var(--color-text)]">Upload</strong> for smaller files (up to{" "}
+              {formatPosterSizeLimit(MARCH_POSTER_MAX_EMBED_BYTES)} unless your team enabled larger cloud uploads).
             </p>
             <label className="mb-1 mt-4 block text-sm font-medium text-[var(--color-text)]">
               Poster image URL
@@ -409,20 +396,21 @@ export function AdminCtas() {
             />
             {form.marchPosterUrl.startsWith("data:") && (
               <p className="mt-2 text-xs text-[var(--color-text-muted)]">
-                A file is embedded for local preview (URL field hidden). Clear with &quot;Remove poster&quot; or replace
-                by uploading again.
+                A small image is saved inside your settings (the address box is hidden for this type). Use{" "}
+                <strong className="text-[var(--color-text)]">Hide poster</strong> to remove it, or upload again to
+                replace.
               </p>
             )}
             <p className="mt-3 text-xs text-[var(--color-text-muted)]">
-              <span className="font-medium text-[var(--color-text)]">Upload limit:</span>{" "}
-              {formatPosterSizeLimit(posterMaxUploadBytes)} per file
+              <span className="font-medium text-[var(--color-text)]">Upload size limit:</span>{" "}
+              {formatPosterSizeLimit(posterMaxUploadBytes)} per file.
               {!DISABLE_REMOTE_API && marchPosterBlobUpload === false
-                ? " (no Vercel Blob — embedded mode only)."
+                ? " For bigger files, use an /images/… or https:// link instead."
                 : null}
               {!DISABLE_REMOTE_API && marchPosterBlobUpload === true
-                ? " (Vercel Blob enabled — larger files allowed)."
+                ? " Larger files are allowed when cloud uploads are enabled."
                 : null}
-              {!DISABLE_REMOTE_API && marchPosterBlobUpload === null ? " (checking…)" : null}
+              {!DISABLE_REMOTE_API && marchPosterBlobUpload === null ? " Checking limits…" : null}
             </p>
             <div className="mt-2 flex flex-wrap items-center gap-3">
               <label className="inline-flex cursor-pointer items-center gap-2 rounded-md border border-white/20 bg-white/5 px-3 py-2 text-sm font-medium text-[var(--color-text)] transition hover:bg-white/10">
