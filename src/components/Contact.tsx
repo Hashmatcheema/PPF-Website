@@ -2,6 +2,8 @@ import { useState } from "react"
 import type { Locale } from "@/data/content"
 import { content } from "@/data/content"
 import { apiUrl, DISABLE_REMOTE_API } from "@/lib/apiUrl"
+import { ppfCtaPrimaryClassName } from "@/lib/ppfCtaButton"
+import { cn } from "@/lib/utils"
 
 export function Contact({ lang }: { lang: Locale }) {
   const t = content[lang].contact
@@ -111,7 +113,7 @@ export function Contact({ lang }: { lang: Locale }) {
           <button
             type="submit"
             disabled={sent || submitting}
-            className="h-11 rounded-md bg-[var(--color-accent)] px-6 font-semibold text-[var(--color-bg)] transition hover:bg-[var(--color-accent-hover)] disabled:opacity-70"
+            className={cn(ppfCtaPrimaryClassName(), "disabled:opacity-70")}
           >
             {submitting
               ? (lang === "ur" ? "بھیج رہے ہیں..." : "Sending...")

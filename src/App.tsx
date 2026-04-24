@@ -54,7 +54,7 @@ function MainSite() {
   return (
     <div className="ppf-marketing min-h-screen min-w-0 bg-[var(--color-bg)]">
       <Header lang={lang} setLang={setLang} />
-      <main>
+      <main className="min-w-0">
         <Hero lang={lang} />
         <FAQTalha lang={lang} />
         <MissionVisionTalha lang={lang} />

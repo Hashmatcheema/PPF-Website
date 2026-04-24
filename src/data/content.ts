@@ -1,9 +1,10 @@
-export const content = {
+import { stripEmDashesDeep } from "@/lib/forDisplay"
+
+const contentSource = {
   en: {
     siteName: "Pak Palestine Forum",
     tagline: "Peaceful, Non-Violent Activism for Palestine",
-    heroSubtitle:
-      "Pak Palestine Forum is a dedicated platform based in Pakistan to support the Palestinian cause, particularly the liberation of Al-Aqsa and the freedom of Palestine.",
+    swipeHint: "swipe",
     nav: {
       mission: "Vision",
       where: "Our Chapters",
@@ -247,6 +248,45 @@ export const content = {
       badge: "Volunteer & Collaborate",
       h2: "Join Pak-Palestine Forum — Volunteer Opportunities",
       p: "Pak-Palestine Forum welcomes volunteers, professionals, and organizations to contribute to humanitarian and advocacy initiatives.",
+      skillsHeading: "Roles & skills",
+      skillCards: [
+        {
+          title: "Ground Activism",
+          detail: "Onboard volunteers onto ground teams for peaceful, organised events.",
+        },
+        {
+          title: "Networking and Public Relations",
+          detail: "Brief new volunteers and pair them with the right ground team.",
+        },
+        {
+          title: "Photography",
+          detail: "Documenting events, marches, and community moments for archives, awareness, and our channels.",
+        },
+        {
+          title: "Vlogs or Video Messages",
+          detail: "Recording short updates, appeals, or personal messages people can share online.",
+        },
+        {
+          title: "Video Editing",
+          detail: "Cutting footage, pacing, captions, and polishing clips so campaigns look sharp and readable.",
+        },
+        {
+          title: "Graphics Designing",
+          detail: "Posters, stories, thumbnails, and visual assets that make our calls to action easy to spot.",
+        },
+        {
+          title: "Social Media Management",
+          detail: "Scheduling posts, replying to supporters, and keeping pages active, accurate, and on-message.",
+        },
+        {
+          title: "Content Writing and Research",
+          detail: "Short social media–savvy content",
+        },
+        {
+          title: "Any other skill relevant to the mission",
+          detail: "Tell us what you bring — if it supports Palestine and our work in Pakistan, we still want to hear from you.",
+        },
+      ],
       cta: "Join Us",
       ways: [
         { title: "Volunteer for Campaigns", short: "On-ground activism & event coordination" },
@@ -255,6 +295,7 @@ export const content = {
         { title: "Provide Professional Expertise", short: "Legal, medical, tech & creative skills" },
         { title: "Collaborate as Partner Organization", short: "Organisational collaboration & resources" },
       ],
+      waysHeading: "How you can help",
     },
     footer: { tagline: "Peaceful, Non-Violent Activism for Palestine" },
     chatbot: {
@@ -269,8 +310,7 @@ export const content = {
   ur: {
     siteName: "پاک فلسطین فورم",
     tagline: "فلسطین کے لیے متحدہ موقف",
-    heroSubtitle:
-      "پاک فلسطین فورم پاکستان کا ایک مشترکہ پلیٹ فارم ہے جو فلسطین کاز کے لیے وقف ہے جو پاکستان کے مختلف طبقات کو فلسطین کی آزادی اور حقوق کے لیے یک آواز ہو کر جدوجہد کی دعوت دیتا ہے۔",
+    swipeHint: "سوائپ",
     nav: {
       mission: "ویژن",
       where: "ہمارے چیپٹر",
@@ -504,6 +544,45 @@ export const content = {
       badge: "رضاکار اور تعاون",
       h2: "پاک فلسطین فورم میں شامل ہوں — رضاکارانہ مواقع",
       p: "پاک فلسطین فورم انسانی اور وکالت کی کوششوں میں حصہ ڈالنے کے لیے رضاکاروں، پیشہ ور افراد اور تنظیموں کا خیرمقدم کرتا ہے۔",
+      skillsHeading: "کردار اور مہارتیں",
+      skillCards: [
+        {
+          title: "زمینی سرگرمی",
+          detail: "رضاکاروں کو زمینی ٹیموں میں شامل کرنا — پرامن، منظم تقریبات کے لیے۔",
+        },
+        {
+          title: "نیٹ ورکنگ اور عوامی تعلقات",
+          detail: "نئے رضاکاروں کو بریف کرنا اور مناسب زمینی ٹیم سے جوڑنا۔",
+        },
+        {
+          title: "فوٹو گرافی",
+          detail: "مارچوں، تقریبات اور کمیونٹی لمحات کی دستاویز — آگاہی اور چینلز کے لیے۔",
+        },
+        {
+          title: "ولاغز یا ویڈیو پیغامات",
+          detail: "مختصر اپ ڈیٹس، اپیلیں یا ذاتی پیغامات جو آن لائن شیئر کیے جا سکیں۔",
+        },
+        {
+          title: "ویڈیو ایڈیٹنگ",
+          detail: "فوٹیج کاٹنا، رفتار، سب ٹائٹل اور کلپس کو مہمات کے لیے تیار کرنا۔",
+        },
+        {
+          title: "گرافک ڈیزائننگ",
+          detail: "پوسٹر، اسٹوریز، تھمب نیل اور بصری مواد تاکہ ہماری کال واضح نظر آئے۔",
+        },
+        {
+          title: "سوشل میڈیا کا انتظام",
+          detail: "پوسٹ شیڈول، جوابات، اور صفحات کو فعال، درست اور پیغام کے مطابق رکھنا۔",
+        },
+        {
+          title: "مواد کی تحریر اور تحقیق",
+          detail: "سوشل میڈیا کے لیے مختصر اور موثر مواد",
+        },
+        {
+          title: "مشن سے متعلق کوئی اور مہارت",
+          detail: "اپنی مہارت لکھیں — اگر فلسطین اور پاکستان میں ہمارے کام میں مددگار ہو تو ہم سننا چاہتے ہیں۔",
+        },
+      ],
       cta: "شامل ہوں",
       ways: [
         { title: "مہمات کے لیے رضاکار", short: "زمینی سرگرمی اور ایونٹ کوآرڈینیشن" },
@@ -512,6 +591,7 @@ export const content = {
         { title: "پیشہ ورانہ مہارت فراہم کریں", short: "قانونی، طبی، ٹیک اور تخلیقی صلاحیتیں" },
         { title: "پارٹنر تنظیم کے طور پر تعاون", short: "تنظیمی تعاون اور وسائل" },
       ],
+      waysHeading: "آپ کیسے مدد کر سکتے ہیں",
     },
     footer: { tagline: "فلسطین کے لیے متحدہ موقف" },
     chatbot: {
@@ -525,4 +605,6 @@ export const content = {
   },
 } as const
 
-export type Locale = keyof typeof content
+export const content = stripEmDashesDeep(contentSource) as typeof contentSource
+
+export type Locale = keyof typeof contentSource

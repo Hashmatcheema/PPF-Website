@@ -1,6 +1,8 @@
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { apiUrl, DISABLE_REMOTE_API } from "@/lib/apiUrl"
+import { ppfCtaPrimaryClassName } from "@/lib/ppfCtaButton"
+import { cn } from "@/lib/utils"
 
 const ADMIN_AUTH_KEY = "ppf-admin-auth"
 
@@ -112,7 +114,7 @@ export function AdminLogin() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-md bg-[var(--color-accent)] py-2.5 text-sm font-semibold text-[var(--color-bg)] transition hover:opacity-90 disabled:opacity-50"
+            className={cn(ppfCtaPrimaryClassName(), "w-full")}
           >
             {loading ? "Signing in…" : "Sign in"}
           </button>

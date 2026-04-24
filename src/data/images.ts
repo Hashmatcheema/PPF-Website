@@ -3,16 +3,16 @@
  * Replace with your own assets; these are high-quality placeholders.
  * Sources: Unsplash (humanitarian, solidarity, peace, community, aid).
  */
-/** Hero slider images — one per tagline pair from content (lines 7–12); excludes images used in Mission and Impact */
+/** Hero slider images — order matches `content.*.heroSlides` (0 = first tagline, 1 = second, …). */
 const heroSlidesList = [
-  "/images/hero-1.jpg",
-  "/images/hero-2.jpg",
-  "/images/hero-3.jpg",
+  "/images/hero-slide-2.webp",
+  "/images/354b2959-8e7f-4f19-b8d4-eee82ab400b6.webp",
+  "/images/hero-3.webp",
 ] as const
 
 export const images = {
-  hero: "/images/hero-1.jpg",
-  heroMobile: "/images/hero-1.jpg",
+  hero: "/images/354b2959-8e7f-4f19-b8d4-eee82ab400b6.webp",
+  heroMobile: "/images/354b2959-8e7f-4f19-b8d4-eee82ab400b6.webp",
   heroSlides: heroSlidesList,
   /** Solidarity / community / together */
   solidarity1: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1200&q=80",
@@ -22,9 +22,9 @@ export const images = {
   olive: "https://images.unsplash.com/photo-1605649487212-47bdab064df7?w=1200&q=80",
   land: "https://images.unsplash.com/photo-1500387467463-e7b3d79a3d4c?w=1200&q=80",
   /** Mission / Vision section */
-  missionVision: "/images/mission.jpg",
+  missionVision: "/images/mission.webp",
   /** Humanitarian / aid / hope / relief (Impact section) */
-  humanitarian: "/images/impact.jpg",
+  humanitarian: "/images/impact.webp",
   hope: "https://images.unsplash.com/photo-1516627145497-ae6968895b74?w=1200&q=80",
   community: "https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=1200&q=80",
   aid: "https://images.unsplash.com/photo-1593113598332-cd288d649433?w=1200&q=80",
@@ -41,13 +41,13 @@ export const images = {
     "https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=800&q=80",
   ],
   /** Team — PPF headshots from Images for PPF website/Team */
-  team1: "/images/team1.jpg",
-  team2: "/images/team2.jpg",
-  team3: "/images/team3.jpg",
-  team4: "/images/team4.jpg",
-  team5: "/images/team5.jpg",
-  team6: "/images/team6.jpg",
-  team7: "/images/team7.jpg",
-  team8: "/images/team8.jpg",
-  team9: "/images/team9.jpg",
+  team1: "/images/team1.webp",
+  team2: "/images/team2.webp",
+  team3: "/images/team3.webp",
+  team4: "/images/team4.webp",
+  team5: "/images/team5.webp",
+  team6: "/images/team6.webp",
+  team7: "/images/team7.webp",
+  team8: "/images/team8.webp",
+  team9: "/images/team9.webp",
 } as const

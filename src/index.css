@@ -1,15 +1,42 @@
 @import "tailwindcss";
 
-/* Dark theme only */
+/*
+ * PPF brand colors (Palestinian flag–aligned, tuned for dark UI)
+ * ----------------------------------------------------------------
+ * Black  → layered bases (bg / elevated / surface), never flat pure #000 alone.
+ * White  → primary body copy only (not eyebrow labels).
+ * Label red → section eyebrows + swipe hints (`--color-label-red`).
+ * Coral accent → navigation, stats, icons, hairlines (`#ff474a` / lighter `#ff5c5f`).
+ * Deep red → solid CTAs + march strip (`--color-cta` family).
+ * Use roles below in components; avoid painting entire sections a single hue.
+ */
 @theme inline {
-  --color-bg: #0a0e0c;
-  --color-bg-elevated: #111814;
-  --color-surface: #161c18;
-  --color-border: #2a332e;
-  --color-text: #e8e6e3;
-  --color-text-muted: #9ca39b;
-  --color-accent: #c9a227;
-  --color-accent-hover: #d4af37;
+  --color-bg: #0b100e;
+  --color-bg-elevated: #131b18;
+  --color-surface: #1a2420;
+  /* Lifted panels (Join cards, etc.) — clearly above page bg for contrast */
+  --color-card: #26332d;
+  --color-card-hover: #2f3d36;
+  --color-border: #3d4d45;
+  --color-border-soft: rgba(255, 255, 255, 0.12);
+  --color-text: #f4f3f1;
+  --color-text-muted: #9eb0a4;
+  /* Section eyebrows & swipe hints — brand red */
+  --color-label-red: #ff1f22;
+  /* Flag reference */
+  --color-flag-red: #ff1f22;
+  --color-flag-red-deep: #b81417;
+  /* Accent = coral (replaces former green: icons, nav, stats, focus) */
+  --color-accent: #ff474a;
+  --color-accent-hover: #ff5c5f;
+  --color-accent-deep: #c73e40;
+  /* CTA = brand red (solid buttons, urgent strip) */
+  --color-cta: #ff1f22;
+  --color-cta-hover: #ff4a4d;
+  --color-cta-deep: #b81417;
+  /* Text on filled accent (coral) */
+  --color-on-accent: #1a0606;
+  --color-on-cta: #ffffff;
   --radius: 0.375rem;
 
   /* Slightly larger copy scale (body / section prose) */
@@ -43,6 +70,28 @@ html {
 
 .ppf-marketing main {
   min-width: 0;
+}
+
+/* Floating march CTA: gentle scale + lift reads as moving toward / away from viewer */
+@keyframes ppf-floating-cta-breathe {
+  0%,
+  100% {
+    transform: scale(1) translateY(0);
+  }
+  50% {
+    transform: scale(1.022) translateY(-2px);
+  }
+}
+
+.ppf-floating-cta-breathe {
+  transform-origin: center bottom;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .ppf-floating-cta-breathe {
+    animation: ppf-floating-cta-breathe 2.6s ease-in-out infinite;
+    will-change: transform;
+  }
 }
 
 /* Fixed header offset for in-page anchors (nav + footer links) */
@@ -94,6 +143,25 @@ body {
   }
 }
 
+/* Impact: wider grid on desktop so milestone copy fits more per line */
+@media (min-width: 1024px) {
+  .wrap.wrap--impact-wide {
+    max-width: min(88rem, calc(100vw - 5rem));
+  }
+}
+
+@media (min-width: 1280px) {
+  .wrap.wrap--impact-wide {
+    max-width: min(92rem, calc(100vw - 5rem));
+  }
+}
+
+@media (min-width: 1536px) {
+  .wrap.wrap--impact-wide {
+    max-width: min(96rem, calc(100vw - 6rem));
+  }
+}
+
 .font-display {
   font-family: "Outfit", "Syne", system-ui, sans-serif;
   font-feature-settings: "ss01" 1;
@@ -131,6 +199,21 @@ body {
     0 6px 28px rgba(0, 0, 0, 0.45);
 }
 
+/* Hero site name eyebrow: black stroke around glyphs (with red fill from `color`) */
+.hero-eyebrow-stroke {
+  -webkit-text-stroke: 0.85px #000000;
+  paint-order: stroke fill;
+}
+
+/* Impact stat numerals: black rim + depth; glow matches accent fill */
+.impact-stat-stroke {
+  -webkit-text-stroke: 1px #060808;
+  paint-order: stroke fill;
+  text-shadow:
+    0 2px 18px rgba(0, 0, 0, 0.65),
+    0 0 36px rgba(255, 71, 74, 0.32);
+}
+
 /* Card Shadows for Light and Dark Modes */
 .shadow-card {
   box-shadow: 0 12px 30px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
@@ -143,10 +226,10 @@ body {
 /* Floating CTA — emergency / urgent emphasis */
 @keyframes floating-cta-glow {
   0%, 100% {
-    box-shadow: 0 4px 24px rgba(220, 38, 38, 0.45), 0 0 0 0 rgba(220, 38, 38, 0.35);
+    box-shadow: 0 4px 24px rgba(255, 31, 34, 0.42), 0 0 0 0 rgba(255, 31, 34, 0.32);
   }
   50% {
-    box-shadow: 0 4px 28px rgba(220, 38, 38, 0.55), 0 0 0 8px rgba(220, 38, 38, 0);
+    box-shadow: 0 4px 28px rgba(255, 31, 34, 0.52), 0 0 0 8px rgba(255, 31, 34, 0);
   }
 }
 
@@ -155,5 +238,84 @@ body {
 }
 .floating-cta-emergency:hover {
   animation: none;
-  box-shadow: 0 8px 32px rgba(220, 38, 38, 0.5);
+  box-shadow: 0 8px 32px rgba(255, 31, 34, 0.48);
+}
+
+/* Impact achievements — entrance (respect reduced motion) */
+@keyframes impact-card-reveal {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 0.625rem, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.impact-card-animate {
+  animation: impact-card-reveal 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Mobile uses horizontal stagger on `.impact-mobile-card` instead */
+@media (max-width: 767px) {
+  .impact-card-animate {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .impact-card-animate {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Impact achievements — horizontal strip on small screens */
+.impact-mobile-scroll {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.impact-mobile-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Impact milestones — mobile: optional stagger (cards stay visible if observer never runs) */
+@keyframes impact-mobile-line-in {
+  from {
+    transform: translate3d(0.75rem, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@media (max-width: 767px) {
+  .impact-mobile-scroll.impact-mobile-strip--revealed .impact-mobile-card {
+    animation: impact-mobile-line-in 0.44s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: var(--impact-m-stagger, 0ms);
+  }
+}
+
+@media (max-width: 767px) and (prefers-reduced-motion: reduce) {
+  .impact-mobile-scroll.impact-mobile-strip--revealed .impact-mobile-card {
+    animation: none !important;
+    transform: none;
+  }
+}
+
+/* Team — horizontal strip on small screens */
+.team-mobile-scroll {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.team-mobile-scroll::-webkit-scrollbar {
+  display: none;
 }

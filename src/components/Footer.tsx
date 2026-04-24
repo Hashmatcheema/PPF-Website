@@ -8,7 +8,7 @@ export function Footer({ lang }: { lang: Locale }) {
     <footer className="bg-[#0a0e0c] border-t border-white/10 py-12">
       <div className="wrap flex flex-col items-center gap-6 text-center md:flex-row md:justify-between md:text-left">
         <div className="flex items-center gap-4">
-          <img src="/images/PPF-logo.png" alt="PPF Logo" className="h-12 w-auto rounded-md object-contain" />
+          <img src="/images/PPF-logo.webp" alt="PPF Logo" className="h-12 w-auto rounded-md object-contain" />
           <div className="flex flex-col items-start gap-0.5">
             <span className="font-display text-xl font-bold text-white">PPF</span>
             <span className="text-sm text-white/70">{t.siteName}</span>

@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom"
 import { useCtasConfig } from "@/contexts/CtasContext"
 import { ADMIN_AUTH_KEY } from "./AdminLogin"
 import { apiUrl, DISABLE_REMOTE_API } from "@/lib/apiUrl"
+import { ppfCtaPrimaryCompactClassName } from "@/lib/ppfCtaButton"
 import type { CtasConfig, LocaleLabel } from "@/data/ctasSchema"
 
 function LocaleFields({
@@ -37,6 +38,30 @@ function LocaleFields({
   )
 }
 
+function validateMarchPoster(url: string): string | null {
+  const u = url.trim()
+  if (!u) return null
+  if (u.startsWith("data:image/")) {
+    if (!DISABLE_REMOTE_API) {
+      return "With the live API, use an https:// image URL or upload (no data URLs in Redis)."
+    }
+    const maxEncoded = 600_000
+    if (u.length > maxEncoded) {
+      return "Poster file is too large for local save; use a smaller image or an https:// URL."
+    }
+    return null
+  }
+  if (u.startsWith("https://")) {
+    try {
+      new URL(u)
+      return null
+    } catch {
+      return "Invalid poster URL"
+    }
+  }
+  return "Poster must be empty, an https:// image URL, or an uploaded image."
+}
+
 function validate(config: CtasConfig): string | null {
   const labels: { key: string; v: LocaleLabel }[] = [
     { key: "joinLabel", v: config.joinLabel },
@@ -54,7 +79,21 @@ function validate(config: CtasConfig): string | null {
       return `${key}: both en and ur are required`
     }
   }
-  return null
+  return validateMarchPoster(config.marchPosterUrl ?? "")
+}
+
+function fileToBase64Payload(file: File): Promise<{ base64: string; mimeType: string }> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => {
+      const dataUrl = reader.result as string
+      const comma = dataUrl.indexOf(",")
+      const base64 = comma >= 0 ? dataUrl.slice(comma + 1) : dataUrl
+      resolve({ base64, mimeType: file.type })
+    }
+    reader.onerror = () => reject(reader.error ?? new Error("Read failed"))
+    reader.readAsDataURL(file)
+  })
 }
 
 export function AdminCtas() {
@@ -83,6 +122,7 @@ export function AdminCtas() {
   const [form, setForm] = useState<CtasConfig>(ctas)
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
   const [saving, setSaving] = useState(false)
+  const [posterUploading, setPosterUploading] = useState(false)
 
   useEffect(() => {
     setForm(ctas)
@@ -103,6 +143,68 @@ export function AdminCtas() {
       setMessage({ type: "success", text: "CTAs saved successfully." })
     } else {
       setMessage({ type: "error", text: result.error ?? "Failed to save" })
+    }
+  }
+
+  const handleMarchPosterFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    e.target.value = ""
+    if (!file || !file.type.startsWith("image/")) {
+      if (file) setMessage({ type: "error", text: "Choose an image file (JPEG, PNG, WebP, or GIF)." })
+      return
+    }
+    const maxPick = 1.5 * 1024 * 1024
+    if (file.size > maxPick) {
+      setMessage({ type: "error", text: "Image must be about 1.5 MB or smaller." })
+      return
+    }
+
+    if (DISABLE_REMOTE_API) {
+      try {
+        const reader = new FileReader()
+        const dataUrl = await new Promise<string>((resolve, reject) => {
+          reader.onload = () => resolve(reader.result as string)
+          reader.onerror = () => reject(reader.error ?? new Error("Read failed"))
+          reader.readAsDataURL(file)
+        })
+        if (dataUrl.length > 600_000) {
+          setMessage({ type: "error", text: "Image is too large for local storage; compress it or use a smaller file." })
+          return
+        }
+        setForm((f) => ({ ...f, marchPosterUrl: dataUrl }))
+        setMessage({ type: "success", text: "Poster loaded. Click Save to keep it in this browser." })
+      } catch {
+        setMessage({ type: "error", text: "Could not read the file." })
+      }
+      return
+    }
+
+    setPosterUploading(true)
+    setMessage(null)
+    try {
+      const { base64, mimeType } = await fileToBase64Payload(file)
+      const res = await fetch(apiUrl("/api/admin/march-poster"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ base64, mimeType, filename: file.name }),
+      })
+      const data = (await res.json().catch(() => ({}))) as { url?: string; error?: string }
+      if (!res.ok) {
+        setMessage({ type: "error", text: data.error ?? "Upload failed" })
+        return
+      }
+      if (typeof data.url === "string" && data.url.startsWith("https://")) {
+        const url = data.url
+        setForm((f) => ({ ...f, marchPosterUrl: url }))
+        setMessage({ type: "success", text: "Poster uploaded. Click Save to publish it on the site." })
+      } else {
+        setMessage({ type: "error", text: "Upload returned an unexpected response." })
+      }
+    } catch {
+      setMessage({ type: "error", text: "Upload request failed." })
+    } finally {
+      setPosterUploading(false)
     }
   }
 
@@ -154,11 +256,75 @@ export function AdminCtas() {
             onChange={(joinLabel) => setForm((f) => ({ ...f, joinLabel }))}
           />
 
+          <div className="rounded-lg border border-white/10 bg-white/[0.03] p-4 sm:p-5">
+            <h2 className="font-display text-base font-semibold text-[var(--color-text)]">
+              March modal poster
+            </h2>
+            <p className="mt-2 text-xs leading-relaxed text-[var(--color-text-muted)]">
+              Shown inside the red &quot;Pakistanis March For Gaza&quot; dialog on the marketing site. Stored with your
+              other CTAs in Redis (no separate database). Production uploads use{" "}
+              <a
+                href="https://vercel.com/docs/vercel-blob"
+                className="text-[var(--color-accent)] underline-offset-2 hover:underline"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Vercel Blob
+              </a>{" "}
+              when <code className="rounded bg-white/10 px-1 py-0.5 text-[11px]">BLOB_READ_WRITE_TOKEN</code> is set;
+              otherwise paste an <strong className="text-[var(--color-text)]">https://</strong> image URL.
+            </p>
+            <label className="mb-1 mt-4 block text-sm font-medium text-[var(--color-text)]">
+              Poster image URL
+            </label>
+            <input
+              type="url"
+              value={form.marchPosterUrl.startsWith("data:") ? "" : form.marchPosterUrl}
+              onChange={(e) => setForm((f) => ({ ...f, marchPosterUrl: e.target.value }))}
+              placeholder="https://…"
+              className="w-full rounded-md border border-white/20 bg-white/5 px-3 py-2 text-[var(--color-text)] placeholder:text-white/40 focus:border-[var(--color-accent)] focus:outline-none focus:ring-1 focus:ring-[var(--color-accent)]"
+            />
+            {form.marchPosterUrl.startsWith("data:") && (
+              <p className="mt-2 text-xs text-[var(--color-text-muted)]">
+                A file is embedded for local preview (URL field hidden). Clear with &quot;Remove poster&quot; or replace
+                by uploading again.
+              </p>
+            )}
+            <div className="mt-4 flex flex-wrap items-center gap-3">
+              <label className="inline-flex cursor-pointer items-center gap-2 rounded-md border border-white/20 bg-white/5 px-3 py-2 text-sm font-medium text-[var(--color-text)] transition hover:bg-white/10">
+                <input
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp,image/gif"
+                  className="sr-only"
+                  disabled={posterUploading}
+                  onChange={handleMarchPosterFile}
+                />
+                {posterUploading ? "Uploading…" : "Upload image"}
+              </label>
+              <button
+                type="button"
+                onClick={() => setForm((f) => ({ ...f, marchPosterUrl: "" }))}
+                className="rounded-md border border-white/20 px-3 py-2 text-sm text-[var(--color-text-muted)] transition hover:bg-white/5 hover:text-[var(--color-text)]"
+              >
+                Remove poster
+              </button>
+            </div>
+            {form.marchPosterUrl.trim() ? (
+              <div className="mt-4 overflow-hidden rounded-lg border border-white/10 bg-black/30 p-2">
+                <img
+                  src={form.marchPosterUrl}
+                  alt="Poster preview"
+                  className="mx-auto max-h-64 w-full max-w-md object-contain"
+                />
+              </div>
+            ) : null}
+          </div>
+
           {message && (
             <p
               className={
                 message.type === "success"
-                  ? "text-sm text-emerald-400"
+                  ? "text-sm text-[var(--color-accent-hover)]"
                   : "text-sm text-red-400"
               }
             >
@@ -170,14 +336,14 @@ export function AdminCtas() {
             <button
               type="submit"
               disabled={saving}
-              className="rounded-md bg-[var(--color-accent)] px-4 py-2 text-sm font-semibold text-[var(--color-bg)] transition hover:opacity-90 disabled:opacity-50"
+              className={ppfCtaPrimaryCompactClassName()}
             >
               {saving ? "Saving…" : "Save"}
             </button>
             <button
               type="button"
               onClick={() => navigate("/")}
-              className="rounded-md border border-white/20 px-4 py-2 text-sm font-medium text-[var(--color-text)] transition hover:bg-white/5"
+              className="rounded-full border border-white/20 px-4 py-2 text-sm font-medium text-[var(--color-text)] transition hover:bg-white/5"
             >
               Cancel
             </button>

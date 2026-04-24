@@ -35,10 +35,13 @@ export default async function handler(
   }
 
   const ip = getClientIp(req)
-  const { success } = await ratelimitLogin().limit(ip)
-  if (!success) {
-    res.status(429).json({ error: "Too many requests" })
-    return
+  const rl = ratelimitLogin()
+  if (rl) {
+    const { success } = await rl.limit(ip)
+    if (!success) {
+      res.status(429).json({ error: "Too many requests" })
+      return
+    }
   }
 
   const json = getJsonBody(req) as { username?: unknown; password?: unknown } | null

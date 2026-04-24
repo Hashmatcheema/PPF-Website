@@ -1,7 +1,7 @@
-import { ChevronLeft, ChevronRight } from "lucide-react"
 import type { Locale } from "@/data/content"
 import { content } from "@/data/content"
 import { CityLandmarkIcon } from "@/components/CityLandmarkIcons"
+import { HorizontalSwipeHint } from "@/components/HorizontalSwipeHint"
 
 /** Chapter Instagram links — order matches `content.*.where.chapters` (Islamabad → Multan) */
 const CHAPTERS_DATA = [
@@ -26,15 +26,20 @@ function InstagramIcon({ className }: { className?: string }) {
 /** Locations (Presence) — chapter chips in one horizontally scrollable, centered row. */
 export function LocationsTalha({ lang }: { lang: Locale }) {
   const t = content[lang].where
+  const swipeHint = content[lang].swipeHint
   const chapters = t.chapters
   const data = CHAPTERS_DATA
 
   return (
-    <section id="presence" aria-labelledby="presence-heading" className="relative bg-black py-16 md:py-24">
+    <section
+      id="presence"
+      aria-labelledby="presence-heading"
+      className="relative z-0 bg-[var(--color-bg)] pb-28 pt-16 md:z-auto md:py-24"
+    >
       <div className="relative px-6 text-center sm:px-10">
         <div className="mb-4 flex items-center justify-center gap-3">
           <div className="h-px w-8 bg-[var(--color-accent)]" />
-          <p className="font-display text-xs font-semibold uppercase tracking-[0.25em] text-[var(--color-accent)]">
+          <p className="font-display text-xs font-semibold uppercase tracking-[0.25em] text-[var(--color-label-red)]">
             {lang === "en" ? "Our Chapters" : "ہمارے چیپٹر"}
           </p>
           <div className="h-px w-8 bg-[var(--color-accent)]" />
@@ -50,50 +55,44 @@ export function LocationsTalha({ lang }: { lang: Locale }) {
         </p>
       </div>
 
-      <div className="mt-8 w-full px-4 sm:px-6">
-        <p className="mb-2 flex items-center justify-center gap-1.5 text-center text-[9px] font-medium leading-none text-[var(--color-text-muted)] sm:text-[10px]">
-          <ChevronLeft className="size-3 shrink-0 opacity-60 sm:size-3.5" strokeWidth={2} aria-hidden />
-          <span>
-            {lang === "en"
-              ? "Swipe sideways to see all chapters"
-              : "بائیں یا دائیں سوائپ کریں — تمام چیپٹر دیکھیں"}
-          </span>
-          <ChevronRight className="size-3 shrink-0 opacity-60 sm:size-3.5" strokeWidth={2} aria-hidden />
-        </p>
+      <div className="relative z-[1] mt-8 flex w-full flex-col items-center px-4 sm:px-6">
         <div
           role="region"
           aria-label={lang === "en" ? "Chapters, scroll horizontally" : "چیپٹر، افقی سکرول"}
-          className="mx-auto max-w-full overflow-x-auto overflow-y-visible overscroll-x-contain px-1 py-1 text-center [-webkit-overflow-scrolling:touch] [scrollbar-width:thin] snap-x snap-mandatory scroll-smooth"
+          className="w-full min-h-[8.5rem] max-w-full overflow-x-auto overflow-y-visible overscroll-x-contain py-1 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden snap-x snap-mandatory scroll-smooth"
         >
-          <div className="inline-flex flex-nowrap gap-3 px-1 sm:gap-3.5">
-            {chapters.map((cityName, i) => {
-              const info = data[i] ?? data[0]
-              return (
-                <div
-                  key={i}
-                  className="grid size-[7.5rem] shrink-0 snap-center grid-rows-[auto_minmax(0,1fr)_auto] place-items-center rounded-xl border border-white/10 bg-white/[0.06] p-2 text-center backdrop-blur-sm transition-colors hover:border-white/20 hover:bg-white/[0.08] sm:size-36 sm:p-2.5"
-                >
-                  <CityLandmarkIcon
-                    index={i}
-                    className="h-10 w-10 shrink-0 text-[var(--color-accent)] sm:h-11 sm:w-11"
-                  />
-                  <p className="line-clamp-2 flex min-h-0 w-full items-center justify-center self-stretch px-0.5 text-center text-xs font-bold leading-tight tracking-wide text-[var(--color-text)] sm:text-[13px]">
-                    {cityName}
-                  </p>
-                  <a
-                    href={info.instagram}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex shrink-0 text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-accent)]"
-                    aria-label={`${cityName} on Instagram`}
+          <div className="mx-auto w-max">
+            <div className="flex flex-nowrap gap-3 px-1 sm:gap-3.5">
+              {chapters.map((cityName, i) => {
+                const info = data[i] ?? data[0]
+                return (
+                  <div
+                    key={i}
+                    className="relative grid size-[7.5rem] shrink-0 snap-start grid-rows-[auto_minmax(0,1fr)_auto] place-items-center overflow-hidden rounded-2xl border border-white/[0.09] bg-gradient-to-br from-white/[0.11] to-black/45 p-2.5 text-center shadow-[0_8px_32px_rgba(0,0,0,0.2)] ring-1 ring-inset ring-white/[0.05] backdrop-blur-xl transition-[border-color,box-shadow] hover:border-white/[0.14] sm:size-36 sm:snap-center sm:p-3"
                   >
-                    <InstagramIcon className="h-4 w-4" />
-                  </a>
-                </div>
-              )
-            })}
+                    <CityLandmarkIcon
+                      index={i}
+                      className="h-10 w-10 shrink-0 fill-[var(--color-accent)] stroke-black stroke-[1.1px] [paint-order:fill_stroke] sm:h-11 sm:w-11"
+                    />
+                    <p className="line-clamp-2 flex min-h-0 w-full items-center justify-center self-stretch px-0.5 text-center text-xs font-bold leading-tight tracking-wide text-white sm:text-[13px] md:text-[var(--color-text)]">
+                      {cityName}
+                    </p>
+                    <a
+                      href={info.instagram}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex shrink-0 text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-label-red)]"
+                      aria-label={`${cityName} on Instagram`}
+                    >
+                      <InstagramIcon className="h-4 w-4" />
+                    </a>
+                  </div>
+                )
+              })}
+            </div>
           </div>
         </div>
+        <HorizontalSwipeHint label={swipeHint} className="mt-3 px-1 pb-1 sm:hidden" />
       </div>
 
       <p className="relative mx-auto mt-10 max-w-3xl px-6 text-center text-sm leading-relaxed text-white/40 sm:text-base">

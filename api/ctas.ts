@@ -28,10 +28,13 @@ export default async function handler(
 
   if (req.method === "PUT") {
     const ip = getClientIp(req)
-    const { success } = await ratelimitCtasPut().limit(ip)
-    if (!success) {
-      res.status(429).json({ error: "Too many requests" })
-      return
+    const rl = ratelimitCtasPut()
+    if (rl) {
+      const { success } = await rl.limit(ip)
+      if (!success) {
+        res.status(429).json({ error: "Too many requests" })
+        return
+      }
     }
 
     const admin = requireAdminUser(req)
@@ -54,7 +57,12 @@ export default async function handler(
       }
       await writeCtas(valid)
       res.status(200).json(valid)
-    } catch {
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : ""
+      if (msg === "REDIS_NOT_CONFIGURED") {
+        res.status(503).json({ error: "CTA storage not configured (set Upstash Redis in .env.local)." })
+        return
+      }
       res.status(500).json({ error: "Failed to write CTA config" })
     }
     return

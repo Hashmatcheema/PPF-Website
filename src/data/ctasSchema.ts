@@ -12,6 +12,8 @@ export interface CtasConfig {
   heroCtaSubtext: LocaleLabel
   volunteerLabel: LocaleLabel
   donateLabel: LocaleLabel
+  /** HTTPS URL (e.g. Vercel Blob) or data URL in local-only mode; shown in the march modal */
+  marchPosterUrl: string
 }
 
 /** Bundled default used when API is unavailable or returns invalid data */
@@ -26,6 +28,7 @@ export const defaultCtas: CtasConfig = {
   },
   volunteerLabel: { en: "Volunteer", ur: "رضاکار" },
   donateLabel: { en: "Donate", ur: "عطیہ" },
+  marchPosterUrl: "",
 }
 
 function isLocaleLabel(x: unknown): x is LocaleLabel {
@@ -58,5 +61,6 @@ export function parseCtas(raw: unknown): CtasConfig | null {
     heroCtaSubtext: o.heroCtaSubtext,
     volunteerLabel: o.volunteerLabel,
     donateLabel: o.donateLabel,
+    marchPosterUrl: typeof o.marchPosterUrl === "string" ? o.marchPosterUrl : "",
   }
 }

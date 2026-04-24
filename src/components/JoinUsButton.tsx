@@ -1,5 +1,9 @@
 import type { Locale } from "@/data/content"
 import type { CtasConfig } from "@/data/ctasSchema"
+import {
+  ppfCtaHeaderSolidPaintClassName,
+  ppfCtaPrimaryClassName,
+} from "@/lib/ppfCtaButton"
 import { cn } from "@/lib/utils"
 
 type JoinUsButtonProps = {
@@ -18,14 +22,16 @@ export function JoinUsButton({ lang, ctas, className, variant = "primary", solid
 
   const baseClass =
     variant === "header"
-      ? "hidden rounded-md px-4 py-2 text-sm font-medium md:inline-block"
-      : "inline-flex h-12 items-center justify-center rounded-md bg-[var(--color-accent)] px-8 font-semibold text-[var(--color-bg)] transition hover:bg-[var(--color-accent-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
+      ? solid
+        ? "hidden items-center justify-center md:inline-flex"
+        : "hidden items-center justify-center md:inline-flex"
+      : ppfCtaPrimaryClassName()
 
   const headerVariantClass =
     variant === "header"
       ? solid
-        ? "bg-[var(--color-accent)] text-[var(--color-bg)] hover:bg-[var(--color-accent-hover)]"
-        : "bg-white/10 text-white hover:bg-white/20"
+        ? ppfCtaHeaderSolidPaintClassName()
+        : "rounded-full px-4 py-2 text-sm font-medium bg-white/10 text-white hover:bg-white/20"
       : ""
 
   return (

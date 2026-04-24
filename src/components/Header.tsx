@@ -27,9 +27,10 @@ const links = [
 
 export function Header({
   lang,
-  setLang,
+  setLang: _setLang,
 }: {
   lang: Locale
+  /** Restore parameter name `setLang` when un-commenting the language toggle below. */
   setLang: (l: Locale) => void
 }) {
   const [open, setOpen] = useState(false)
@@ -207,7 +208,7 @@ export function Header({
           }}
         >
           <img
-            src="/images/PPF-logo-icon.png"
+            src="/images/PPF-logo-icon.webp"
             alt="Pak Palestine Forum"
             className="h-10 w-auto shrink-0 object-contain"
           />
@@ -241,6 +242,11 @@ export function Header({
           <div className="hidden items-center gap-1 md:flex">
             <SocialIcons lang={lang} variant="header" solid={solid} />
           </div>
+          {/*
+            Language toggle — hidden until Urdu content is ready. Restore:
+            - Rename `_setLang` → `setLang` in the Header props above.
+            - Uncomment the button block below.
+
           <button
             type="button"
             onClick={() => setLang(lang === "en" ? "ur" : "en")}
@@ -255,6 +261,7 @@ export function Header({
               <span className={`transition-opacity duration-300 ${lang === "ur" ? "opacity-0" : "opacity-100"}`}>اردو</span>
             </div>
           </button>
+          */}
           <button
             type="button"
             onClick={() => setOpen((o) => !o)}

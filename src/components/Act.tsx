@@ -2,6 +2,8 @@ import { useState } from "react"
 import { ArrowRight, Heart, UserPlus, X } from "lucide-react"
 import type { Locale } from "@/data/content"
 import { content } from "@/data/content"
+import { ppfCtaPrimaryClassName } from "@/lib/ppfCtaButton"
+import { cn } from "@/lib/utils"
 
 export function Act({ lang }: { lang: Locale }) {
   const t = content[lang].contact
@@ -11,7 +13,7 @@ export function Act({ lang }: { lang: Locale }) {
   return (
     <section id="act" className="py-24 md:py-32">
       <div className="wrap">
-        <p className="font-display text-xs font-semibold uppercase tracking-[0.25em] text-[var(--color-accent)]">
+        <p className="font-display text-xs font-semibold uppercase tracking-[0.25em] text-[var(--color-label-red)]">
           Get involved
         </p>
         <h2 className="font-display mt-3 max-w-2xl text-3xl font-bold tracking-tight text-[var(--color-text)] md:text-4xl">
@@ -63,7 +65,7 @@ export function Act({ lang }: { lang: Locale }) {
                 href={volunteerUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--color-accent)] py-3.5 pl-5 pr-4 text-sm font-semibold text-[var(--color-bg)] transition hover:bg-[var(--color-accent-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
+                className={cn(ppfCtaPrimaryClassName(), "mt-6 w-full pl-5 pr-4")}
               >
                 {t.volunteer.cta}
                 <ArrowRight className="h-4 w-4 shrink-0" />
@@ -104,8 +106,9 @@ export function Act({ lang }: { lang: Locale }) {
               </div>
             )}
             <button
+              type="button"
               onClick={() => setShowDonate(true)}
-              className="mt-6 inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-[var(--color-accent)] px-6 text-sm font-semibold text-[var(--color-bg)] transition hover:bg-[var(--color-accent-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
+              className={cn(ppfCtaPrimaryClassName(), "mt-6 w-full")}
             >
               {t.donate.cta}
             </button>
@@ -155,8 +158,9 @@ export function Act({ lang }: { lang: Locale }) {
               )}
             </div>
             <button
+              type="button"
               onClick={() => setShowDonate(false)}
-              className="mt-6 w-full rounded-xl bg-[var(--color-accent)] py-3 font-semibold text-[var(--color-bg)] transition hover:bg-[var(--color-accent-hover)]"
+              className={cn(ppfCtaPrimaryClassName(), "mt-6 w-full")}
             >
               {lang === "en" ? "Close" : "بند کریں"}
             </button>

@@ -5,10 +5,12 @@ let loginRl: Ratelimit | null = null
 let ctasRl: Ratelimit | null = null
 let contactRl: Ratelimit | null = null
 
-export function ratelimitLogin(): Ratelimit {
+export function ratelimitLogin(): Ratelimit | null {
+  const redis = getRedis()
+  if (!redis) return null
   if (!loginRl) {
     loginRl = new Ratelimit({
-      redis: getRedis(),
+      redis,
       limiter: Ratelimit.slidingWindow(8, "1 m"),
       prefix: "ppf:rl:login",
     })
@@ -16,10 +18,12 @@ export function ratelimitLogin(): Ratelimit {
   return loginRl
 }
 
-export function ratelimitCtasPut(): Ratelimit {
+export function ratelimitCtasPut(): Ratelimit | null {
+  const redis = getRedis()
+  if (!redis) return null
   if (!ctasRl) {
     ctasRl = new Ratelimit({
-      redis: getRedis(),
+      redis,
       limiter: Ratelimit.slidingWindow(40, "1 m"),
       prefix: "ppf:rl:ctas",
     })
@@ -27,10 +31,12 @@ export function ratelimitCtasPut(): Ratelimit {
   return ctasRl
 }
 
-export function ratelimitContact(): Ratelimit {
+export function ratelimitContact(): Ratelimit | null {
+  const redis = getRedis()
+  if (!redis) return null
   if (!contactRl) {
     contactRl = new Ratelimit({
-      redis: getRedis(),
+      redis,
       limiter: Ratelimit.slidingWindow(12, "1 h"),
       prefix: "ppf:rl:contact",
     })

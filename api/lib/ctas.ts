@@ -10,6 +10,7 @@ export interface CtasConfig {
   heroCtaSubtext: LocaleLabel
   volunteerLabel: LocaleLabel
   donateLabel: LocaleLabel
+  marchPosterUrl: string
 }
 
 export function defaultCtas(): CtasConfig {
@@ -27,6 +28,7 @@ export function defaultCtas(): CtasConfig {
     },
     volunteerLabel: { en: "Volunteer", ur: "رضاکار" },
     donateLabel: { en: "Donate", ur: "عطیہ" },
+    marchPosterUrl: "",
   }
 }
 
@@ -60,11 +62,16 @@ export function parseCtasBody(raw: unknown): CtasConfig | null {
     heroCtaSubtext: o.heroCtaSubtext,
     volunteerLabel: o.volunteerLabel,
     donateLabel: o.donateLabel,
+    marchPosterUrl: typeof o.marchPosterUrl === "string" ? o.marchPosterUrl : "",
   }
 }
 
 export async function readCtas(): Promise<CtasConfig> {
-  const raw = await getRedis().get<string>(CTAS_KEY)
+  const redis = getRedis()
+  if (!redis) {
+    return defaultCtas()
+  }
+  const raw = await redis.get<string>(CTAS_KEY)
   if (raw == null || raw === "") {
     return defaultCtas()
   }
@@ -79,7 +86,11 @@ export async function readCtas(): Promise<CtasConfig> {
 }
 
 export async function writeCtas(config: CtasConfig): Promise<void> {
-  await getRedis().set(CTAS_KEY, JSON.stringify(config))
+  const redis = getRedis()
+  if (!redis) {
+    throw new Error("REDIS_NOT_CONFIGURED")
+  }
+  await redis.set(CTAS_KEY, JSON.stringify(config))
 }
 
 export async function mergeCtasPatch(body: Record<string, unknown>): Promise<CtasConfig> {
@@ -103,6 +114,9 @@ export async function mergeCtasPatch(body: Record<string, unknown>): Promise<Cta
     ) {
       merged[key] = current[key]
     }
+  }
+  if (typeof merged.marchPosterUrl !== "string") {
+    merged.marchPosterUrl = current.marchPosterUrl
   }
   return merged as CtasConfig
 }

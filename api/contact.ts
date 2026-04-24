@@ -20,10 +20,13 @@ export default async function handler(
   }
 
   const ip = getClientIp(req)
-  const { success } = await ratelimitContact().limit(ip)
-  if (!success) {
-    res.status(429).json({ error: "Too many requests" })
-    return
+  const rl = ratelimitContact()
+  if (rl) {
+    const { success } = await rl.limit(ip)
+    if (!success) {
+      res.status(429).json({ error: "Too many requests" })
+      return
+    }
   }
 
   try {
@@ -56,6 +59,10 @@ export default async function handler(
     }
 
     const r = getRedis()
+    if (!r) {
+      res.status(503).json({ error: "Contact storage not configured (set Upstash Redis in .env.local)." })
+      return
+    }
     await r.rpush(CONTACT_LIST_KEY, JSON.stringify(entry))
     await r.ltrim(CONTACT_LIST_KEY, -MAX_LIST, -1)
 

@@ -1,5 +1,5 @@
 /**
- * Optional: generate .webp siblings next to hero + impact JPGs for <picture> sources.
+ * Optional: generate .webp siblings for hero + impact JPGs and the header PNG icon.
  * Run: node scripts/generate-webp.mjs
  */
 import { readdir } from "fs/promises"
@@ -21,6 +21,18 @@ try {
 const targets = ["hero-1.jpg", "hero-2.jpg", "hero-3.jpg", "impact.jpg"]
 
 async function main() {
+  const pngIcons = ["PPF-logo-icon.png"]
+  for (const name of pngIcons) {
+    const input = join(imagesDir, name)
+    const out = input.replace(/\.png$/i, ".webp")
+    try {
+      await sharp(input).webp({ quality: 90 }).toFile(out)
+      console.log("Wrote", out)
+    } catch (e) {
+      console.warn("Skip", name, e.message)
+    }
+  }
+
   for (const name of targets) {
     const input = join(imagesDir, name)
     const out = input.replace(/\.jpe?g$/i, ".webp")

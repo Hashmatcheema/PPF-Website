@@ -9,21 +9,21 @@ export function FooterTalha({ lang }: { lang: Locale }) {
   const year = new Date().getFullYear()
 
   return (
-    <footer className="relative overflow-hidden border-t border-white/10 bg-[#111111]">
+    <footer className="relative overflow-hidden border-t border-white/10 bg-[#111111] pb-[max(5.5rem,calc(4.5rem+env(safe-area-inset-bottom,0px)))] sm:pb-28 md:pb-32">
       <div
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse at bottom center, rgba(201,162,39,0.04) 0%, transparent 60%)",
+            "radial-gradient(ellipse at bottom center, rgba(255,71,74,0.09) 0%, transparent 60%)",
         }}
       />
 
-      <div className="relative wrap py-4 sm:py-8 md:py-10 lg:py-12 max-sm:pb-24">
+      <div className="relative wrap py-4 sm:py-8 md:py-10 lg:py-12">
         {/* Brand — tighter on mobile */}
         <div className="flex flex-col items-start text-left">
           <a href="#" className="flex items-center gap-2.5 sm:gap-3" aria-label="Pak-Palestine Forum">
             <img
-              src="/images/PPF-logo.png"
+              src="/images/PPF-logo.webp"
               alt="PPF"
               width={48}
               height={48}
