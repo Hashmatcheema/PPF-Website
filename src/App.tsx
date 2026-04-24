@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, lazy, Suspense } from "react"
 import { CtasProvider } from "@/contexts/CtasContext"
 import { Header } from "@/components/Header"
 import { Hero } from "@/components/Hero"
@@ -12,6 +12,7 @@ import { FooterTalha } from "@/components/FooterTalha"
 import { FloatingCta } from "@/components/FloatingCta"
 import { AdminLogin } from "@/pages/AdminLogin"
 import { ProtectedAdmin } from "@/components/ProtectedAdmin"
+const TrackerLive = lazy(() => import("@/pages/TrackerLive").then((m) => ({ default: m.TrackerLive })))
 import type { Locale } from "@/data/content"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 
@@ -75,6 +76,20 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<MainSite />} />
+          <Route
+            path="/tracker"
+            element={
+              <Suspense
+                fallback={
+                  <div className="flex min-h-screen items-center justify-center bg-[var(--color-bg)] text-[var(--color-text-muted)]">
+                    Loading…
+                  </div>
+                }
+              >
+                <TrackerLive />
+              </Suspense>
+            }
+          />
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin" element={<ProtectedAdmin />} />
         </Routes>
