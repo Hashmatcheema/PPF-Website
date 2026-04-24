@@ -6,6 +6,7 @@ import { apiUrl, DISABLE_REMOTE_API } from "@/lib/apiUrl"
 import { ppfCtaPrimaryCompactClassName } from "@/lib/ppfCtaButton"
 import type { CtasConfig, LocaleLabel } from "@/data/ctasSchema"
 import { DEFAULT_MARCH_POSTER_URL } from "@/data/images"
+import { posterSrcForDisplay } from "@/lib/posterImageSrc"
 
 function LocaleFields({
   label,
@@ -321,8 +322,9 @@ export function AdminCtas() {
               March modal poster
             </h2>
             <p className="mt-2 text-xs leading-relaxed text-[var(--color-text-muted)]">
-              Image inside the march dialog (WebP recommended). Stored with your other
-              CTAs in Redis (no separate database). Production uploads use{" "}
+              Image inside the march dialog (WebP recommended). Same <code className="rounded bg-white/10 px-1 py-0.5 text-[11px]">/images/…</code> path is
+              browser-cached; after replacing the file in Git, redeploy so visitors get a new cache key. Stored with your
+              other CTAs in Redis (no separate database). Production uploads use{" "}
               <a
                 href="https://vercel.com/docs/vercel-blob"
                 className="text-[var(--color-accent)] underline-offset-2 hover:underline"
@@ -398,7 +400,8 @@ export function AdminCtas() {
             {form.marchPosterUrl.trim() ? (
               <div className="mt-4 overflow-hidden rounded-lg border border-white/10 bg-black/30 p-2">
                 <img
-                  src={form.marchPosterUrl}
+                  key={posterSrcForDisplay(form.marchPosterUrl)}
+                  src={posterSrcForDisplay(form.marchPosterUrl)}
                   alt="Poster preview"
                   className="mx-auto max-h-64 w-full max-w-md object-contain"
                 />

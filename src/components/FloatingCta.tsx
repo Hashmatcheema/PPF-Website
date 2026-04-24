@@ -5,6 +5,7 @@ import type { Locale } from "@/data/content"
 import { content } from "@/data/content"
 import { useCtasConfig } from "@/contexts/CtasContext"
 import { ppfCtaFlex, ppfCtaSolid } from "@/lib/ppfCtaButton"
+import { posterSrcForDisplay } from "@/lib/posterImageSrc"
 import { cn } from "@/lib/utils"
 
 const barClassName =
@@ -45,6 +46,7 @@ export function FloatingCta({ lang }: { lang: Locale }) {
   const marchTitle = (ctas.marchEventTitle?.[lang] ?? "").trim() || t.eventTitle
   const marchBody = (ctas.marchEventBody?.[lang] ?? "").trim() || t.eventBody
   const marchPoster = ctas.marchPosterUrl?.trim() ?? ""
+  const marchPosterSrc = marchPoster ? posterSrcForDisplay(marchPoster) : ""
   const [contactOpen, setContactOpen] = useState(false)
   const [eventOpen, setEventOpen] = useState(false)
   const contactPanelId = useId()
@@ -101,7 +103,7 @@ export function FloatingCta({ lang }: { lang: Locale }) {
                     <X className="h-5 w-5" strokeWidth={2} aria-hidden />
                   </Dialog.Close>
                 </div>
-                {marchPoster ? (
+                {marchPosterSrc ? (
                   <figure className="mt-5 flex w-full flex-col items-center">
                     <div
                       className={cn(
@@ -120,7 +122,8 @@ export function FloatingCta({ lang }: { lang: Locale }) {
                       >
                         <div className="overflow-hidden rounded-[1px] bg-neutral-900 shadow-[inset_0_0_24px_rgba(0,0,0,0.35)] ring-1 ring-black/20">
                           <img
-                            src={marchPoster}
+                            key={marchPosterSrc}
+                            src={marchPosterSrc}
                             alt={marchTitle}
                             className="mx-auto block h-auto max-h-[min(58dvh,520px)] w-auto max-w-[min(18.5rem,calc(100vw-3.5rem))] object-contain object-center sm:max-h-[min(62dvh,560px)] sm:max-w-[min(19.25rem,calc(100vw-4rem))]"
                             sizes="(max-width: 24rem) calc(100vw - 3.5rem), 19rem"
