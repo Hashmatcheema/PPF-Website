@@ -3,11 +3,13 @@ import { put } from "@vercel/blob"
 import { forbidWithoutCors, handleCorsPreflight } from "../../server/lib/http.js"
 import { requireAdminUser } from "../../server/lib/auth.js"
 import { getJsonBody } from "../../server/lib/body.js"
+import {
+  MARCH_POSTER_MAX_BLOB_BYTES,
+  MARCH_POSTER_MAX_EMBED_BYTES,
+} from "../../shared/marchPosterLimits.js"
 
-/** With Vercel Blob token */
-const MAX_BYTES = 1.8 * 1024 * 1024
-/** Without Blob: embed as data URL in Redis — keep small for Upstash payload limits */
-const MAX_EMBED_BYTES_NO_BLOB = 420 * 1024
+const MAX_BYTES = MARCH_POSTER_MAX_BLOB_BYTES
+const MAX_EMBED_BYTES_NO_BLOB = MARCH_POSTER_MAX_EMBED_BYTES
 
 const ALLOWED_MIME = new Set([
   "image/jpeg",

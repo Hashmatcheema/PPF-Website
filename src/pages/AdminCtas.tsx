@@ -7,6 +7,11 @@ import { ppfCtaPrimaryCompactClassName } from "@/lib/ppfCtaButton"
 import type { CtasConfig, LocaleLabel } from "@/data/ctasSchema"
 import { DEFAULT_MARCH_POSTER_URL } from "@/data/images"
 import { posterSrcForDisplay } from "@/lib/posterImageSrc"
+import {
+  formatPosterSizeLimit,
+  MARCH_POSTER_MAX_BLOB_CLIENT_BYTES,
+  MARCH_POSTER_MAX_EMBED_BYTES,
+} from "../../shared/marchPosterLimits"
 
 function LocaleFields({
   label,
@@ -128,10 +133,35 @@ export function AdminCtas() {
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
   const [saving, setSaving] = useState(false)
   const [posterUploading, setPosterUploading] = useState(false)
+  /** `null` until /api/admin/me — assume strict embed limit until then */
+  const [marchPosterBlobUpload, setMarchPosterBlobUpload] = useState<boolean | null>(null)
 
   useEffect(() => {
     setForm(ctas)
   }, [ctas])
+
+  useEffect(() => {
+    if (DISABLE_REMOTE_API) {
+      setMarchPosterBlobUpload(false)
+      return
+    }
+    let cancelled = false
+    fetch(apiUrl("/api/admin/me"), { credentials: "include" })
+      .then(async (r) => {
+        if (!r.ok) return null
+        return (await r.json()) as { marchPosterBlobUpload?: boolean }
+      })
+      .then((data) => {
+        if (cancelled || !data) return
+        setMarchPosterBlobUpload(!!data.marchPosterBlobUpload)
+      })
+      .catch(() => {
+        if (!cancelled) setMarchPosterBlobUpload(false)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -158,9 +188,23 @@ export function AdminCtas() {
       if (file) setMessage({ type: "error", text: "Choose an image file (JPEG, PNG, WebP, or GIF)." })
       return
     }
-    const maxPick = 1.5 * 1024 * 1024
+
+    const maxPick = DISABLE_REMOTE_API
+      ? MARCH_POSTER_MAX_EMBED_BYTES
+      : marchPosterBlobUpload === true
+        ? MARCH_POSTER_MAX_BLOB_CLIENT_BYTES
+        : MARCH_POSTER_MAX_EMBED_BYTES
+
     if (file.size > maxPick) {
-      setMessage({ type: "error", text: "Image must be about 1.5 MB or smaller." })
+      const cap = formatPosterSizeLimit(maxPick)
+      const hint =
+        marchPosterBlobUpload === false
+          ? " Without Vercel Blob, uploads are limited to embedded storage. Add BLOB_READ_WRITE_TOKEN for larger files, or use an /images/… or https:// URL."
+          : ""
+      setMessage({
+        type: "error",
+        text: `This image is too large (${formatPosterSizeLimit(file.size)}). Maximum upload size is ${cap}.${hint}`,
+      })
       return
     }
 
@@ -244,6 +288,12 @@ export function AdminCtas() {
       setPosterUploading(false)
     }
   }
+
+  const posterMaxUploadBytes = DISABLE_REMOTE_API
+    ? MARCH_POSTER_MAX_EMBED_BYTES
+    : marchPosterBlobUpload === true
+      ? MARCH_POSTER_MAX_BLOB_CLIENT_BYTES
+      : MARCH_POSTER_MAX_EMBED_BYTES
 
   return (
     <div className="min-h-screen bg-[var(--color-bg)]">
@@ -333,8 +383,8 @@ export function AdminCtas() {
               </a>{" "}
               when <code className="rounded bg-white/10 px-1 py-0.5 text-[11px]">BLOB_READ_WRITE_TOKEN</code> is set
               (larger files). <strong className="text-[var(--color-text)]">Without Blob,</strong>{" "}
-              <strong className="text-[var(--color-text)]">Upload</strong> still works for images under ~420&nbsp;KB (stored
-              embedded in Redis after Save). Or paste{" "}
+              <strong className="text-[var(--color-text)]">Upload</strong> still works for images up to{" "}
+              {formatPosterSizeLimit(MARCH_POSTER_MAX_EMBED_BYTES)} (stored embedded in Redis after Save). Or paste{" "}
               <code className="rounded bg-white/10 px-1 py-0.5 text-[11px]">{DEFAULT_MARCH_POSTER_URL}</code> or{" "}
               <strong className="text-[var(--color-text)]">https://</strong> URLs.
             </p>
@@ -363,13 +413,25 @@ export function AdminCtas() {
                 by uploading again.
               </p>
             )}
-            <div className="mt-4 flex flex-wrap items-center gap-3">
+            <p className="mt-3 text-xs text-[var(--color-text-muted)]">
+              <span className="font-medium text-[var(--color-text)]">Upload limit:</span>{" "}
+              {formatPosterSizeLimit(posterMaxUploadBytes)} per file
+              {!DISABLE_REMOTE_API && marchPosterBlobUpload === false
+                ? " (no Vercel Blob — embedded mode only)."
+                : null}
+              {!DISABLE_REMOTE_API && marchPosterBlobUpload === true
+                ? " (Vercel Blob enabled — larger files allowed)."
+                : null}
+              {!DISABLE_REMOTE_API && marchPosterBlobUpload === null ? " (checking…)" : null}
+            </p>
+            <div className="mt-2 flex flex-wrap items-center gap-3">
               <label className="inline-flex cursor-pointer items-center gap-2 rounded-md border border-white/20 bg-white/5 px-3 py-2 text-sm font-medium text-[var(--color-text)] transition hover:bg-white/10">
                 <input
                   type="file"
                   accept="image/jpeg,image/png,image/webp,image/gif"
                   className="sr-only"
                   disabled={posterUploading}
+                  title={`Max ${formatPosterSizeLimit(posterMaxUploadBytes)}`}
                   onChange={handleMarchPosterFile}
                 />
                 {posterUploading ? "Uploading…" : "Upload image (WebP, PNG, …)"}
