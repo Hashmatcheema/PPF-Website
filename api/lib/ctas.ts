@@ -28,7 +28,9 @@ export function defaultCtas(): CtasConfig {
     },
     volunteerLabel: { en: "Volunteer", ur: "رضاکار" },
     donateLabel: { en: "Donate", ur: "عطیہ" },
-    marchPosterUrl: "",
+    /** Same-origin march poster JPEG; keep in sync with src/data/images.ts `DEFAULT_MARCH_POSTER_URL` */
+    marchPosterUrl:
+      "/images/WhatsApp%20Image%202026-04-09%20at%2021.09.21.jpeg",
   }
 }
 
@@ -54,6 +56,11 @@ export function parseCtasBody(raw: unknown): CtasConfig | null {
   ) {
     return null
   }
+  const marchPosterUrl =
+    typeof o.marchPosterUrl === "string" ? o.marchPosterUrl : ""
+  const resolvedPoster =
+    "marchPosterUrl" in o ? marchPosterUrl : defaultCtas().marchPosterUrl
+
   return {
     joinUrl: typeof o.joinUrl === "string" ? o.joinUrl : "",
     joinLabel: o.joinLabel,
@@ -62,7 +69,7 @@ export function parseCtasBody(raw: unknown): CtasConfig | null {
     heroCtaSubtext: o.heroCtaSubtext,
     volunteerLabel: o.volunteerLabel,
     donateLabel: o.donateLabel,
-    marchPosterUrl: typeof o.marchPosterUrl === "string" ? o.marchPosterUrl : "",
+    marchPosterUrl: resolvedPoster,
   }
 }
 

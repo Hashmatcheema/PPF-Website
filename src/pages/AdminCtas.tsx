@@ -5,6 +5,7 @@ import { ADMIN_AUTH_KEY } from "./AdminLogin"
 import { apiUrl, DISABLE_REMOTE_API } from "@/lib/apiUrl"
 import { ppfCtaPrimaryCompactClassName } from "@/lib/ppfCtaButton"
 import type { CtasConfig, LocaleLabel } from "@/data/ctasSchema"
+import { DEFAULT_MARCH_POSTER_URL } from "@/data/images"
 
 function LocaleFields({
   label,
@@ -59,7 +60,11 @@ function validateMarchPoster(url: string): string | null {
       return "Invalid poster URL"
     }
   }
-  return "Poster must be empty, an https:// image URL, or an uploaded image."
+  if (u.startsWith("/")) {
+    if (u.includes("..") || u.length > 2048) return "Invalid poster path"
+    return null
+  }
+  return "Poster must be empty, /images/… on this site, an https:// image URL, or an uploaded image."
 }
 
 function validate(config: CtasConfig): string | null {
@@ -171,8 +176,17 @@ export function AdminCtas() {
           setMessage({ type: "error", text: "Image is too large for local storage; compress it or use a smaller file." })
           return
         }
-        setForm((f) => ({ ...f, marchPosterUrl: dataUrl }))
-        setMessage({ type: "success", text: "Poster loaded. Click Save to keep it in this browser." })
+        const next = { ...form, marchPosterUrl: dataUrl }
+        setForm(next)
+        const saved = await saveCtas(next)
+        if (saved.ok) {
+          setMessage({ type: "success", text: "Poster saved. Refresh the site to see it in the march dialog." })
+        } else {
+          setMessage({
+            type: "error",
+            text: saved.error ?? "Poster loaded but could not save — click Save.",
+          })
+        }
       } catch {
         setMessage({ type: "error", text: "Could not read the file." })
       }
@@ -196,8 +210,22 @@ export function AdminCtas() {
       }
       if (typeof data.url === "string" && data.url.startsWith("https://")) {
         const url = data.url
-        setForm((f) => ({ ...f, marchPosterUrl: url }))
-        setMessage({ type: "success", text: "Poster uploaded. Click Save to publish it on the site." })
+        const next = { ...form, marchPosterUrl: url }
+        setForm(next)
+        const saved = await saveCtas(next)
+        if (saved.ok) {
+          setMessage({
+            type: "success",
+            text: "Poster uploaded and saved. Open the march dialog on the site to confirm.",
+          })
+        } else {
+          setMessage({
+            type: "error",
+            text:
+              saved.error ??
+              "Upload succeeded but save failed — click Save, or configure Redis for CTAs.",
+          })
+        }
       } else {
         setMessage({ type: "error", text: "Upload returned an unexpected response." })
       }
@@ -261,8 +289,8 @@ export function AdminCtas() {
               March modal poster
             </h2>
             <p className="mt-2 text-xs leading-relaxed text-[var(--color-text-muted)]">
-              Shown inside the red &quot;Pakistanis March For Gaza&quot; dialog on the marketing site. Stored with your
-              other CTAs in Redis (no separate database). Production uploads use{" "}
+              Shown inside the &quot;Pakistanis March For Gaza&quot; dialog (WebP recommended). Stored with your other
+              CTAs in Redis (no separate database). Production uploads use{" "}
               <a
                 href="https://vercel.com/docs/vercel-blob"
                 className="text-[var(--color-accent)] underline-offset-2 hover:underline"
@@ -272,16 +300,18 @@ export function AdminCtas() {
                 Vercel Blob
               </a>{" "}
               when <code className="rounded bg-white/10 px-1 py-0.5 text-[11px]">BLOB_READ_WRITE_TOKEN</code> is set;
-              otherwise paste an <strong className="text-[var(--color-text)]">https://</strong> image URL.
+              otherwise paste a same-site path like{" "}
+              <code className="rounded bg-white/10 px-1 py-0.5 text-[11px]">{DEFAULT_MARCH_POSTER_URL}</code> or an{" "}
+              <strong className="text-[var(--color-text)]">https://</strong> image URL.
             </p>
             <label className="mb-1 mt-4 block text-sm font-medium text-[var(--color-text)]">
               Poster image URL
             </label>
             <input
-              type="url"
+              type="text"
               value={form.marchPosterUrl.startsWith("data:") ? "" : form.marchPosterUrl}
               onChange={(e) => setForm((f) => ({ ...f, marchPosterUrl: e.target.value }))}
-              placeholder="https://…"
+              placeholder={`${DEFAULT_MARCH_POSTER_URL} or https://…`}
               className="w-full rounded-md border border-white/20 bg-white/5 px-3 py-2 text-[var(--color-text)] placeholder:text-white/40 focus:border-[var(--color-accent)] focus:outline-none focus:ring-1 focus:ring-[var(--color-accent)]"
             />
             {form.marchPosterUrl.startsWith("data:") && (
@@ -299,14 +329,21 @@ export function AdminCtas() {
                   disabled={posterUploading}
                   onChange={handleMarchPosterFile}
                 />
-                {posterUploading ? "Uploading…" : "Upload image"}
+                {posterUploading ? "Uploading…" : "Upload image (WebP, PNG, …)"}
               </label>
+              <button
+                type="button"
+                onClick={() => setForm((f) => ({ ...f, marchPosterUrl: DEFAULT_MARCH_POSTER_URL }))}
+                className="rounded-md border border-white/20 px-3 py-2 text-sm text-[var(--color-text)] transition hover:bg-white/5"
+              >
+                Use site default poster
+              </button>
               <button
                 type="button"
                 onClick={() => setForm((f) => ({ ...f, marchPosterUrl: "" }))}
                 className="rounded-md border border-white/20 px-3 py-2 text-sm text-[var(--color-text-muted)] transition hover:bg-white/5 hover:text-[var(--color-text)]"
               >
-                Remove poster
+                Hide poster
               </button>
             </div>
             {form.marchPosterUrl.trim() ? (

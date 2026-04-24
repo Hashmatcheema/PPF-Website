@@ -33,10 +33,11 @@ const popoverBaseClassName =
 const popoverContactClassName = `${popoverBaseClassName} right-0 origin-bottom-right`
 
 const eventModalOverlayClassName =
-  "fixed inset-0 z-[55] bg-black/50 backdrop-blur-[2px] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0"
+  "fixed inset-0 z-[55] bg-black/65 backdrop-blur-[3px] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0"
 
+/** March / event dialog: portrait-poster friendly width, lightbox-style shell */
 const eventModalContentClassName =
-  "fixed left-1/2 top-1/2 z-[60] max-h-[min(85vh,calc(100dvh-2rem))] w-[min(28rem,calc(100vw-2rem))] -translate-x-1/2 -translate-y-1/2 overflow-y-auto overscroll-contain rounded-2xl border border-white/12 bg-[var(--color-bg)]/95 p-4 shadow-[0_8px_40px_rgba(0,0,0,0.5)] ring-1 ring-black/40 backdrop-blur-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:p-5"
+  "fixed left-1/2 top-1/2 z-[60] max-h-[min(92dvh,calc(100dvh-1.25rem))] w-[min(23rem,calc(100vw-2rem))] -translate-x-1/2 -translate-y-1/2 overflow-y-auto overscroll-contain rounded-2xl border border-white/15 bg-[var(--color-bg)]/97 p-4 shadow-[0_0_0_1px_rgba(0,0,0,0.4),0_24px_80px_-12px_rgba(0,0,0,0.65)] ring-1 ring-white/10 backdrop-blur-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:p-5"
 
 export function FloatingCta({ lang }: { lang: Locale }) {
   const { ctas } = useCtasConfig()
@@ -99,16 +100,37 @@ export function FloatingCta({ lang }: { lang: Locale }) {
                   </Dialog.Close>
                 </div>
                 {marchPoster ? (
-                  <div className="mt-4 overflow-hidden rounded-xl border border-white/10 bg-black/25">
-                    <img
-                      src={marchPoster}
-                      alt=""
-                      className="mx-auto max-h-[min(40vh,18rem)] w-full object-contain"
-                      decoding="async"
-                    />
-                  </div>
+                  <figure className="mt-5 flex w-full flex-col items-center">
+                    <div
+                      className={cn(
+                        "w-fit max-w-full",
+                        "rounded-[3px] shadow-[0_22px_48px_-10px_rgba(0,0,0,0.85),0_0_0_1px_rgba(255,255,255,0.14)]",
+                        "ring-1 ring-inset ring-white/25",
+                      )}
+                    >
+                      {/* Passepartout / mat — reads as a framed poster, not a video strip */}
+                      <div
+                        className={cn(
+                          "rounded-[3px] bg-gradient-to-br from-[#f6f3ec] via-[#ebe6dc] to-[#d9d3c8]",
+                          "p-2.5 sm:p-[14px]",
+                          "shadow-[inset_0_1px_0_rgba(255,255,255,0.95),inset_0_-2px_6px_rgba(0,0,0,0.06)]",
+                        )}
+                      >
+                        <div className="overflow-hidden rounded-[1px] bg-neutral-900 shadow-[inset_0_0_24px_rgba(0,0,0,0.35)] ring-1 ring-black/20">
+                          <img
+                            src={marchPoster}
+                            alt={t.eventTitle}
+                            className="mx-auto block h-auto max-h-[min(58dvh,520px)] w-auto max-w-[min(18.5rem,calc(100vw-3.5rem))] object-contain object-center sm:max-h-[min(62dvh,560px)] sm:max-w-[min(19.25rem,calc(100vw-4rem))]"
+                            sizes="(max-width: 24rem) calc(100vw - 3.5rem), 19rem"
+                            decoding="async"
+                            fetchPriority="low"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </figure>
                 ) : null}
-                <Dialog.Description className="mt-3 text-pretty text-sm leading-relaxed text-[var(--color-text-muted)]">
+                <Dialog.Description className="mt-4 border-t border-white/10 pt-4 text-pretty text-sm leading-relaxed text-[var(--color-text-muted)]">
                   {t.eventBody}
                 </Dialog.Description>
               </Dialog.Content>

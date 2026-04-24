@@ -3,16 +3,27 @@
  * Replace with your own assets; these are high-quality placeholders.
  * Sources: Unsplash (humanitarian, solidarity, peace, community, aid).
  */
+
+/** Primary hero / slide still (WebP). */
+const HERO_PRIMARY_WEBP = "/images/354b2959-8e7f-4f19-b8d4-eee82ab400b6.webp" as const
+
+/**
+ * Default march modal graphic (`public/images/WhatsApp Image 2026-04-09 at 21.09.21.jpeg`).
+ * Spaces encoded for stable `src` URLs. Override in Admin → CTAs; keep in sync with `api/lib/ctas.ts` defaultCtas.
+ */
+export const DEFAULT_MARCH_POSTER_URL =
+  "/images/WhatsApp%20Image%202026-04-09%20at%2021.09.21.jpeg" as const
+
 /** Hero slider images — order matches `content.*.heroSlides` (0 = first tagline, 1 = second, …). */
 const heroSlidesList = [
   "/images/hero-slide-2.webp",
-  "/images/354b2959-8e7f-4f19-b8d4-eee82ab400b6.webp",
+  HERO_PRIMARY_WEBP,
   "/images/hero-3.webp",
 ] as const
 
 export const images = {
-  hero: "/images/354b2959-8e7f-4f19-b8d4-eee82ab400b6.webp",
-  heroMobile: "/images/354b2959-8e7f-4f19-b8d4-eee82ab400b6.webp",
+  hero: HERO_PRIMARY_WEBP,
+  heroMobile: HERO_PRIMARY_WEBP,
   heroSlides: heroSlidesList,
   /** Solidarity / community / together */
   solidarity1: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1200&q=80",

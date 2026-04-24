@@ -1,3 +1,5 @@
+import { DEFAULT_MARCH_POSTER_URL } from "./images"
+
 /**
  * CTA config schema — matches server API (GET/PUT /api/ctas).
  * Client can change labels and joinUrl without code deploy.
@@ -12,7 +14,7 @@ export interface CtasConfig {
   heroCtaSubtext: LocaleLabel
   volunteerLabel: LocaleLabel
   donateLabel: LocaleLabel
-  /** HTTPS URL (e.g. Vercel Blob) or data URL in local-only mode; shown in the march modal */
+  /** Same-site path (/images/…), https URL (e.g. Vercel Blob), or data URL in local-only; shown in the march modal */
   marchPosterUrl: string
 }
 
@@ -28,7 +30,7 @@ export const defaultCtas: CtasConfig = {
   },
   volunteerLabel: { en: "Volunteer", ur: "رضاکار" },
   donateLabel: { en: "Donate", ur: "عطیہ" },
-  marchPosterUrl: "",
+  marchPosterUrl: DEFAULT_MARCH_POSTER_URL,
 }
 
 function isLocaleLabel(x: unknown): x is LocaleLabel {
@@ -53,6 +55,12 @@ export function parseCtas(raw: unknown): CtasConfig | null {
   ) {
     return null
   }
+  const marchPosterUrl =
+    typeof o.marchPosterUrl === "string" ? o.marchPosterUrl : ""
+  /** Older Redis/local saves had no key — treat as “unset” and use default march poster asset */
+  const resolvedPoster =
+    "marchPosterUrl" in o ? marchPosterUrl : DEFAULT_MARCH_POSTER_URL
+
   return {
     joinUrl: typeof o.joinUrl === "string" ? o.joinUrl : "",
     joinLabel: o.joinLabel,
@@ -61,6 +69,6 @@ export function parseCtas(raw: unknown): CtasConfig | null {
     heroCtaSubtext: o.heroCtaSubtext,
     volunteerLabel: o.volunteerLabel,
     donateLabel: o.donateLabel,
-    marchPosterUrl: typeof o.marchPosterUrl === "string" ? o.marchPosterUrl : "",
+    marchPosterUrl: resolvedPoster,
   }
 }
