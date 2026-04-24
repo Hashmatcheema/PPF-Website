@@ -12,8 +12,8 @@ import {
 import type { Locale } from "@/data/content"
 import { content } from "@/data/content"
 import { HorizontalSwipeHint } from "@/components/HorizontalSwipeHint"
-import { ppfCtaPrimaryClassName } from "@/lib/ppfCtaButton"
-import { cn } from "@/lib/utils"
+import { JoinUsButton } from "@/components/JoinUsButton"
+import { useCtasConfig } from "@/contexts/CtasContext"
 
 const skillCardIcons = [
   HandHelping,
@@ -71,11 +71,11 @@ function JoinRoleIcon({ index, className }: { index: number; className?: string 
 const trackCardClassName =
   "relative w-[min(16rem,calc(100vw-2.25rem))] shrink-0 snap-center cursor-default overflow-hidden rounded-2xl border border-white/[0.09] bg-gradient-to-br from-white/[0.11] to-black/45 p-4 shadow-[0_8px_32px_rgba(0,0,0,0.2)] ring-1 ring-inset ring-white/[0.05] backdrop-blur-xl sm:w-auto sm:min-w-0 sm:max-w-none sm:snap-normal sm:p-5"
 
-/** Join PPF — ways to take part (static list) + primary Join Us link to volunteer form */
+/** Join PPF — ways to take part (static list) + primary Join Us from admin CTAs (`joinUrl` / `joinLabel`) */
 export function JoinPPFTalha({ lang }: { lang: Locale }) {
+  const { ctas } = useCtasConfig()
   const t = content[lang].join
   const swipeHint = content[lang].swipeHint
-  const volunteerFormUrl = content[lang].contact.volunteer.formUrl
   return (
     <section id="act" aria-labelledby="join-heading" className="relative overflow-hidden bg-[var(--color-bg)]">
       <div
@@ -206,17 +206,11 @@ export function JoinPPFTalha({ lang }: { lang: Locale }) {
         </div>
 
         <div className="mt-12 flex justify-center px-1 sm:mt-14 sm:px-0">
-          <a
-            href={volunteerFormUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={cn(
-              ppfCtaPrimaryClassName(),
-              "w-full max-w-xs sm:w-auto sm:max-w-none sm:min-w-[12rem]",
-            )}
-          >
-            {t.cta}
-          </a>
+          <JoinUsButton
+            lang={lang}
+            ctas={ctas}
+            className="w-full max-w-xs sm:w-auto sm:max-w-none sm:min-w-[12rem]"
+          />
         </div>
       </div>
     </section>
