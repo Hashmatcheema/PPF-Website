@@ -205,7 +205,15 @@ export function AdminCtas() {
       })
       const data = (await res.json().catch(() => ({}))) as { url?: string; error?: string }
       if (!res.ok) {
-        setMessage({ type: "error", text: data.error ?? "Upload failed" })
+        const apiErr = typeof data.error === "string" ? data.error : ""
+        const blobMissing =
+          apiErr.includes("BLOB") || apiErr.toLowerCase().includes("not configured")
+        setMessage({
+          type: "error",
+          text: blobMissing
+            ? `${apiErr || "Upload is not configured."} Add the image under public/images in the repo, use /images/… in Poster URL, then Save — or add BLOB_READ_WRITE_TOKEN in Vercel for drag-and-drop upload.`
+            : apiErr || "Upload failed",
+        })
         return
       }
       if (typeof data.url === "string" && data.url.startsWith("https://")) {
@@ -303,6 +311,14 @@ export function AdminCtas() {
               otherwise paste a same-site path like{" "}
               <code className="rounded bg-white/10 px-1 py-0.5 text-[11px]">{DEFAULT_MARCH_POSTER_URL}</code> or an{" "}
               <strong className="text-[var(--color-text)]">https://</strong> image URL.
+            </p>
+            <p className="mt-3 rounded-md border border-white/10 bg-white/[0.04] px-3 py-2.5 text-xs leading-relaxed text-[var(--color-text-muted)]">
+              <strong className="text-[var(--color-text)]">Upload</strong> only works if this project has{" "}
+              <code className="rounded bg-white/10 px-1 py-0.5 text-[11px]">BLOB_READ_WRITE_TOKEN</code> in Vercel
+              env. <strong className="text-[var(--color-text)]">Without Blob,</strong> add images under{" "}
+              <code className="rounded bg-white/10 px-1 py-0.5 text-[11px]">public/images/</code> in Git, deploy, then
+              set Poster URL to <code className="rounded bg-white/10 px-1 py-0.5 text-[11px]">/images/your-file.jpg</code>{" "}
+              and click <strong className="text-[var(--color-text)]">Save</strong> — no upload button needed.
             </p>
             <label className="mb-1 mt-4 block text-sm font-medium text-[var(--color-text)]">
               Poster image URL
