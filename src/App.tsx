@@ -12,7 +12,7 @@ import { FooterTalha } from "@/components/FooterTalha"
 import { FloatingCta } from "@/components/FloatingCta"
 import { AdminLogin } from "@/pages/AdminLogin"
 import { ProtectedAdmin } from "@/components/ProtectedAdmin"
-const TrackerLive = lazy(() => import("@/pages/TrackerLive").then((m) => ({ default: m.TrackerLive })))
+const TrackerLivePublic = lazy(() => import("@/pages/TrackerLivePublic").then((m) => ({ default: m.TrackerLivePublic })))
 import type { Locale } from "@/data/content"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 
@@ -86,7 +86,7 @@ function App() {
                   </div>
                 }
               >
-                <TrackerLive />
+                <TrackerLivePublic />
               </Suspense>
             }
           />

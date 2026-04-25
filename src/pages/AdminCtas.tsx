@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { useCtasConfig } from "@/contexts/CtasContext"
-import { ADMIN_AUTH_KEY } from "./AdminLogin"
 import { apiUrl, DISABLE_REMOTE_API } from "@/lib/apiUrl"
 import { ppfCtaPrimaryCompactClassName } from "@/lib/ppfCtaButton"
 import type { CtasConfig, LocaleLabel } from "@/data/ctasSchema"
@@ -135,26 +134,6 @@ function fileToBase64Payload(file: File): Promise<{ base64: string; mimeType: st
 export function AdminCtas() {
   const navigate = useNavigate()
   const { ctas, saveCtas } = useCtasConfig()
-
-  const handleLogout = async () => {
-    if (!DISABLE_REMOTE_API) {
-      try {
-        await fetch(apiUrl("/api/admin/logout"), {
-          method: "POST",
-          credentials: "include",
-        })
-      } catch {
-        /* network/cookie clear best-effort */
-      }
-    } else {
-      try {
-        sessionStorage.removeItem(ADMIN_AUTH_KEY)
-      } catch {
-        /* storage unavailable */
-      }
-    }
-    navigate("/admin/login", { replace: true })
-  }
   const [form, setForm] = useState<CtasConfig>(ctas)
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
   const [saving, setSaving] = useState(false)
@@ -314,31 +293,7 @@ export function AdminCtas() {
       : MARCH_POSTER_MAX_EMBED_BYTES
 
   return (
-    <div className="min-h-screen bg-[var(--color-bg)]">
-      <header className="border-b border-white/10 px-4 py-4 sm:px-6">
-        <div className="mx-auto flex max-w-3xl items-center justify-between">
-          <h1 className="font-display text-lg font-semibold text-[var(--color-text)]">
-            Edit website content
-          </h1>
-          <div className="flex items-center gap-4">
-            <button
-              type="button"
-              onClick={handleLogout}
-              className="text-sm font-medium text-[var(--color-text-muted)] transition hover:text-[var(--color-text)]"
-            >
-              Log out
-            </button>
-            <Link
-              to="/"
-              className="text-sm font-medium text-[var(--color-accent)] transition hover:underline"
-            >
-              Back to site
-            </Link>
-          </div>
-        </div>
-      </header>
-      <main className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
-        <form onSubmit={handleSubmit} className="space-y-8">
+    <form onSubmit={handleSubmit} className="space-y-8">
           <p className="text-sm text-[var(--color-text-muted)]">
             Use <strong className="text-[var(--color-text)]">Save</strong> at the bottom when you finish a section.
           </p>
@@ -481,7 +436,5 @@ export function AdminCtas() {
             </button>
           </div>
         </form>
-      </main>
-    </div>
   )
 }

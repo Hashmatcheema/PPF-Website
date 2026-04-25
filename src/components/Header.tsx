@@ -236,6 +236,12 @@ export function Header({
               </a>
             )
           })}
+          <a
+            href="/tracker"
+            className="text-sm font-bold tracking-[0.02em] text-[var(--color-accent)] transition hover:text-[var(--color-accent-hover)] [text-shadow:-1px_-1px_0_#000,1px_-1px_0_#000,-1px_1px_0_#000,1px_1px_0_#000]"
+          >
+            Tracker
+          </a>
         </nav>
 
         <div className="flex items-center gap-3">
@@ -302,6 +308,13 @@ export function Header({
                   </a>
                 )
               })}
+              <a
+                href="/tracker"
+                onClick={() => setOpen(false)}
+                className="rounded-md px-3 py-2.5 text-sm font-medium text-[var(--color-accent)] transition hover:bg-[var(--color-surface)]"
+              >
+                📍 Live Tracker
+              </a>
             </nav>
             <div className="mt-4 flex justify-center border-t border-[var(--color-border)] pt-4">
               <SocialIcons lang={lang} variant="footer" />
