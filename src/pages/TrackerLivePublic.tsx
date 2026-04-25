@@ -118,7 +118,7 @@ export function TrackerLivePublic() {
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3">
           <div>
             <p className="font-display text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-label-red)]">
-              📍 Live tracker
+              📍 Live track
             </p>
             <h1 className="font-display text-lg font-semibold sm:text-xl">
               March location
