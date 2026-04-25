@@ -40,11 +40,18 @@ const eventModalOverlayClassName =
 const eventModalContentClassName =
   "fixed left-1/2 top-1/2 z-[60] max-h-[min(92dvh,calc(100dvh-1.25rem))] w-[min(23rem,calc(100vw-2rem))] -translate-x-1/2 -translate-y-1/2 overflow-y-auto overscroll-contain rounded-2xl border border-white/15 bg-[var(--color-bg)]/97 p-4 shadow-[0_0_0_1px_rgba(0,0,0,0.4),0_24px_80px_-12px_rgba(0,0,0,0.65)] ring-1 ring-white/10 backdrop-blur-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:p-5"
 
+/** Match admin textarea line breaks (LF/CRLF and unicode line/paragraph separators from paste). */
+function normalizePosterSupportingLineBreaks(s: string): string {
+  return s.replace(/\r\n?/g, "\n").replace(/\u2028|\u2029/g, "\n")
+}
+
 export function FloatingCta({ lang }: { lang: Locale }) {
   const { ctas } = useCtasConfig()
   const t = content[lang].floatingBar
   const marchTitle = (ctas.marchEventTitle?.[lang] ?? "").trim() || t.eventTitle
-  const marchBody = (ctas.marchEventBody?.[lang] ?? "").trim() || t.eventBody
+  const marchBody = normalizePosterSupportingLineBreaks(
+    (ctas.marchEventBody?.[lang] ?? "").trim() || t.eventBody,
+  )
   const marchPoster = ctas.marchPosterUrl?.trim() ?? ""
   const marchPosterSrc = marchPoster ? posterSrcForDisplay(marchPoster) : ""
   const [contactOpen, setContactOpen] = useState(false)
@@ -135,7 +142,12 @@ export function FloatingCta({ lang }: { lang: Locale }) {
                     </div>
                   </figure>
                 ) : null}
-                <Dialog.Description className="mt-4 border-t border-white/10 pt-4 text-pretty text-sm leading-relaxed text-[var(--color-text-muted)]">
+                <Dialog.Description
+                  className={cn(
+                    "mt-4 min-w-0 border-t border-white/10 pt-4 text-sm leading-relaxed text-[var(--color-text-muted)]",
+                    "whitespace-pre-line",
+                  )}
+                >
                   {marchBody}
                 </Dialog.Description>
               </Dialog.Content>

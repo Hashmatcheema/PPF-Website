@@ -11,16 +11,24 @@ import {
   MARCH_POSTER_MAX_EMBED_BYTES,
 } from "../../shared/marchPosterLimits"
 
+const localeFieldClassName =
+  "w-full rounded-md border border-white/20 bg-white/5 px-3 py-2 text-[var(--color-text)] placeholder:text-white/40 focus:border-[var(--color-accent)] focus:outline-none focus:ring-1 focus:ring-[var(--color-accent)]"
+
+/** Poster supporting text only: plain CSS hides scrollbars reliably (see `index.css`). */
+const localePosterSupportingTextareaClassName = `${localeFieldClassName} admin-poster-supporting-field leading-normal`
+
 function LocaleFields({
   label,
   hint,
   value,
   onChange,
+  multiline = false,
 }: {
   label: string
   hint?: string
   value: LocaleLabel
   onChange: (v: LocaleLabel) => void
+  multiline?: boolean
 }) {
   return (
     <div className="space-y-2">
@@ -35,25 +43,43 @@ function LocaleFields({
           <span className="text-[10px] font-semibold uppercase tracking-wide text-[var(--color-text-muted)]">
             English
           </span>
-          <input
-            type="text"
-            placeholder="English text"
-            value={value.en}
-            onChange={(e) => onChange({ ...value, en: e.target.value })}
-            className="w-full rounded-md border border-white/20 bg-white/5 px-3 py-2 text-[var(--color-text)] placeholder:text-white/40 focus:border-[var(--color-accent)] focus:outline-none focus:ring-1 focus:ring-[var(--color-accent)]"
-          />
+          {multiline ? (
+            <textarea
+              placeholder="English text"
+              value={value.en}
+              onChange={(e) => onChange({ ...value, en: e.target.value })}
+              className={localePosterSupportingTextareaClassName}
+            />
+          ) : (
+            <input
+              type="text"
+              placeholder="English text"
+              value={value.en}
+              onChange={(e) => onChange({ ...value, en: e.target.value })}
+              className={localeFieldClassName}
+            />
+          )}
         </div>
         <div className="space-y-1">
           <span className="text-[10px] font-semibold uppercase tracking-wide text-[var(--color-text-muted)]">
             Urdu
           </span>
-          <input
-            type="text"
-            placeholder="Urdu text"
-            value={value.ur}
-            onChange={(e) => onChange({ ...value, ur: e.target.value })}
-            className="w-full rounded-md border border-white/20 bg-white/5 px-3 py-2 text-[var(--color-text)] placeholder:text-white/40 focus:border-[var(--color-accent)] focus:outline-none focus:ring-1 focus:ring-[var(--color-accent)]"
-          />
+          {multiline ? (
+            <textarea
+              placeholder="Urdu text"
+              value={value.ur}
+              onChange={(e) => onChange({ ...value, ur: e.target.value })}
+              className={localePosterSupportingTextareaClassName}
+            />
+          ) : (
+            <input
+              type="text"
+              placeholder="Urdu text"
+              value={value.ur}
+              onChange={(e) => onChange({ ...value, ur: e.target.value })}
+              className={localeFieldClassName}
+            />
+          )}
         </div>
       </div>
     </div>
@@ -346,6 +372,7 @@ export function AdminCtas() {
                 hint="Short paragraph under the image in the poster popup."
                 value={form.marchEventBody}
                 onChange={(marchEventBody) => setForm((f) => ({ ...f, marchEventBody }))}
+                multiline
               />
             </div>
           </div>
