@@ -288,14 +288,6 @@ const contentSource = {
         },
       ],
       cta: "Join Us",
-      ways: [
-        { title: "Volunteer for Campaigns", short: "On-ground activism & event coordination" },
-        { title: "Support Awareness Initiatives", short: "Content creation & public outreach" },
-        { title: "Join Advocacy Efforts", short: "Policy, media & institutional engagement" },
-        { title: "Provide Professional Expertise", short: "Legal, medical, tech & creative skills" },
-        { title: "Collaborate as Partner Organization", short: "Organisational collaboration & resources" },
-      ],
-      waysHeading: "How you can help",
     },
     footer: { tagline: "Peaceful, Non-Violent Activism for Palestine" },
     chatbot: {
@@ -584,14 +576,6 @@ const contentSource = {
         },
       ],
       cta: "شامل ہوں",
-      ways: [
-        { title: "مہمات کے لیے رضاکار", short: "زمینی سرگرمی اور ایونٹ کوآرڈینیشن" },
-        { title: "آگاہی کی کوششوں کی حمایت", short: "مواد کی تخلیق اور عوامی رسائی" },
-        { title: "وکالت کی کوششوں میں شامل ہوں", short: "پالیسی، میڈیا اور ادارہ جاتی مشغولیت" },
-        { title: "پیشہ ورانہ مہارت فراہم کریں", short: "قانونی، طبی، ٹیک اور تخلیقی صلاحیتیں" },
-        { title: "پارٹنر تنظیم کے طور پر تعاون", short: "تنظیمی تعاون اور وسائل" },
-      ],
-      waysHeading: "آپ کیسے مدد کر سکتے ہیں",
     },
     footer: { tagline: "فلسطین کے لیے متحدہ موقف" },
     chatbot: {
