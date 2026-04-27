@@ -246,7 +246,7 @@ const contentSource = {
     },
     join: {
       badge: "Volunteer & Collaborate",
-      h2: "Join Pak-Palestine Forum — Volunteer Opportunities",
+      h2: "Join Pak-Palestine Forum",
       p: "Pak-Palestine Forum welcomes volunteers, professionals, and organizations to contribute to humanitarian and advocacy initiatives.",
       skillsHeading: "Roles & skills",
       skillCards: [
@@ -542,7 +542,7 @@ const contentSource = {
     },
     join: {
       badge: "رضاکار اور تعاون",
-      h2: "پاک فلسطین فورم میں شامل ہوں — رضاکارانہ مواقع",
+      h2: "پاک فلسطین فورم میں شامل ہوں",
       p: "پاک فلسطین فورم انسانی اور وکالت کی کوششوں میں حصہ ڈالنے کے لیے رضاکاروں، پیشہ ور افراد اور تنظیموں کا خیرمقدم کرتا ہے۔",
       skillsHeading: "کردار اور مہارتیں",
       skillCards: [
