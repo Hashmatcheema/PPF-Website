@@ -7,7 +7,7 @@ const SLIDE_DURATION_MS = 5000
 const MOBILE_FOCAL_CLASSES = [
   "[object-position:center_22%]",
   "[object-position:center_26%]",
-  "[object-position:center_24%]",
+  "[object-position:center_5%]",
 ] as const
 
 export function Hero({ lang }: { lang: Locale }) {
@@ -47,7 +47,7 @@ export function Hero({ lang }: { lang: Locale }) {
               alt=""
               className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
                 MOBILE_FOCAL_CLASSES[i] ?? "[object-position:center_28%]"
-              } sm:[object-position:center]`}
+              } ${i === 2 ? "sm:[object-position:center_22%]" : "sm:[object-position:center]"}`}
               style={{ opacity: i === index ? 1 : 0 }}
               loading="eager"
               fetchPriority={i === 0 ? "high" : "auto"}
