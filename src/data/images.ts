@@ -16,7 +16,7 @@ export const DEFAULT_MARCH_POSTER_URL =
 
 /** Hero slider images — order matches `content.*.heroSlides` (0 = first tagline, 1 = second, …). */
 const heroSlidesList = [
-  "/images/hero-slide-2.webp",
+  "/images/hero-slide-2-1.webp",
   HERO_PRIMARY_WEBP,
   "/images/hero-3.webp",
 ] as const
