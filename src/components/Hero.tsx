@@ -32,7 +32,7 @@ export function Hero({ lang }: { lang: Locale }) {
   return (
     <section
       id="hero"
-      className="relative flex min-h-[78svh] flex-col justify-end overflow-hidden sm:min-h-[100dvh]"
+      className="relative flex min-h-[46svh] flex-col justify-end overflow-hidden sm:min-h-[100dvh]"
     >
       <div className="absolute inset-0">
         {slides.map((src, i) => (
