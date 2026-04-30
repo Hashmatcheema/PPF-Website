@@ -1,6 +1,14 @@
 import { useEffect, useState, useCallback, useMemo } from "react"
 import { Link } from "react-router-dom"
-import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from "react-leaflet"
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  Polyline,
+  Tooltip,
+  useMap,
+} from "react-leaflet"
 import L, { Icon } from "leaflet"
 import "leaflet/dist/leaflet.css"
 import { apiUrl } from "@/lib/apiUrl"
@@ -386,6 +394,17 @@ export function TrackerLivePublic() {
                       ]}
                       icon={currentLocationIcon}
                     >
+                      <Tooltip
+                        permanent
+                        direction="top"
+                        offset={[0, -48]}
+                        opacity={1}
+                        className="!rounded-md !border !border-white/20 !bg-[var(--color-bg)]/95 !px-2 !py-1.5 !text-[var(--color-text)] !shadow-md [&_.leaflet-tooltip-content]:!m-0 [&_.leaflet-tooltip-content]:!text-left [&_.leaflet-tooltip-content]:!leading-tight"
+                      >
+                        <span className="block text-xs font-semibold text-[var(--color-text)]">
+                          Current location
+                        </span>
+                      </Tooltip>
                       <Popup>
                         <div className="space-y-1 text-xs">
                           <p className="font-semibold text-[var(--color-text)]">
