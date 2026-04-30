@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback, useMemo } from "react"
 import { Link } from "react-router-dom"
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet"
+import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from "react-leaflet"
 import L, { Icon } from "leaflet"
 import "leaflet/dist/leaflet.css"
 import { apiUrl } from "@/lib/apiUrl"
@@ -205,6 +205,26 @@ export function TrackerLivePublic() {
     return [33.6844, 73.0479]
   }, [state?.currentLocation, state?.history])
 
+  /**
+   * March timeline: oldest → … → newest in `history`, then live `currentLocation`.
+   * Consecutive vertices only — the current pin shares one segment with its immediate
+   * predecessor (`history[history.length - 1]`), not with older points.
+   */
+  const pathCoordinates = useMemo((): [number, number][] => {
+    if (!state) return []
+    const coords: [number, number][] = state.history.map((loc) => [
+      loc.lat,
+      loc.lng,
+    ])
+    if (state.currentLocation) {
+      coords.push([
+        state.currentLocation.lat,
+        state.currentLocation.lng,
+      ])
+    }
+    return coords
+  }, [state])
+
   const trailPoints = useMemo(
     () => (state ? trailPointsFromState(state) : []),
     [state]
@@ -324,6 +344,17 @@ export function TrackerLivePublic() {
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                   />
+                  {pathCoordinates.length > 1 && (
+                    <Polyline
+                      positions={pathCoordinates}
+                      pathOptions={{
+                        color: "#ff474a",
+                        weight: 3,
+                        opacity: 0.6,
+                        dashArray: "5, 5",
+                      }}
+                    />
+                  )}
                   {/* History markers */}
                   {state.history.map((loc, idx) => (
                     <Marker
