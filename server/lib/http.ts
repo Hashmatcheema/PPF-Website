@@ -20,7 +20,7 @@ export function handleCorsPreflight(req: VercelRequest, res: VercelResponse): bo
     res.status(403).end()
     return true
   }
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, OPTIONS")
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization")
   res.setHeader("Access-Control-Max-Age", "86400")
   res.status(204).end()

@@ -6,7 +6,8 @@ import {
 } from "../../server/lib/http.js"
 import {
   adminCredentials,
-  setAuthCookie,
+  issueAdminToken,
+  setAuthCookieWithToken,
 } from "../../server/lib/auth.js"
 import { ratelimitLogin } from "../../server/lib/ratelimit.js"
 import { getJsonBody } from "../../server/lib/body.js"
@@ -53,6 +54,7 @@ export default async function handler(
     return
   }
 
-  setAuthCookie(res, cred.user)
-  res.status(200).json({ ok: true })
+  const token = issueAdminToken(cred.user)
+  setAuthCookieWithToken(res, token)
+  res.status(200).json({ ok: true, token })
 }

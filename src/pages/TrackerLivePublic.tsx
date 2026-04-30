@@ -1,9 +1,10 @@
 import { useEffect, useState, useCallback, useMemo } from "react"
 import { Link } from "react-router-dom"
-import { MapContainer, TileLayer, Marker, Popup, Polyline } from "react-leaflet"
-import { Icon } from "leaflet"
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet"
+import L, { Icon } from "leaflet"
 import "leaflet/dist/leaflet.css"
 import { apiUrl } from "@/lib/apiUrl"
+import { ChevronDown } from "lucide-react"
 
 export type TrackerLocation = {
   lat: number
@@ -47,11 +48,111 @@ function formatTime(iso: string): string {
   }
 }
 
+function toFiniteNumber(v: unknown): number | null {
+  if (typeof v === "number" && Number.isFinite(v)) return v
+  if (typeof v === "string") {
+    const n = Number.parseFloat(v)
+    if (Number.isFinite(n)) return n
+  }
+  return null
+}
+
+/** Coerce API / Redis values so Leaflet always receives finite numbers. */
+function normalizeLocation(loc: unknown): TrackerLocation | null {
+  if (!loc || typeof loc !== "object") return null
+  const o = loc as Record<string, unknown>
+  const lat = toFiniteNumber(o.lat)
+  const lng = toFiniteNumber(o.lng)
+  const timestamp = typeof o.timestamp === "string" ? o.timestamp : ""
+  const message = typeof o.message === "string" ? o.message : ""
+  if (lat == null || lng == null) return null
+  return { lat, lng, timestamp, message }
+}
+
+function normalizeHistoryArray(raw: unknown): TrackerLocation[] {
+  if (raw == null) return []
+  if (Array.isArray(raw)) {
+    return raw.map(normalizeLocation).filter((x): x is TrackerLocation => x !== null)
+  }
+  if (typeof raw === "object") {
+    return Object.keys(raw as object)
+      .filter((k) => /^\d+$/.test(k))
+      .sort((a, b) => Number(a) - Number(b))
+      .map((k) => normalizeLocation((raw as Record<string, unknown>)[k]))
+      .filter((x): x is TrackerLocation => x !== null)
+  }
+  return []
+}
+
+function normalizeTrackerState(raw: unknown): TrackerState {
+  if (!raw || typeof raw !== "object") {
+    return { isActive: false, currentLocation: null, history: [] }
+  }
+  const o = raw as Record<string, unknown>
+  const current = o.currentLocation ? normalizeLocation(o.currentLocation) : null
+  return {
+    isActive: Boolean(o.isActive),
+    currentLocation: current,
+    history: normalizeHistoryArray(o.history),
+  }
+}
+
+/** All trail coordinates for bounds + layout (history order, then current). */
+function trailPointsFromState(state: TrackerState): [number, number][] {
+  const pts: [number, number][] = state.history.map((loc) => [loc.lat, loc.lng])
+  if (state.currentLocation) {
+    pts.push([state.currentLocation.lat, state.currentLocation.lng])
+  }
+  return pts
+}
+
+/**
+ * Leaflet inside CSS grid often needs `invalidateSize` after layout; fit bounds so
+ * markers are in view (initial `center` alone is easy to miss after async fetch).
+ */
+function TrackerMapLayoutSync({ points }: { points: [number, number][] }) {
+  const map = useMap()
+  const pointsKey = useMemo(
+    () => points.map((p) => `${p[0].toFixed(5)},${p[1].toFixed(5)}`).join("|"),
+    [points]
+  )
+
+  useEffect(() => {
+    if (points.length === 0) return
+
+    const run = () => {
+      map.invalidateSize({ animate: false })
+      try {
+        if (points.length === 1) {
+          const [lat, lng] = points[0]!
+          map.setView([lat, lng], 14, { animate: false })
+          return
+        }
+        const b = L.latLngBounds(points as L.LatLngExpression[])
+        if (b.isValid()) {
+          map.fitBounds(b, { padding: [40, 40], maxZoom: 15, animate: false })
+        }
+      } catch {
+        /* ignore bounds edge cases */
+      }
+    }
+
+    const id = requestAnimationFrame(run)
+    return () => cancelAnimationFrame(id)
+    // `pointsKey` encodes coordinates; omitting `points` avoids re-running on every poll
+    // when the parent passes a new array reference with the same coords.
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- points matches the render for pointsKey
+  }, [map, pointsKey])
+
+  return null
+}
+
 export function TrackerLivePublic() {
   const [state, setState] = useState<TrackerState | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [lastUpdate, setLastUpdate] = useState<string | null>(null)
+  const [historyExpanded, setHistoryExpanded] = useState(false)
 
   const fetchTrackerState = useCallback(async () => {
     try {
@@ -66,7 +167,7 @@ export function TrackerLivePublic() {
         throw new Error(`Invalid response type: ${contentType}. API endpoint may not be configured.`)
       }
       
-      const data = (await response.json()) as TrackerState
+      const data = normalizeTrackerState(await response.json())
       setState(data)
       setError(null)
       setLastUpdate(new Date().toLocaleTimeString())
@@ -95,21 +196,19 @@ export function TrackerLivePublic() {
     if (state?.currentLocation) {
       return [state.currentLocation.lat, state.currentLocation.lng]
     }
+    const h = state?.history
+    if (h && h.length > 0) {
+      const last = h[h.length - 1]
+      return [last.lat, last.lng]
+    }
     // Default to Islamabad, Pakistan
     return [33.6844, 73.0479]
-  }, [state?.currentLocation])
+  }, [state?.currentLocation, state?.history])
 
-  const pathCoordinates = useMemo((): [number, number][] => {
-    if (!state) return []
-    const coords: [number, number][] = []
-    if (state.currentLocation) {
-      coords.push([state.currentLocation.lat, state.currentLocation.lng])
-    }
-    state.history.forEach((loc) => {
-      coords.push([loc.lat, loc.lng])
-    })
-    return coords.reverse()
-  }, [state])
+  const trailPoints = useMemo(
+    () => (state ? trailPointsFromState(state) : []),
+    [state]
+  )
 
   return (
     <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
@@ -205,40 +304,30 @@ export function TrackerLivePublic() {
               </div>
             </aside>
           </div>
-        ) : state?.currentLocation ? (
-          <div className="grid gap-6 lg:grid-cols-[1fr_minmax(0,24rem)]">
-            {/* Map section */}
-            <div className="space-y-3">
+        ) : state &&
+          (state.currentLocation || (state.history && state.history.length > 0)) ? (
+          <div className="grid min-w-0 gap-6 lg:grid-cols-[1fr_minmax(0,24rem)]">
+            {/* Map section — min-w-0 so grid does not clip Leaflet to zero width */}
+            <div className="min-w-0 space-y-3">
               <p className="text-xs font-medium uppercase tracking-wide text-[var(--color-text-muted)]">
-                Current location
+                {state.currentLocation ? "Current location" : "March trail"}
               </p>
-              <div className="overflow-hidden rounded-xl border border-white/10">
+              <div className="min-h-[min(500px,60vh)] min-w-0 overflow-hidden rounded-xl border border-white/10">
                 <MapContainer
                   center={mapCenter}
                   zoom={14}
-                  className="h-[min(500px,60vh)] w-full"
+                  className="h-[min(500px,60vh)] w-full min-w-0"
                   scrollWheelZoom
                 >
+                  <TrackerMapLayoutSync points={trailPoints} />
                   <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                   />
-                  {/* Route path */}
-                  {pathCoordinates.length > 1 && (
-                    <Polyline
-                      positions={pathCoordinates}
-                      pathOptions={{
-                        color: "#ff474a",
-                        weight: 3,
-                        opacity: 0.6,
-                        dashArray: "5, 5",
-                      }}
-                    />
-                  )}
                   {/* History markers */}
                   {state.history.map((loc, idx) => (
                     <Marker
-                      key={`history-${idx}`}
+                      key={`history-${loc.timestamp}-${idx}`}
                       position={[loc.lat, loc.lng]}
                       icon={historyLocationIcon}
                     >
@@ -258,101 +347,136 @@ export function TrackerLivePublic() {
                     </Marker>
                   ))}
                   {/* Current location marker */}
-                  <Marker
-                    position={[
-                      state.currentLocation.lat,
-                      state.currentLocation.lng,
-                    ]}
-                    icon={currentLocationIcon}
-                  >
-                    <Popup>
-                      <div className="space-y-1 text-xs">
-                        <p className="font-semibold text-[var(--color-text)]">
-                          Current location
-                        </p>
-                        <p className="text-[var(--color-text-muted)]">
-                          {formatTime(state.currentLocation.timestamp)}
-                        </p>
-                        {state.currentLocation.message && (
-                          <p className="text-[var(--color-text)]">
-                            {state.currentLocation.message}
+                  {state.currentLocation ? (
+                    <Marker
+                      position={[
+                        state.currentLocation.lat,
+                        state.currentLocation.lng,
+                      ]}
+                      icon={currentLocationIcon}
+                    >
+                      <Popup>
+                        <div className="space-y-1 text-xs">
+                          <p className="font-semibold text-[var(--color-text)]">
+                            Current location
                           </p>
-                        )}
-                      </div>
-                    </Popup>
-                  </Marker>
+                          <p className="text-[var(--color-text-muted)]">
+                            {formatTime(state.currentLocation.timestamp)}
+                          </p>
+                          {state.currentLocation.message && (
+                            <p className="text-[var(--color-text)]">
+                              {state.currentLocation.message}
+                            </p>
+                          )}
+                        </div>
+                      </Popup>
+                    </Marker>
+                  ) : null}
                 </MapContainer>
               </div>
             </div>
 
             {/* Sidebar with updates */}
-            <aside className="space-y-4">
-              <div>
-                <p className="mb-3 text-xs font-medium uppercase tracking-wide text-[var(--color-text-muted)]">
-                  Current status
-                </p>
-                <div className="space-y-3 rounded-lg border border-white/10 bg-white/[0.03] p-4">
-                  <div>
-                    <p className="text-[10px] font-semibold uppercase tracking-wide text-[var(--color-text-muted)]">
-                      Coordinates
-                    </p>
-                    <p className="mt-1 font-mono text-sm text-[var(--color-accent)]">
-                      {state.currentLocation.lat.toFixed(4)},
-                      <br />
-                      {state.currentLocation.lng.toFixed(4)}
-                    </p>
-                  </div>
-                  <div className="border-t border-white/10 pt-3">
-                    <p className="text-[10px] font-semibold uppercase tracking-wide text-[var(--color-text-muted)]">
-                      Updated
-                    </p>
-                    <p className="mt-1 text-sm text-[var(--color-text)]">
-                      {formatTime(state.currentLocation.timestamp)}
-                    </p>
-                  </div>
-                  {state.currentLocation.message && (
-                    <div className="border-t border-white/10 pt-3">
-                      <p className="text-[10px] font-semibold uppercase tracking-wide text-[var(--color-text-muted)]">
-                        Message
-                      </p>
-                      <p className="mt-1 text-sm text-[var(--color-text)]">
-                        {state.currentLocation.message}
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* History */}
-              {state.history.length > 0 && (
+            <aside className="min-w-0 space-y-4">
+              {state.currentLocation ? (
                 <div>
                   <p className="mb-3 text-xs font-medium uppercase tracking-wide text-[var(--color-text-muted)]">
-                    Previous locations ({state.history.length})
+                    Current status
                   </p>
-                  <ul className="max-h-[400px] space-y-2 overflow-y-auto pr-1">
-                    {state.history.map((loc, idx) => (
-                      <li
-                        key={`history-item-${idx}`}
-                        className="rounded-lg border border-white/10 bg-white/[0.04] p-2.5 text-xs"
-                      >
-                        <div className="flex items-start justify-between gap-2">
-                          <div>
-                            <p className="font-mono text-[10px] text-[var(--color-accent)]">
-                              {loc.lat.toFixed(4)}, {loc.lng.toFixed(4)}
-                            </p>
-                            <p className="mt-0.5 text-[10px] text-[var(--color-text-muted)]">
-                              {formatTime(loc.timestamp)}
-                            </p>
+                  <div className="space-y-3 rounded-lg border border-white/10 bg-white/[0.03] p-4">
+                    <div>
+                      <p className="text-[10px] font-semibold uppercase tracking-wide text-[var(--color-text-muted)]">
+                        Coordinates
+                      </p>
+                      <p className="mt-1 font-mono text-sm text-[var(--color-accent)]">
+                        {state.currentLocation.lat.toFixed(4)},
+                        <br />
+                        {state.currentLocation.lng.toFixed(4)}
+                      </p>
+                    </div>
+                    <div className="border-t border-white/10 pt-3">
+                      <p className="text-[10px] font-semibold uppercase tracking-wide text-[var(--color-text-muted)]">
+                        Updated
+                      </p>
+                      <p className="mt-1 text-sm text-[var(--color-text)]">
+                        {formatTime(state.currentLocation.timestamp)}
+                      </p>
+                    </div>
+                    {state.currentLocation.message && (
+                      <div className="border-t border-white/10 pt-3">
+                        <p className="text-[10px] font-semibold uppercase tracking-wide text-[var(--color-text-muted)]">
+                          Message
+                        </p>
+                        <p className="mt-1 text-sm text-[var(--color-text)]">
+                          {state.currentLocation.message}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <div className="rounded-lg border border-white/10 bg-white/[0.03] p-4 text-sm text-[var(--color-text-muted)]">
+                  No live pin is set. The map shows past points on the trail only.
+                </div>
+              )}
+
+              {/* History — collapsible with inner scroll (matches admin tracker UX) */}
+              {state.history.length > 0 && (
+                <div className="rounded-lg border border-white/10 bg-white/[0.03] p-3 sm:p-4">
+                  <button
+                    type="button"
+                    id="public-tracker-history-toggle"
+                    aria-expanded={historyExpanded}
+                    aria-controls="public-tracker-history-list"
+                    onClick={() => setHistoryExpanded((v) => !v)}
+                    className="flex w-full min-w-0 items-center gap-2 rounded-md border-0 bg-transparent px-1 py-2 text-left transition hover:bg-white/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-bg)]"
+                  >
+                    <ChevronDown
+                      className={`size-4 shrink-0 text-[var(--color-text-muted)] transition-transform duration-200 ${
+                        historyExpanded ? "rotate-180" : ""
+                      }`}
+                      aria-hidden
+                    />
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-[10px] font-semibold uppercase tracking-wide text-[var(--color-text-muted)]">
+                        Previous locations
+                      </span>
+                      <span className="mt-0.5 block text-sm text-[var(--color-text)]">
+                        {state.history.length} location{state.history.length !== 1 ? "s" : ""}
+                      </span>
+                    </span>
+                  </button>
+                  {historyExpanded ? (
+                    <ul
+                      id="public-tracker-history-list"
+                      role="list"
+                      aria-labelledby="public-tracker-history-toggle"
+                      className="mt-3 max-h-[min(42vh,13rem)] space-y-2 overflow-y-auto overscroll-y-contain pr-1 [-ms-overflow-style:none] [scrollbar-width:none] sm:max-h-[min(38vh,15rem)] md:max-h-60 [&::-webkit-scrollbar]:hidden"
+                    >
+                      {state.history.map((loc, idx) => (
+                        <li
+                          key={`history-item-${idx}`}
+                          className="rounded-lg border border-white/10 bg-white/[0.04] p-2.5 text-xs"
+                        >
+                          <div className="flex items-start justify-between gap-2">
+                            <div>
+                              <p className="font-mono text-[10px] text-[var(--color-accent)]">
+                                {loc.lat.toFixed(4)}, {loc.lng.toFixed(4)}
+                              </p>
+                              <p className="mt-0.5 text-[10px] text-[var(--color-text-muted)]">
+                                {formatTime(loc.timestamp)}
+                              </p>
+                            </div>
                           </div>
-                        </div>
-                        {loc.message && (
-                          <p className="mt-1.5 text-[var(--color-text)]">
-                            {loc.message}
-                          </p>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
+                          {loc.message && (
+                            <p className="mt-1.5 text-[var(--color-text)]">
+                              {loc.message}
+                            </p>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
                 </div>
               )}
             </aside>

@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { apiUrl, DISABLE_REMOTE_API } from "@/lib/apiUrl"
+import { setStoredAdminJwt } from "@/lib/adminSession"
 import { ppfCtaPrimaryClassName } from "@/lib/ppfCtaButton"
 import { cn } from "@/lib/utils"
 
@@ -38,6 +39,10 @@ export function AdminLogin() {
           credentials: "include",
         })
         if (res.ok) {
+          const data = (await res.json().catch(() => ({}))) as { token?: unknown }
+          if (typeof data.token === "string" && data.token.length > 0) {
+            setStoredAdminJwt(data.token)
+          }
           navigate("/admin", { replace: true })
           return
         }

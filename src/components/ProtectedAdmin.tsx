@@ -4,6 +4,7 @@ import { AdminCtas } from "@/pages/AdminCtas"
 import { AdminTracker } from "@/pages/AdminTracker"
 import { ADMIN_AUTH_KEY } from "@/pages/AdminLogin"
 import { apiUrl, DISABLE_REMOTE_API } from "@/lib/apiUrl"
+import { adminAuthFetchInit, setStoredAdminJwt } from "@/lib/adminSession"
 
 export function ProtectedAdmin() {
   const navigate = useNavigate()
@@ -20,7 +21,7 @@ export function ProtectedAdmin() {
   useEffect(() => {
     if (DISABLE_REMOTE_API) return
     const url = apiUrl("/api/admin/me")
-    fetch(url, { credentials: "include" })
+    fetch(url, adminAuthFetchInit())
       .then((res) => {
         setAuthStatus(res.ok ? "ok" : "unauthorized")
       })
@@ -30,13 +31,14 @@ export function ProtectedAdmin() {
   const handleLogout = async () => {
     if (!DISABLE_REMOTE_API) {
       try {
-        await fetch(apiUrl("/api/admin/logout"), {
-          method: "POST",
-          credentials: "include",
-        })
+        await fetch(
+          apiUrl("/api/admin/logout"),
+          adminAuthFetchInit({ method: "POST" })
+        )
       } catch {
         /* best effort */
       }
+      setStoredAdminJwt(null)
     } else {
       try {
         sessionStorage.removeItem(ADMIN_AUTH_KEY)

@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react"
 import { defaultCtas, parseCtas, type CtasConfig } from "@/data/ctasSchema"
 import { apiUrl, DISABLE_REMOTE_API } from "@/lib/apiUrl"
+import { adminAuthFetchInit } from "@/lib/adminSession"
 
 const STORAGE_KEY = "ppf-ctas"
 
@@ -29,7 +30,7 @@ export function useCtas(): {
   useEffect(() => {
     if (DISABLE_REMOTE_API) return
     const url = apiUrl("/api/ctas")
-    fetch(url, { method: "GET", credentials: "include" })
+    fetch(url, adminAuthFetchInit({ method: "GET" }))
       .then((res) => (res.ok ? res.json() : Promise.reject(new Error("Failed to fetch"))))
       .then((data) => {
         const parsed = parseCtas(data)
@@ -47,12 +48,14 @@ export function useCtas(): {
       if (!DISABLE_REMOTE_API) {
         const url = apiUrl("/api/ctas")
         try {
-          const res = await fetch(url, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(config),
-            credentials: "include",
-          })
+          const res = await fetch(
+            url,
+            adminAuthFetchInit({
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(config),
+            })
+          )
           if (!res.ok) {
             const text = await res.text()
             try {

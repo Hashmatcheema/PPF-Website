@@ -1,4 +1,5 @@
 import { Redis } from "@upstash/redis"
+import { loadLocalEnvOnce } from "./loadLocalEnv.js"
 
 let client: Redis | null = null
 
@@ -13,6 +14,8 @@ export function isRedisConfigured(): boolean {
  * Local `vercel dev` without Upstash can still serve admin login + default CTAs.
  */
 export function getRedis(): Redis | null {
+  // Same pattern as `auth.ts`: `vercel dev` often omits `.env.local` for non-auth routes.
+  loadLocalEnvOnce()
   if (!isRedisConfigured()) return null
   if (!client) {
     client = Redis.fromEnv()

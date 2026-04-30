@@ -1,6 +1,9 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node"
 import { handleCorsPreflight, forbidWithoutCors } from "../server/lib/http.js"
-import { readTrackerState } from "../server/lib/tracker.js"
+import {
+  readTrackerState,
+  TRACKER_READ_FAILED,
+} from "../server/lib/tracker.js"
 
 export default async function handler(
   req: VercelRequest,
@@ -13,7 +16,14 @@ export default async function handler(
     try {
       const state = await readTrackerState()
       res.status(200).json(state)
-    } catch {
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : ""
+      if (msg === TRACKER_READ_FAILED) {
+        res
+          .status(503)
+          .json({ error: "Tracker temporarily unavailable" })
+        return
+      }
       res.status(500).json({ error: "Failed to read tracker state" })
     }
     return

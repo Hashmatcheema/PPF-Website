@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { useCtasConfig } from "@/contexts/CtasContext"
 import { apiUrl, DISABLE_REMOTE_API } from "@/lib/apiUrl"
+import { adminAuthFetchInit } from "@/lib/adminSession"
 import { ppfCtaPrimaryCompactClassName } from "@/lib/ppfCtaButton"
 import type { CtasConfig, LocaleLabel } from "@/data/ctasSchema"
 import { posterSrcForDisplay } from "@/lib/posterImageSrc"
@@ -177,7 +178,7 @@ export function AdminCtas() {
       return
     }
     let cancelled = false
-    fetch(apiUrl("/api/admin/me"), { credentials: "include" })
+    fetch(apiUrl("/api/admin/me"), adminAuthFetchInit())
       .then(async (r) => {
         if (!r.ok) return null
         return (await r.json()) as { marchPosterBlobUpload?: boolean }
@@ -269,12 +270,14 @@ export function AdminCtas() {
     setMessage(null)
     try {
       const { base64, mimeType } = await fileToBase64Payload(file)
-      const res = await fetch(apiUrl("/api/admin/march-poster"), {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ base64, mimeType, filename: file.name }),
-      })
+      const res = await fetch(
+        apiUrl("/api/admin/march-poster"),
+        adminAuthFetchInit({
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ base64, mimeType, filename: file.name }),
+        })
+      )
       const data = (await res.json().catch(() => ({}))) as { url?: string; error?: string }
       if (!res.ok) {
         const apiErr = typeof data.error === "string" ? data.error : ""
