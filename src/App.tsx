@@ -14,6 +14,7 @@ import { AdminLogin } from "@/pages/AdminLogin"
 import { ProtectedAdmin } from "@/components/ProtectedAdmin"
 const TrackerLivePublic = lazy(() => import("@/pages/TrackerLivePublic").then((m) => ({ default: m.TrackerLivePublic })))
 import type { Locale } from "@/data/content"
+import { applyHomeSeo } from "@/lib/seoDom"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 
 const SEO_TITLES: Record<Locale, string> = {
@@ -41,9 +42,10 @@ function MainSite() {
   }, [lang])
 
   useEffect(() => {
-    document.title = SEO_TITLES[lang]
-    const meta = document.getElementById("meta-description") as HTMLMetaElement | null
-    if (meta) meta.content = SEO_DESCRIPTIONS[lang]
+    applyHomeSeo({
+      title: SEO_TITLES[lang],
+      description: SEO_DESCRIPTIONS[lang],
+    })
   }, [lang])
 
   useEffect(() => {

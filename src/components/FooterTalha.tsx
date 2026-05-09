@@ -21,7 +21,7 @@ export function FooterTalha({ lang }: { lang: Locale }) {
       <div className="relative wrap py-4 sm:py-8 md:py-10 lg:py-12">
         {/* Brand — tighter on mobile */}
         <div className="flex flex-col items-start text-left">
-          <a href="#" className="flex items-center gap-2.5 sm:gap-3" aria-label="Pak-Palestine Forum">
+          <a href="/" className="flex items-center gap-2.5 sm:gap-3" aria-label="Pak-Palestine Forum">
             <img
               src="/images/PPF-logo.webp"
               alt="PPF"

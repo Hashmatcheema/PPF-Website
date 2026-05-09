@@ -1,18 +1,33 @@
+import type { CSSProperties } from "react"
 import type { Locale } from "@/data/content"
 import { content } from "@/data/content"
 import { images } from "@/data/images"
 
 type TeamMember = (typeof content.en.team.members)[number]
 
+function memberImageStyle(member: TeamMember): CSSProperties | undefined {
+  if ("imageObjectPosition" in member && member.imageObjectPosition) {
+    return { objectPosition: member.imageObjectPosition }
+  }
+  if ("imagePosition" in member && member.imagePosition === "top") {
+    return { objectPosition: "center top" }
+  }
+  return undefined
+}
+
 function TeamMemberTile({ member, compact }: { member: TeamMember; compact: boolean }) {
-  const imgPos =
-    "imagePosition" in member && member.imagePosition === "top" ? ({ objectPosition: "center top" } as const) : undefined
+  const imgPos = memberImageStyle(member)
 
   if (compact) {
     return (
       <article className="flex h-full flex-col items-center rounded-xl border border-white/10 bg-white/[0.04] px-2 pb-3 pt-2.5">
         <div className="relative aspect-square w-[5.5rem] shrink-0 overflow-hidden rounded-full border-2 border-white/10 shadow-card">
-          <img src={images[member.imageKey]} alt="" className="h-full w-full object-cover" style={imgPos} />
+          <img
+            src={images[member.imageKey]}
+            alt={member.name}
+            className="h-full w-full object-cover"
+            style={imgPos}
+          />
         </div>
         <h3 className="font-display mt-2 w-full text-balance text-center text-[0.8125rem] font-bold leading-snug text-[var(--color-text)]">
           {member.name}
@@ -20,7 +35,7 @@ function TeamMemberTile({ member, compact }: { member: TeamMember; compact: bool
         <p className="mt-1 w-full text-balance text-center text-[0.6875rem] font-semibold leading-snug text-[var(--color-text)]">
           {member.tag}
         </p>
-        <p className="mt-1.5 line-clamp-3 w-full text-balance text-center text-[0.625rem] leading-snug text-[var(--color-text-muted)]">
+        <p className="mt-1.5 line-clamp-5 w-full text-balance text-center text-[0.625rem] leading-snug text-[var(--color-text-muted)] whitespace-pre-line">
           {member.bio}
         </p>
       </article>
@@ -30,7 +45,7 @@ function TeamMemberTile({ member, compact }: { member: TeamMember; compact: bool
   return (
     <div className="flex w-full min-w-0 flex-col items-center px-1 text-center sm:px-0">
       <div className="relative mx-auto aspect-square w-full max-w-[min(16rem,calc(100vw-2.5rem))] overflow-hidden rounded-full border-4 border-white/10 shadow-card sm:max-w-[18rem] md:aspect-auto md:h-72 md:w-72 md:max-w-none">
-        <img src={images[member.imageKey]} alt="" className="h-full w-full object-cover" style={imgPos} />
+        <img src={images[member.imageKey]} alt={member.name} className="h-full w-full object-cover" style={imgPos} />
       </div>
       <h3 className="font-display mt-5 max-w-full text-balance break-words text-xl font-bold text-[var(--color-text)] sm:mt-6 sm:text-2xl">
         {member.name}

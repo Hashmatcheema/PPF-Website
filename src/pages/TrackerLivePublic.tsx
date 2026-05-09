@@ -12,6 +12,7 @@ import {
 import L, { Icon } from "leaflet"
 import "leaflet/dist/leaflet.css"
 import { apiUrl } from "@/lib/apiUrl"
+import { applyTrackerSeo } from "@/lib/seoDom"
 import { ChevronDown } from "lucide-react"
 
 export type TrackerLocation = {
@@ -189,6 +190,10 @@ export function TrackerLivePublic() {
     }
   }, [])
 
+  useEffect(() => {
+    applyTrackerSeo()
+  }, [])
+
   // Initial fetch
   useEffect(() => {
     fetchTrackerState()
@@ -284,7 +289,7 @@ export function TrackerLivePublic() {
             <div className="flex items-center justify-between">
               <div>
                 <strong className={state.isActive ? "text-[var(--color-accent)]" : "text-[var(--color-text-muted)]"}>
-                  {state.isActive ? "🟢 March is active" : "⚪ Tracker inactive"}
+                  {state.isActive ? "🟢 March concluded" : "⚪ Tracker inactive"}
                 </strong>
                 {lastUpdate && (
                   <p className="mt-1 text-xs text-[var(--color-text-muted)]">

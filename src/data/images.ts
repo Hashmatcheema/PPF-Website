@@ -61,4 +61,5 @@ export const images = {
   team7: "/images/team7.webp",
   team8: "/images/team8.webp",
   team9: "/images/team9.webp",
+  team10: "/images/1778359958015-ea5b98ce-f505-4997-964a-2ac880029f72_1.jpg",
 } as const
