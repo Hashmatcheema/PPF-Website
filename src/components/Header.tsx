@@ -286,8 +286,8 @@ export function Header({
             className="fixed inset-0 top-16 z-40 bg-black/20 backdrop-blur-sm md:hidden"
             onClick={() => setOpen(false)}
           />
-          <div className="relative z-50 border-t border-[var(--color-border)] bg-[var(--color-bg)] px-4 py-6 shadow-xl md:hidden">
-            <nav className="flex flex-col gap-1">
+          <div className="relative z-50 w-full min-w-0 max-h-[calc(100svh-4rem)] overflow-y-auto overscroll-y-contain border-t border-[var(--color-border)] bg-[var(--color-bg)] pt-3 pb-[max(1.25rem,calc(0.75rem+env(safe-area-inset-bottom,0px)))] pl-[max(1rem,env(safe-area-inset-left,0px))] pr-[max(1rem,env(safe-area-inset-right,0px))] shadow-xl [-webkit-overflow-scrolling:touch] md:hidden">
+            <nav className="mx-auto flex w-full min-w-0 max-w-lg flex-col gap-0.5 sm:max-w-xl">
               {links.map(({ id, key }) => {
                 const isActive = activeId === id
                 return (
@@ -299,24 +299,24 @@ export function Header({
                       setOpen(false)
                       requestAnimationFrame(() => scrollToSection(id))
                     }}
-                    className={`rounded-md px-3 py-2.5 text-sm transition ${isActive
+                    className={`flex min-h-11 items-center rounded-md px-3 py-2.5 text-sm transition sm:min-h-12 sm:text-base ${isActive
                       ? "font-bold text-[var(--color-accent)] bg-[var(--color-surface)]"
                       : "font-medium text-[var(--color-text)] hover:bg-[var(--color-surface)]"
                       }`}
                   >
-                    {content[lang].nav[key]}
+                    <span className="text-pretty break-words">{content[lang].nav[key]}</span>
                   </a>
                 )
               })}
               <a
                 href="/tracker"
                 onClick={() => setOpen(false)}
-                className="rounded-md px-3 py-2.5 text-sm font-medium text-[var(--color-accent)] transition hover:bg-[var(--color-surface)]"
+                className="flex min-h-11 items-center rounded-md px-3 py-2.5 text-sm font-medium text-[var(--color-accent)] transition hover:bg-[var(--color-surface)] sm:min-h-12 sm:text-base"
               >
-                📍 Live Tracker
+                <span className="text-pretty break-words">📍 Live Tracker</span>
               </a>
             </nav>
-            <div className="mt-4 flex justify-center border-t border-[var(--color-border)] pt-4">
+            <div className="mx-auto mt-4 flex w-full min-w-0 max-w-lg justify-center border-t border-[var(--color-border)] pt-4 sm:max-w-xl">
               <SocialIcons lang={lang} variant="footer" />
             </div>
           </div>

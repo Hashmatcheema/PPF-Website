@@ -246,19 +246,19 @@ export function TrackerLivePublic() {
   return (
     <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
       {/* Header */}
-      <header className="border-b border-white/10 px-4 py-3 sm:px-6">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3">
-          <div>
+      <header className="border-b border-white/10 px-4 pb-3 pt-[max(0.75rem,env(safe-area-inset-top,0px))] sm:px-6">
+        <div className="mx-auto flex min-w-0 max-w-6xl flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+          <div className="min-w-0 flex-1">
             <p className="font-display text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-label-red)]">
               📍 Track
             </p>
-            <h1 className="font-display text-lg font-semibold sm:text-xl">
+            <h1 className="font-display text-balance break-words text-lg font-semibold leading-snug sm:text-xl">
               March location
             </h1>
           </div>
           <Link
             to="/"
-            className="text-sm font-medium text-[var(--color-accent)] transition hover:underline"
+            className="inline-flex w-fit shrink-0 items-center self-start text-sm font-medium text-[var(--color-accent)] transition hover:underline sm:self-auto"
           >
             ← Back to site
           </Link>

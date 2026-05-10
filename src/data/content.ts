@@ -28,7 +28,7 @@ const contentSource = {
       email: "pakpalforum@gmail.com",
       eventTitle: "Pakistanis March For Gaza",
       eventBody:
-        "Stand with Palestine in the streets. Dates, cities, and how to join will be shared on our channels — follow PPF so you do not miss the march.",
+        "Stand with Palestine in the streets. Dates, cities, and how to join will be shared on our channels. Follow PPF so you do not miss the march.",
       close: "Close",
       dismissOverlay: "Close dialog",
     },
@@ -81,8 +81,7 @@ const contentSource = {
         { value: "PKR 10M+", label: "Aid Delivered" },
       ],
       achievements: [
-        "International representation of Pakistan in Global Sumud Flotilla, via 5 member delegation",
-        "Central membership of Nationwide coalition for Palestine (Palestine Action Coalition, Pak)",
+        "International representation of Pakistan in Global Sumud Flotillas of 2025 and 2026",
         "300+ protests, campaigns, and awareness sessions held across 15+ cities of Pakistan",
         "Engaged 100+ politicians, diplomats, and leaders of Pakistan",
         "Secured an Agreement with Gov of Pakistan for Gaza, after a 42-day Sit-in in the Capital",
@@ -93,6 +92,7 @@ const contentSource = {
         "Distributed 170,000+ boycott guides across Pakistan",
         "Successfully negotiated Divestment from a McDonald's branch in I-8 Sector, Islamabad",
         "Assisted admission of a Palestinian student and evacuation/immigration of more than 7+ Palestinians",
+        "Membership of Nationwide coalition for Palestine (Palestine Action Coalition, Pak)",
       ],
     },
     faq: {
@@ -154,6 +154,8 @@ const contentSource = {
       title: "Our Team",
       intro: "People behind PPF's mission and impact.",
       chapterHeadsLabel: "Chapter Heads",
+      readMore: "Read more",
+      readLess: "Read less",
       names: ["Name One", "Name Two", "Name Three"],
       role: "Role / Title",
       members: [
@@ -194,12 +196,6 @@ const contentSource = {
           tag: "Karachi Lead",
           bio: "Forging strength beyond the gym.\nFitness trainer, youth mentor, and activist inspiring discipline, leadership, and awareness for global justice.",
           imageKey: "team6" as const,
-        },
-        {
-          name: "Ibrahim Bajwa",
-          tag: "Faisalabad Lead",
-          bio: "Building intelligent systems but invested more in driving awareness and activism.",
-          imageKey: "team7" as const,
         },
         {
           name: "Adv. Jawad Bhutta",
@@ -333,7 +329,7 @@ const contentSource = {
       email: "pakpalforum@gmail.com",
       eventTitle: "غزہ کے لیے پاکستانی مارچ",
       eventBody:
-        "فلسطین کے ساتھ سڑکوں پر یکجہتی۔ تاریخیں، شہروں کی تفصیل اور شرکت کا طریقہ ہمارے چینلز پر شیئر کیا جائے گا — پی پی ایف فالو کریں تاکہ مارچ کی تازہ خبریں نہ چھوٹیں۔",
+        "فلسطین کے ساتھ سڑکوں پر یکجہتی۔ تاریخیں، شہروں کی تفصیل اور شرکت کا طریقہ ہمارے چینلز پر شیئر کیا جائے گا۔ پی پی ایف فالو کریں تاکہ مارچ کی تازہ خبریں نہ چھوٹیں۔",
       close: "بند کریں",
       dismissOverlay: "باکس بند کریں",
     },
@@ -377,8 +373,7 @@ const contentSource = {
         { value: "PKR 10M+", label: "امداد فراہم" },
       ],
       achievements: [
-        "Global Sumud Flotilla میں پاکستان کی بین الاقوامی نمائندگی، 5 رکنی وفد کے ذریعے",
-        "قومی سطح پر فلسطین کے اتحاد (Palestine Action Coalition, Pak) میں مرکزی رکنیت",
+        "2025 اور 2026 کے Global Sumud Flotillas میں پاکستان کی بین الاقوامی نمائندگی",
         "پاکستان کے 15 سے زیادہ شہروں میں 300 سے زیادہ احتجاج، مہمات اور آگاہی سیشن",
         "100 سے زیادہ سیاست دانوں، سفارت کاروں اور پاکستان کے رہنماؤں سے مشغول",
         "دارالحکومت میں 42 دن کے دھرنے کے بعد غزہ کے لیے پاکستان کی حکومت کے ساتھ معاہدہ",
@@ -389,6 +384,7 @@ const contentSource = {
         "پاکستان بھر میں 170,000 سے زیادہ بائیکاٹ گائیڈز تقسیم کیے",
         "اسلام آباد آئی-8 سیکٹر میں مک ڈونلڈز برانچ سے ڈائیویسٹمنٹ پر کامیاب مذاکرات",
         "ایک فلسطینی طالب علم کی داخلہ اور 7 سے زیادہ فلسطینیوں کی تخلیص/امigration میں مدد",
+        "قومی سطح پر فلسطین کے اتحاد (Palestine Action Coalition, Pak) میں رکنیت",
       ],
     },
     faq: {
@@ -450,6 +446,8 @@ const contentSource = {
       title: "ہماری ٹیم",
       intro: "PPF کے مشن اور اثر کے پیچھے لوگ۔",
       chapterHeadsLabel: "چاپٹر ہیڈز",
+      readMore: "مزید پڑھیں",
+      readLess: "مختصر کریں",
       names: ["Name One", "Name Two", "Name Three"],
       role: "Role / Title",
       members: [
@@ -490,12 +488,6 @@ const contentSource = {
           tag: "Karachi Lead",
           bio: "Forging strength beyond the gym.\nFitness trainer, youth mentor, and activist inspiring discipline, leadership, and awareness for global justice.",
           imageKey: "team6" as const,
-        },
-        {
-          name: "Ibrahim Bajwa",
-          tag: "Faisalabad Lead",
-          bio: "Building intelligent systems but invested more in driving awareness and activism.",
-          imageKey: "team7" as const,
         },
         {
           name: "Adv. Jawad Bhutta",

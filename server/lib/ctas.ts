@@ -21,8 +21,8 @@ const MARCH_FLOATING_DEFAULT_TITLE: LocaleLabel = {
 }
 
 const MARCH_FLOATING_DEFAULT_BODY: LocaleLabel = {
-  en: "Stand with Palestine in the streets. Dates, cities, and how to join will be shared on our channels — follow PPF so you do not miss the march.",
-  ur: "فلسطین کے ساتھ سڑکوں پر یکجہتی۔ تاریخیں، شہروں کی تفصیل اور شرکت کا طریقہ ہمارے چینلز پر شیئر کیا جائے گا — پی پی ایف فالو کریں تاکہ مارچ کی تازہ خبریں نہ چھوٹیں۔",
+  en: "Stand with Palestine in the streets. Dates, cities, and how to join will be shared on our channels. Follow PPF so you do not miss the march.",
+  ur: "فلسطین کے ساتھ سڑکوں پر یکجہتی۔ تاریخیں، شہروں کی تفصیل اور شرکت کا طریقہ ہمارے چینلز پر شیئر کیا جائے گا۔ پی پی ایف فالو کریں تاکہ مارچ کی تازہ خبریں نہ چھوٹیں۔",
 }
 
 export function defaultCtas(): CtasConfig {

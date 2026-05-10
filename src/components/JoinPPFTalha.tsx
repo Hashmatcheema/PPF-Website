@@ -44,12 +44,12 @@ export function JoinPPFTalha({ lang }: { lang: Locale }) {
       />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-[var(--color-bg)] via-[var(--color-bg)]/85 to-transparent" aria-hidden />
       <div className="relative wrap pb-14 pt-20">
-        <div className="mb-5 flex items-center justify-center gap-3">
-          <div className="h-px w-8 bg-[var(--color-label-red)]" aria-hidden />
-          <p className="font-display text-xs font-semibold uppercase tracking-[0.25em] text-[var(--color-label-red)]">
+        <div className="mb-5 flex w-full items-center justify-center gap-3 px-1">
+          <div className="h-px w-8 shrink-0 bg-[var(--color-label-red)]" aria-hidden />
+          <p className="max-w-[min(20rem,calc(100vw-5.5rem))] text-balance text-center font-display text-xs font-semibold uppercase tracking-[0.25em] text-[var(--color-label-red)]">
             {t.badge}
           </p>
-          <div className="h-px w-8 bg-[var(--color-label-red)]" aria-hidden />
+          <div className="h-px w-8 shrink-0 bg-[var(--color-label-red)]" aria-hidden />
         </div>
         <h2
           id="join-heading"
@@ -62,14 +62,14 @@ export function JoinPPFTalha({ lang }: { lang: Locale }) {
         </p>
         <div className="mx-auto mt-10 flex w-full max-w-5xl justify-center px-1 sm:mt-14 sm:px-0">
           <div className="flex w-full max-w-lg items-center justify-center gap-3 px-1 sm:px-0">
-            <div className="h-px w-8 shrink-0 bg-[var(--color-accent)]/40" aria-hidden />
+            <div className="h-px w-8 shrink-0 bg-[var(--color-accent)]" aria-hidden />
             <h3
               id="join-skills-heading"
-              className="shrink-0 text-balance text-center font-display text-xs font-semibold uppercase tracking-[0.25em] text-[var(--color-label-red)]"
+              className="max-w-[min(20rem,calc(100vw-5.5rem))] text-balance text-center font-display text-xs font-semibold uppercase tracking-[0.25em] text-[var(--color-label-red)]"
             >
               {t.skillsHeading}
             </h3>
-            <div className="h-px w-8 shrink-0 bg-[var(--color-accent)]/40" aria-hidden />
+            <div className="h-px w-8 shrink-0 bg-[var(--color-accent)]" aria-hidden />
           </div>
         </div>
         <div className="-mx-5 mt-8 sm:mx-0 sm:mt-10">

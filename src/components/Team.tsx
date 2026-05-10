@@ -1,3 +1,4 @@
+import { useLayoutEffect, useRef, useState } from "react"
 import type { CSSProperties } from "react"
 import type { Locale } from "@/data/content"
 import { content } from "@/data/content"
@@ -15,10 +16,41 @@ function memberImageStyle(member: TeamMember): CSSProperties | undefined {
   return undefined
 }
 
-function TeamMemberTile({ member, compact }: { member: TeamMember; compact: boolean }) {
+function TeamMemberTile({ member, compact, lang }: { member: TeamMember; compact: boolean; lang: Locale }) {
   const imgPos = memberImageStyle(member)
+  const teamLabels = content[lang].team
+  const readMore = "readMore" in teamLabels ? teamLabels.readMore : "Read more"
+  const readLess = "readLess" in teamLabels ? teamLabels.readLess : "Read less"
+
+  const bioRef = useRef<HTMLParagraphElement>(null)
+  const [bioExpanded, setBioExpanded] = useState(false)
+  const [bioTruncated, setBioTruncated] = useState(false)
+
+  useLayoutEffect(() => {
+    if (!compact) {
+      setBioTruncated(false)
+      return
+    }
+    const el = bioRef.current
+    if (!el) return
+
+    const measure = () => {
+      if (bioExpanded) return
+      setBioTruncated(el.scrollHeight > el.clientHeight + 2)
+    }
+
+    measure()
+    const ro = new ResizeObserver(measure)
+    ro.observe(el)
+    window.addEventListener("resize", measure)
+    return () => {
+      ro.disconnect()
+      window.removeEventListener("resize", measure)
+    }
+  }, [compact, bioExpanded, member.bio])
 
   if (compact) {
+    const showBioToggle = bioTruncated || bioExpanded
     return (
       <article className="flex h-full flex-col items-center rounded-xl border border-white/10 bg-white/[0.04] px-2 pb-3 pt-2.5">
         <div className="relative aspect-square w-[5.5rem] shrink-0 overflow-hidden rounded-full border-2 border-white/10 shadow-card">
@@ -35,9 +67,22 @@ function TeamMemberTile({ member, compact }: { member: TeamMember; compact: bool
         <p className="mt-1 w-full text-balance text-center text-[0.6875rem] font-semibold leading-snug text-[var(--color-text)]">
           {member.tag}
         </p>
-        <p className="mt-1.5 line-clamp-5 w-full text-balance text-center text-[0.625rem] leading-snug text-[var(--color-text-muted)] whitespace-pre-line">
+        <p
+          ref={bioRef}
+          className={`mt-1.5 w-full text-balance text-center text-[0.625rem] leading-snug text-[var(--color-text-muted)] whitespace-pre-line ${bioExpanded ? "" : "line-clamp-5"}`}
+        >
           {member.bio}
         </p>
+        {showBioToggle ? (
+          <button
+            type="button"
+            className="mt-1 text-[0.625rem] font-semibold text-[var(--color-accent)] underline-offset-2 hover:underline"
+            onClick={() => setBioExpanded((e) => !e)}
+            aria-expanded={bioExpanded}
+          >
+            {bioExpanded ? readLess : readMore}
+          </button>
+        ) : null}
       </article>
     )
   }
@@ -105,7 +150,7 @@ export function Team({ lang }: { lang: Locale }) {
               </li>
             ) : (
               <li key={seg.member.name} className="w-[9.5rem] min-w-0 shrink-0 snap-start sm:w-[10rem]">
-                <TeamMemberTile member={seg.member} compact />
+                <TeamMemberTile member={seg.member} compact lang={lang} />
               </li>
             ),
           )}
@@ -129,7 +174,7 @@ export function Team({ lang }: { lang: Locale }) {
               </div>
             ) : (
               <div key={seg.member.name} className="min-w-0">
-                <TeamMemberTile member={seg.member} compact={false} />
+                <TeamMemberTile member={seg.member} compact={false} lang={lang} />
               </div>
             ),
           )}

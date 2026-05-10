@@ -66,9 +66,17 @@ export function LocationsTalha({ lang }: { lang: Locale }) {
               {chapters.map((cityName, i) => {
                 const info = data[i] ?? data[0]
                 return (
-                  <div
+                  <a
                     key={i}
-                    className="relative grid size-[7.5rem] shrink-0 snap-start grid-rows-[auto_minmax(0,1fr)_auto] place-items-center overflow-hidden rounded-2xl border border-white/[0.09] bg-gradient-to-br from-white/[0.11] to-black/45 p-2.5 text-center shadow-[0_8px_32px_rgba(0,0,0,0.2)] ring-1 ring-inset ring-white/[0.05] backdrop-blur-xl transition-[border-color,box-shadow] hover:border-white/[0.14] sm:size-36 sm:snap-center sm:p-3"
+                    href={info.instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group relative grid size-[7.5rem] shrink-0 snap-start grid-rows-[auto_minmax(0,1fr)_auto] place-items-center overflow-hidden rounded-2xl border border-white/[0.09] bg-gradient-to-br from-white/[0.11] to-black/45 p-2.5 text-center shadow-[0_8px_32px_rgba(0,0,0,0.2)] ring-1 ring-inset ring-white/[0.05] backdrop-blur-xl transition-[border-color,box-shadow,transform] hover:border-white/[0.14] hover:brightness-[1.06] active:scale-[0.98] sm:size-36 sm:snap-center sm:p-3 no-underline outline-offset-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-accent)]"
+                    aria-label={
+                      lang === "en"
+                        ? `${cityName} chapter — open Instagram`
+                        : `${cityName} چیپٹر — انسٹاگرام کھولیں`
+                    }
                   >
                     <CityLandmarkIcon
                       index={i}
@@ -77,16 +85,13 @@ export function LocationsTalha({ lang }: { lang: Locale }) {
                     <p className="line-clamp-2 flex min-h-0 w-full items-center justify-center self-stretch px-0.5 text-center text-xs font-bold leading-tight tracking-wide text-white sm:text-[13px] md:text-[var(--color-text)]">
                       {cityName}
                     </p>
-                    <a
-                      href={info.instagram}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex shrink-0 text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-label-red)]"
-                      aria-label={`${cityName} on Instagram`}
+                    <span
+                      className="flex shrink-0 text-[var(--color-text-muted)] transition-colors group-hover:text-[var(--color-label-red)]"
+                      aria-hidden
                     >
                       <InstagramIcon className="h-4 w-4" />
-                    </a>
-                  </div>
+                    </span>
+                  </a>
                 )
               })}
             </div>

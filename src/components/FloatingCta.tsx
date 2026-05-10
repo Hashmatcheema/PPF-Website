@@ -38,7 +38,7 @@ const eventModalOverlayClassName =
 
 /** March / event dialog: portrait-poster friendly width, lightbox-style shell */
 const eventModalContentClassName =
-  "fixed left-1/2 top-1/2 z-[60] max-h-[min(92dvh,calc(100dvh-1.25rem))] w-[min(23rem,calc(100vw-2rem))] -translate-x-1/2 -translate-y-1/2 overflow-y-auto overscroll-contain rounded-2xl border border-white/15 bg-[var(--color-bg)]/97 p-4 shadow-[0_0_0_1px_rgba(0,0,0,0.4),0_24px_80px_-12px_rgba(0,0,0,0.65)] ring-1 ring-white/10 backdrop-blur-md outline-none [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:p-5"
+  "fixed left-1/2 top-1/2 z-[60] max-h-[min(92dvh,calc(100dvh-1.25rem))] w-[min(26rem,calc(100vw-1rem))] max-w-[100vw] -translate-x-1/2 -translate-y-1/2 overflow-x-hidden overflow-y-auto overscroll-contain rounded-2xl border border-white/15 bg-[var(--color-bg)]/97 p-4 shadow-[0_0_0_1px_rgba(0,0,0,0.4),0_24px_80px_-12px_rgba(0,0,0,0.65)] ring-1 ring-white/10 backdrop-blur-md outline-none [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:w-[min(28rem,calc(100vw-2rem))] sm:p-5 md:w-[min(30rem,calc(100vw-2.5rem))]"
 
 /** Match admin textarea line breaks (LF/CRLF and unicode line/paragraph separators from paste). */
 function normalizePosterSupportingLineBreaks(s: string): string {
@@ -132,8 +132,8 @@ export function FloatingCta({ lang }: { lang: Locale }) {
                             key={marchPosterSrc}
                             src={marchPosterSrc}
                             alt={marchTitle}
-                            className="mx-auto block h-auto max-h-[min(58dvh,520px)] w-auto max-w-[min(18.5rem,calc(100vw-3.5rem))] object-contain object-center sm:max-h-[min(62dvh,560px)] sm:max-w-[min(19.25rem,calc(100vw-4rem))]"
-                            sizes="(max-width: 24rem) calc(100vw - 3.5rem), 19rem"
+                            className="mx-auto block h-auto max-h-[min(58dvh,520px)] w-auto max-w-full object-contain object-center sm:max-h-[min(62dvh,560px)] sm:max-w-[min(22rem,calc(100vw-3rem))]"
+                            sizes="(max-width: 640px) calc(100vw - 2.5rem), 22rem"
                             decoding="async"
                             fetchPriority="low"
                           />
@@ -144,7 +144,9 @@ export function FloatingCta({ lang }: { lang: Locale }) {
                 ) : null}
                 <Dialog.Description
                   className={cn(
-                    "mt-4 min-w-0 border-t border-white/10 pt-4 text-sm leading-relaxed text-[var(--color-text-muted)]",
+                    "mt-4 w-full min-w-0 max-w-full border-t border-white/10 pt-4",
+                    "text-pretty break-words text-left text-[13px] leading-[1.55] tracking-[-0.01em] text-[var(--color-text-muted)]",
+                    "sm:text-sm sm:leading-relaxed sm:tracking-normal md:text-base",
                     "whitespace-pre-line",
                   )}
                 >

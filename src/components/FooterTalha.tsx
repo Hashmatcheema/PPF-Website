@@ -44,11 +44,11 @@ export function FooterTalha({ lang }: { lang: Locale }) {
         <div className="my-3 h-px w-full bg-white/10 sm:my-5 md:my-6" />
 
         {/*
-          Mobile: nav links | Chapters side by side.
-          sm+: 3 columns with empty middle for spacing (matches header order in footer links).
+          Mobile: nav then chapters (full width) — avoids squashed 2-col chapter grid.
+          sm+: 3 columns with empty middle for spacing.
         */}
-        <div className="grid grid-cols-2 gap-x-4 gap-y-3 text-left sm:grid-cols-3 sm:gap-x-8 sm:gap-y-5">
-          <div className="col-start-1 row-start-1 min-w-0">
+        <div className="grid grid-cols-1 gap-y-6 text-left sm:grid-cols-3 sm:gap-x-8 sm:gap-y-5">
+          <div className="min-w-0 sm:col-start-1 sm:row-start-1">
             <ul className="flex flex-col gap-1 sm:gap-1.5 md:gap-2">
               {[
                 { href: "#faq", label: nav.faq },
@@ -72,16 +72,16 @@ export function FooterTalha({ lang }: { lang: Locale }) {
 
           <div className="hidden sm:block sm:col-start-2 sm:row-start-1" aria-hidden />
 
-          <div className="col-start-2 row-start-1 min-w-0 sm:col-start-3">
-            <h4 className="mb-1 text-[10px] font-bold uppercase tracking-widest text-white/40 sm:mb-2 md:mb-3">
+          <div className="min-w-0 border-t border-white/10 pt-5 sm:col-start-3 sm:border-0 sm:pt-0">
+            <h4 className="mb-2 text-[10px] font-bold uppercase tracking-widest text-white/40 sm:mb-2 md:mb-3">
               {lang === "en" ? "Our Chapters" : "ہمارے چیپٹر"}
             </h4>
-            <ul className="grid grid-cols-1 gap-x-2 gap-y-1 sm:gap-x-4 sm:gap-y-2 max-sm:grid-cols-2">
+            <ul className="grid grid-cols-1 gap-x-4 gap-y-1.5 sm:grid-cols-2 sm:gap-y-2">
               {chapters.map((city) => (
-                <li key={city}>
+                <li key={city} className="min-w-0">
                   <a
                     href="#presence"
-                    className="text-[13px] leading-snug text-white/60 transition-colors hover:text-[var(--color-accent)] sm:text-sm"
+                    className="block text-pretty break-words text-[13px] leading-snug text-white/60 transition-colors hover:text-[var(--color-accent)] sm:text-sm"
                   >
                     {city}
                   </a>
